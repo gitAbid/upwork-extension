@@ -1,0 +1,318 @@
+/* content/content.css — badge + tooltip styles */
+
+/* Floating toggle button for extension on/off */
+.ujm-floating-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.ujm-toggle-btn {
+  background: #14a800;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.ujm-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.ujm-toggle-btn:active {
+  transform: translateY(0);
+}
+
+.ujm-toggle-on .ujm-toggle-btn {
+  background: #14a800;
+}
+
+.ujm-toggle-off .ujm-toggle-btn {
+  background: #6b7280;
+}
+
+.ujm-toggle-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.ujm-toggle-text {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Wrapper: column — chip row on top, flag pills below */
+.ujm-wrapper {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  z-index: 999;
+  max-width: 420px;
+}
+
+/* Three-chip row: [R:50] [AI:74] [⇒64] */
+.ujm-chip-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Flat label chips for Rules and AI */
+.ujm-chip {
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  animation: ujm-fade-in 0.3s ease;
+}
+
+.ujm-chip-rules {
+  background: rgba(0, 0, 0, 0.55);
+  color: #d1d5db;
+}
+
+.ujm-chip-ai {
+  background: rgba(0, 0, 0, 0.55);
+  color: #a5b4fc;
+}
+
+/* Final score badge — colored, with tooltip */
+.ujm-badge {
+  height: 22px;
+  min-width: 36px;
+  padding: 0 8px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  cursor: default;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  animation: ujm-fade-in 0.3s ease;
+  flex-shrink: 0;
+  letter-spacing: 0.3px;
+  position: relative;
+}
+
+@keyframes ujm-fade-in {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Color variants */
+.ujm-green  { background: #16a34a; }
+.ujm-yellow { background: #ca8a04; }
+.ujm-red    { background: #dc2626; }
+.ujm-grey   { background: #6b7280; }
+.ujm-loading {
+  background: #9ca3af;
+  animation: ujm-pulse 1.2s ease-in-out infinite;
+  height: 22px;
+  min-width: 80px;
+  border-radius: 11px;
+}
+
+@keyframes ujm-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+/* Rules-only indicator — small blue dot on final badge */
+.ujm-badge.ujm-rules-only::after {
+  content: 'R';
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1d4ed8;
+  font-size: 8px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 14px;
+  text-align: center;
+}
+
+/* Optimization-skipped state — dashed border, clickable */
+.ujm-badge.ujm-optimization-skipped {
+  border: 2px dashed #9ca3af;
+  background: #f3f4f6;
+  color: #6b7280;
+  animation: none;
+}
+
+.ujm-badge.ujm-clickable {
+  cursor: pointer;
+}
+
+.ujm-badge.ujm-clickable:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.ujm-badge.ujm-clickable:active {
+  transform: scale(0.98);
+}
+
+/* Optimization-skipped indicator — small orange dot on final badge */
+.ujm-badge.ujm-optimization-skipped::after {
+  content: '⚡';
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f97316;
+  font-size: 8px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 14px;
+  text-align: center;
+}
+
+/* Flag pill row */
+.ujm-flags-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+/* Pill base */
+.ujm-pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  white-space: nowrap;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Pill color variants */
+.ujm-pill-green  { background: #dcfce7; color: #15803d; }
+.ujm-pill-red    { background: #fee2e2; color: #b91c1c; }
+.ujm-pill-yellow { background: #fef9c3; color: #a16207; }
+.ujm-pill-gray   { background: #f3f4f6; color: #4b5563; }
+
+/* Tooltip — shown on hover of final badge */
+.ujm-tooltip {
+  display: none;
+  position: absolute;
+  top: 28px;
+  right: 0;
+  width: 200px;
+  background: #1f2937;
+  color: #f9fafb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  z-index: 1000;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.ujm-badge:hover .ujm-tooltip {
+  display: block;
+}
+
+/* Score breakdown table inside tooltip */
+.ujm-tooltip-scores {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #374151;
+}
+
+.ujm-tooltip-score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.ujm-tooltip-label {
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.ujm-tooltip-val {
+  font-weight: 700;
+  color: #f9fafb;
+}
+
+.ujm-tooltip-final .ujm-tooltip-label {
+  color: #d1d5db;
+}
+
+.ujm-tooltip-final .ujm-tooltip-val {
+  font-size: 13px;
+  color: #fff;
+}
+
+.ujm-tooltip-reason {
+  color: #d1d5db;
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+
+.ujm-tooltip-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.ujm-flag {
+  background: #374151;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 10px;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+/* Make job cards position:relative so badge can be absolute */
+[data-test="job-tile-list"] > section.air3-card-section,
+[data-test="JobsList"] article[data-test="JobTile"] {
+  position: relative !important;
+}

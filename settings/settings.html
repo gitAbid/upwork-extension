@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upwork Job Matcher — Settings</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <div>
+          <h1>Upwork Job Matcher</h1>
+          <p class="subtitle">Configure your profile and AI scoring preferences</p>
+        </div>
+        <button id="dark-mode-btn" title="Toggle dark mode" type="button">🌙</button>
+      </div>
+    </header>
+
+    <form id="settings-form">
+
+      <!-- Section 1: Profile -->
+      <section class="card">
+        <h2>Your Profile</h2>
+        <p class="help-text">Paste your resume, bio, or skill summary. The AI uses this to evaluate job fit.</p>
+        <textarea id="profile" name="profile" rows="12"
+          placeholder="e.g. Senior full-stack developer with 8 years experience in React, Node.js, PostgreSQL..."></textarea>
+      </section>
+
+      <!-- Section 1.5: Your Hourly Rate -->
+      <section class="card">
+        <h2>Your Hourly Rate <span class="optional">optional</span></h2>
+        <p class="help-text">Enter your typical hourly rate to compare jobs against your rate.</p>
+        <div class="field-row">
+          <label for="user-hourly-rate">Your Hourly Rate ($/hr)</label>
+          <input type="number" id="user-hourly-rate" min="0" max="1000" step="5" placeholder="e.g., 50">
+        </div>
+        <p class="help-text">Leave empty to use fixed thresholds (30-80/hr = good)</p>
+      </section>
+
+      <!-- Section 1.6: Your Fixed Price Range -->
+      <section class="card">
+        <h2>Fixed Price Range <span class="optional">optional</span></h2>
+        <p class="help-text">Set your acceptable range for fixed-price projects to compare against client budgets.</p>
+        <div class="threshold-grid">
+          <div class="field-row">
+            <label for="user-fixed-min">Your Minimum ($)</label>
+            <input type="number" id="user-fixed-min" min="0" max="100000" step="50" placeholder="e.g., 100">
+          </div>
+          <div class="field-row">
+            <label for="user-fixed-max">Your Maximum ($)</label>
+            <input type="number" id="user-fixed-max" min="0" max="100000" step="50" placeholder="e.g., 1000">
+          </div>
+        </div>
+        <p class="help-text">Leave empty to use fixed thresholds ($100-500 = good)</p>
+      </section>
+
+      <!-- Section 2: LLM Provider + Model -->
+      <section class="card">
+        <h2>AI Provider &amp; Model</h2>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="provider" value="openai" checked>
+            <span>OpenAI</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="provider" value="anthropic">
+            <span>Anthropic</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="provider" value="gemini">
+            <span>Google Gemini</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="provider" value="zai">
+            <span>Z.ai</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="provider" value="custom">
+            <span>Custom (OpenAI-compatible)</span>
+          </label>
+        </div>
+
+        <div class="field-row" style="margin-top:14px">
+          <label for="api-key">API Key <span class="optional">(optional for Custom)</span></label>
+          <div class="input-with-toggle">
+            <input type="password" id="api-key" name="api-key" placeholder="Paste your API key here" autocomplete="off">
+            <button type="button" id="toggle-key" class="icon-btn" title="Show/hide key">&#128065;</button>
+          </div>
+          <p class="help-text" id="api-key-link"></p>
+        </div>
+
+        <div class="field-row custom-url-row" style="margin-top:12px; display:none;">
+          <label for="custom-url">Custom API URL</label>
+          <input type="text" id="custom-url" name="custom-url" placeholder="https://api.example.com/v1/chat/completions">
+          <p class="help-text">OpenAI-compatible endpoint URL (e.g., for local LLMs or other providers)</p>
+        </div>
+
+        <div class="field-row" style="margin-top:12px">
+          <div class="model-label-row">
+            <label for="model-select">Model</label>
+            <button type="button" id="refresh-models-btn" class="btn-icon-text" title="Fetch models from provider">
+              <span id="refresh-icon">↻</span> Refresh
+            </button>
+          </div>
+          <select id="model-select">
+            <option value="">— enter API key then click Refresh —</option>
+          </select>
+          <p class="help-text" id="model-status"></p>
+        </div>
+      </section>
+
+      <!-- Section 3: Custom System Prompt -->
+      <section class="card">
+        <h2>Custom Instructions <span class="optional">optional</span></h2>
+        <p class="help-text">Additional instructions appended to the AI system prompt.</p>
+        <textarea id="custom-prompt" name="custom-prompt" rows="4"
+          placeholder="e.g. Prefer jobs that mention long-term collaboration. Penalize jobs with vague descriptions."></textarea>
+      </section>
+
+      <!-- Section 4: Scoring Weights -->
+      <section class="card">
+        <h2>Scoring Weights</h2>
+        <p class="help-text">Rules + AI weights must sum to 100.</p>
+        <div class="slider-row">
+          <label>Rules Score</label>
+          <input type="range" id="weight-rules" min="0" max="100" value="40">
+          <span id="weight-rules-val" class="weight-val">40%</span>
+        </div>
+        <div class="slider-row">
+          <label>AI Score</label>
+          <input type="range" id="weight-llm" min="0" max="100" value="60">
+          <span id="weight-llm-val" class="weight-val">60%</span>
+        </div>
+      </section>
+
+      <!-- Section 5: Custom Rules -->
+      <section class="card">
+        <div class="section-header-row">
+          <h2>Custom Rules</h2>
+          <button type="button" id="add-rule-btn" class="btn-secondary-sm">+ Add Rule</button>
+        </div>
+        <p class="help-text">Define custom scoring rules. Jobs matching these rules earn points.</p>
+        <div id="rules-list" class="rules-list"></div>
+        <button type="button" id="reset-rules-btn" class="btn-secondary-sm" style="margin-top:12px;">Reset to Defaults</button>
+      </section>
+
+      <!-- Section 6: Optimization -->
+      <section class="card">
+        <h2>Optimization</h2>
+        <p class="help-text">Enable smart optimization to save API calls. Only analyze jobs that match your stack/keywords.</p>
+        <label class="toggle-switch">
+          <input type="checkbox" id="optimization-enabled">
+          <span class="toggle-slider"></span>
+          Enable Stack-Based Optimization
+        </label>
+
+        <div class="field-row" style="margin-top:16px">
+          <label>Stack / Domain Keywords</label>
+          <div id="keywords-list" class="tags-container"></div>
+          <div class="add-keyword-row">
+            <input type="text" id="new-keyword" placeholder="Add keyword (e.g., react, python, aws)...">
+            <button type="button" id="add-keyword-btn" class="btn-secondary">Add</button>
+          </div>
+          <p class="help-text">Jobs containing these keywords in title, description, or skills will trigger full AI analysis.</p>
+        </div>
+      </section>
+
+      <!-- Section 7: Filter Thresholds -->
+      <section class="card">
+        <h2>Filter Thresholds</h2>
+        <div class="threshold-grid">
+          <div class="field-row">
+            <label for="max-proposals">Max Proposals</label>
+            <input type="number" id="max-proposals" min="1" max="200" value="50">
+          </div>
+          <div class="field-row">
+            <label for="hourly-min">Hourly Min ($/hr)</label>
+            <input type="number" id="hourly-min" min="0" max="500" value="30">
+          </div>
+          <div class="field-row">
+            <label for="hourly-max">Hourly Max ($/hr)</label>
+            <input type="number" id="hourly-max" min="0" max="500" value="80">
+          </div>
+          <div class="field-row">
+            <label for="fixed-min">Fixed Min ($)</label>
+            <input type="number" id="fixed-min" min="0" max="100000" value="100">
+          </div>
+          <div class="field-row">
+            <label for="fixed-max">Fixed Max ($)</label>
+            <input type="number" id="fixed-max" min="0" max="100000" value="500">
+          </div>
+        </div>
+
+        <div class="field-row" style="margin-top:16px">
+          <label>Target Countries</label>
+          <div id="countries-list" class="tags-container"></div>
+          <div class="add-country-row">
+            <input type="text" id="new-country" placeholder="Add country…">
+            <button type="button" id="add-country-btn" class="btn-secondary">Add</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 8: Request Log -->
+      <section class="card">
+        <div class="section-header-row">
+          <h2>Request Log</h2>
+          <button type="button" id="clear-log-btn" class="btn-danger-sm">Clear Log</button>
+        </div>
+        <p class="help-text">Log every LLM call for debugging. Stores up to 200 entries locally.</p>
+        <label class="toggle-switch">
+          <input type="checkbox" id="log-enabled">
+          <span class="toggle-slider"></span>
+          Enable Request Logging
+        </label>
+        <div id="log-list" class="log-list"></div>
+      </section>
+
+      <!-- Section 9: Token Usage -->
+      <section class="card">
+        <div class="section-header-row">
+          <h2>Token Usage</h2>
+          <button type="button" id="reset-usage-btn" class="btn-danger-sm">Reset</button>
+        </div>
+        <p class="help-text">Cumulative tokens consumed across all scored jobs.</p>
+        <div id="token-usage-table" class="usage-table">
+          <p class="usage-empty">No usage recorded yet.</p>
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button type="submit" class="btn-primary">Save Settings</button>
+        <button type="button" id="reset-btn" class="btn-secondary">Reset to Defaults</button>
+        <span id="save-status" class="save-status"></span>
+      </div>
+
+    </form>
+  </div>
+
+  <script type="module" src="settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Upwork Job Matcher",
+  "version": "1.1.0",
+  "description": "Scores Upwork job listings against your profile using LLM analysis.",
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": [
+    "https://www.upwork.com/*",
+    "https://api.openai.com/*",
+    "https://api.anthropic.com/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.z.ai/*",
+    "*://*/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "content_scripts": [{
+    "matches": [
+      "https://www.upwork.com/nx/find-work/*",
+      "https://www.upwork.com/nx/search/jobs/*"
+    ],
+    "js": ["content/content.js"],
+    "css": ["content/content.css"],
+    "run_at": "document_idle"
+  }],
+  "options_ui": {
+    "page": "settings/settings.html",
+    "open_in_tab": true
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
