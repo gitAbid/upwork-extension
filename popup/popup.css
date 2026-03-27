@@ -1,15 +1,24 @@
 :root {
-  --primary: #10b981;
-  --bg: #020617;
-  --text: #f8fafc;
-  --card-bg: rgba(15, 23, 42, 0.6);
+  --primary: #14a800;
+  --primary-hover: #108a00;
+  --primary-light: #e8f5e2;
+  --bg: #ffffff;
+  --text: #001e00;
+  --text-muted: #575a62;
+  --text-tertiary: #8a8f98;
+  --border: #e0e0e4;
+  --border-hover: #c8c8cc;
+  --card-bg: #ffffff;
+  --muted-bg: #f1f2f4;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
   width: 320px;
   margin: 0;
   padding: 0;
-  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font);
   background: var(--bg);
   color: var(--text);
   overflow: hidden;
@@ -17,7 +26,7 @@ body {
 
 .popup-container {
   padding: 20px;
-  background: radial-gradient(circle at 0% 0%, #0f172a 0%, #020617 100%);
+  background: var(--bg);
   min-height: 240px;
   display: flex;
   flex-direction: column;
@@ -36,30 +45,15 @@ header {
   gap: 12px;
 }
 
-.logo-orb {
-  width: 14px;
-  height: 14px;
+.logo-mark {
+  width: 28px;
+  height: 28px;
   background: var(--primary);
-  border-radius: 50%;
-  box-shadow: 0 0 15px var(--primary);
-  position: relative;
-}
-
-.logo-orb::after {
-  content: '';
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(1.8); opacity: 0; }
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
 }
 
 h1 {
@@ -67,30 +61,25 @@ h1 {
   font-weight: 700;
   margin: 0;
   letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text);
 }
 
 .icon-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
+  background: var(--muted-bg);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
   padding: 8px;
-  border-radius: 10px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease, color 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .icon-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: var(--border-hover);
+  color: var(--text);
 }
 
 .stats-grid {
@@ -101,45 +90,42 @@ h1 {
 }
 
 .stat-card {
-  background: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
+  background: var(--muted-bg);
+  border: 1px solid var(--border);
   padding: 16px;
-  border-radius: 16px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease;
 }
 
 .stat-card:hover {
-  border-color: rgba(16, 185, 129, 0.3);
-  background: rgba(15, 23, 42, 0.8);
-  transform: translateY(-2px);
+  border-color: var(--border-hover);
 }
 
 .stat-label {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #64748b;
+  color: var(--text-muted);
   font-weight: 600;
 }
 
 .stat-value {
   font-size: 20px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text);
 }
 
 .status-indicator {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(16, 185, 129, 0.05);
-  border: 1px solid rgba(16, 185, 129, 0.1);
+  background: var(--primary-light);
+  border: 1px solid rgba(20, 168, 0, 0.2);
   padding: 10px 16px;
-  border-radius: 12px;
+  border-radius: 6px;
   margin-top: auto;
 }
 
@@ -148,13 +134,12 @@ h1 {
   height: 8px;
   background: var(--primary);
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--primary);
 }
 
 #statusText {
   font-size: 13px;
   font-weight: 500;
-  color: #86efac;
+  color: var(--primary);
 }
 
 footer {
@@ -164,6 +149,6 @@ footer {
 
 footer p {
   font-size: 10px;
-  color: #475569;
+  color: var(--text-tertiary);
   margin: 0;
 }
