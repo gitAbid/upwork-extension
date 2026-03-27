@@ -186,8 +186,29 @@ textarea:focus, input:focus, select:focus { border-color: var(--primary); }
 .modal-header h3 { font-size: 1.25rem; color: var(--text); font-weight: 600; letter-spacing: -0.01em; }
 .modal-close { background: var(--secondary); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; padding: 6px; border-radius: 6px; transition: all 0.2s; }
 .modal-close:hover { background: var(--secondary-hover); border-color: var(--border-hover); color: var(--text); }
-.modal-body { padding: 24px; overflow-y: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; background: var(--bg); color: var(--text-muted); }
+.modal-body { padding: 24px; overflow-y: auto; background: var(--bg); color: var(--text-muted); }
 .modal-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--card-bg); padding: 0 12px; }
+
+/* Log detail fields */
+.log-detail { display: flex; flex-direction: column; gap: 16px; }
+.log-detail-field { display: flex; flex-direction: column; gap: 4px; }
+.log-detail-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); }
+.log-detail-value { font-size: 0.9rem; color: var(--text); font-weight: 500; }
+.log-detail-block { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.82rem; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; color: var(--text-muted); max-height: 200px; overflow-y: auto; }
+.log-detail-row { display: flex; gap: 24px; flex-wrap: wrap; }
+.log-detail-row .log-detail-field { flex: 1; min-width: 100px; }
+.log-detail-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+.log-detail-error { background: var(--danger-bg); color: var(--danger); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 500; }
+.log-detail-score { font-size: 1.5rem; font-weight: 700; color: var(--text); line-height: 1; }
+.log-detail-score-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 2px; }
+.log-detail-scores { display: flex; gap: 20px; align-items: flex-end; padding: 14px 16px; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.log-detail-scores .score-item { text-align: center; min-width: 56px; }
+.log-detail-scores .score-item .score-val { font-size: 1.25rem; font-weight: 700; color: var(--text); }
+.log-detail-scores .score-item .score-lbl { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-top: 2px; }
+.log-detail-scores .score-item.primary .score-val { color: var(--primary); }
+.log-detail-stat { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--text-muted); }
+.log-detail-stat span { color: var(--text); font-weight: 500; }
+.log-raw-json { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.82rem; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; color: var(--text-muted); margin: 0; }
 .modal-tab { padding: 14px 20px; cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent; font-size: 0.95rem; font-weight: 500; transition: all 0.2s; }
 .modal-tab:hover { color: var(--text); }
 .modal-tab.active { color: var(--primary); border-bottom-color: var(--primary); }

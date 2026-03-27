@@ -340,8 +340,98 @@ function openLogModal(entry) {
   activeLogEntry = entry;
   modalTabs.forEach(t => t.classList.remove('active'));
   document.querySelector('.modal-tab[data-target="log-response"]').classList.add('active');
-  logModalBody.textContent = JSON.stringify(entry.response || {info: 'No response saved'}, null, 2);
+  logModalBody.innerHTML = renderResponseTab(entry);
   logModal.classList.add('active');
+}
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str || '';
+  return d.innerHTML;
+}
+
+function renderRequestTab(e) {
+  return `<div class="log-detail">
+    <div class="log-detail-row">
+      <div class="log-detail-field">
+        <div class="log-detail-label">Provider</div>
+        <div class="log-detail-value">${esc(e.provider)}</div>
+      </div>
+      <div class="log-detail-field">
+        <div class="log-detail-label">Model</div>
+        <div class="log-detail-value">${esc(e.model)}</div>
+      </div>
+    </div>
+    ${e.systemPrompt ? `<div class="log-detail-field">
+      <div class="log-detail-label">System Prompt</div>
+      <div class="log-detail-block">${esc(e.systemPrompt)}</div>
+    </div>` : ''}
+    ${e.userMessage ? `<div class="log-detail-field">
+      <div class="log-detail-label">User Message</div>
+      <div class="log-detail-block">${esc(e.userMessage)}</div>
+    </div>` : ''}
+  </div>`;
+}
+
+function renderResponseTab(e) {
+  const parts = [];
+  if (e.error) {
+    parts.push(`<div class="log-detail-error">${esc(e.error)}</div>`);
+  }
+  parts.push(`<div class="log-detail-scores">
+    <div class="score-item primary">
+      <div class="score-val">${e.score ?? '—'}</div>
+      <div class="score-lbl">Final</div>
+    </div>
+    <div class="score-item">
+      <div class="score-val">${e.llmScore ?? '—'}</div>
+      <div class="score-lbl">LLM</div>
+    </div>
+    <div class="score-item">
+      <div class="score-val">${e.rulesScore ?? '—'}</div>
+      <div class="score-lbl">Rules</div>
+    </div>
+  </div>`);
+  if (e.reason) {
+    parts.push(`<div class="log-detail-field">
+      <div class="log-detail-label">Reasoning</div>
+      <div class="log-detail-block">${esc(e.reason)}</div>
+    </div>`);
+  }
+  if (e.rawResponse) {
+    parts.push(`<div class="log-detail-field">
+      <div class="log-detail-label">Raw Response</div>
+      <div class="log-detail-block">${esc(e.rawResponse)}</div>
+    </div>`);
+  }
+  const stats = [];
+  if (e.durationMs != null) stats.push(`<div class="log-detail-stat">Duration: <span>${e.durationMs}ms</span></div>`);
+  if (e.tokensIn != null) stats.push(`<div class="log-detail-stat">Tokens In: <span>${e.tokensIn}</span></div>`);
+  if (e.tokensOut != null) stats.push(`<div class="log-detail-stat">Tokens Out: <span>${e.tokensOut}</span></div>`);
+  if (stats.length) {
+    parts.push(`<hr class="log-detail-divider"><div class="log-detail-row">${stats.join('')}</div>`);
+  }
+  return `<div class="log-detail">${parts.join('')}</div>`;
+}
+
+function renderJobTab(e) {
+  const ts = e.ts ? new Date(e.ts).toLocaleString() : '';
+  return `<div class="log-detail">
+    <div class="log-detail-field">
+      <div class="log-detail-label">Job Title</div>
+      <div class="log-detail-value">${esc(e.jobTitle)}</div>
+    </div>
+    <div class="log-detail-row">
+      <div class="log-detail-field">
+        <div class="log-detail-label">Job UID</div>
+        <div class="log-detail-value">${esc(e.jobUid) || '—'}</div>
+      </div>
+      ${ts ? `<div class="log-detail-field">
+        <div class="log-detail-label">Timestamp</div>
+        <div class="log-detail-value">${ts}</div>
+      </div>` : ''}
+    </div>
+  </div>`;
 }
 
 function setupModalListeners() {
@@ -355,9 +445,10 @@ function setupModalListeners() {
       if (!activeLogEntry) return;
       
       const target = tab.getAttribute('data-target');
-      if (target === 'log-request') logModalBody.textContent = JSON.stringify(activeLogEntry.request || {info:'No data'}, null, 2);
-      else if (target === 'log-response') logModalBody.textContent = JSON.stringify(activeLogEntry.response || {info:'No data'}, null, 2);
-      else if (target === 'log-job') logModalBody.textContent = JSON.stringify(activeLogEntry.jobContext || {info:'No data'}, null, 2);
+      if (target === 'log-request') logModalBody.innerHTML = renderRequestTab(activeLogEntry);
+      else if (target === 'log-response') logModalBody.innerHTML = renderResponseTab(activeLogEntry);
+      else if (target === 'log-job') logModalBody.innerHTML = renderJobTab(activeLogEntry);
+      else if (target === 'log-raw') logModalBody.innerHTML = `<pre class="log-raw-json">${esc(JSON.stringify(activeLogEntry, null, 2))}</pre>`;
     });
   });
 }
