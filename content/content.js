@@ -22,6 +22,7 @@
   // ─── Rules-based scoring (inlined from shared/scoring.js) ─────────────────
   function applyRulesScore(jobData) {
     const flags = [];
+    const rateLabels = {};
     let rawPoints = 0;
     const RAW_MAX = 130;
 
@@ -38,6 +39,9 @@
     if (budgetType === 'hourly') {
       const rangeLow = budgetMin ?? budgetMax ?? 0;
       const rangeHigh = budgetMax ?? budgetMin ?? 0;
+      const rangeStr = rangeLow === rangeHigh
+        ? `${formatMoney(rangeLow)}/hr`
+        : `${formatMoney(rangeLow)}-${formatMoney(rangeHigh)}/hr`;
 
       // Use comparison logic if user rate is set
       if (userHourlyRate && userHourlyRate > 0) {
@@ -46,17 +50,21 @@
 
         console.log('[UJM] Hourly calculation:', { userHourlyRate, rangeLow, rangeHigh, midpoint, premiumThreshold });
 
-        // Determine primary flag based on user's rate vs client's range
         if (userHourlyRate < rangeLow) {
           rawPoints += 0; flags.push('hourly_below_minimum');
+          rateLabels.hourly_below_minimum = `Below Min · ${rangeStr}`;
         } else if (userHourlyRate <= midpoint) {
           rawPoints += 30; flags.push('hourly_budget_friendly');
+          rateLabels.hourly_budget_friendly = `Sweet Spot · ${rangeStr}`;
         } else if (userHourlyRate <= rangeHigh) {
           rawPoints += 25; flags.push('hourly_near_top');
+          rateLabels.hourly_near_top = `Near Top · ${rangeStr}`;
         } else if (userHourlyRate <= premiumThreshold) {
           rawPoints += 15; flags.push('hourly_above_market');
+          rateLabels.hourly_above_market = `Above Market · ${rangeStr}`;
         } else {
           rawPoints += 5; flags.push('hourly_premium');
+          rateLabels.hourly_premium = `Premium · ${rangeStr}`;
         }
       } else {
         // FALLBACK: Use original fixed thresholds
@@ -64,18 +72,23 @@
         console.log('[UJM] Using fallback hourly logic (no user rate set)');
         if (rate >= 30 && rate <= 80) {
           rawPoints += 30; flags.push('budget_match');
+          rateLabels.budget_match = `Good Rate · ${rangeStr}`;
         } else if (rate > 80 && rate <= 150) {
           rawPoints += 20; flags.push('budget_high');
+          rateLabels.budget_high = `High Rate · ${formatMoney(rate)}+/hr`;
         } else if (rate >= 20 && rate < 30) {
           rawPoints += 15; flags.push('budget_low');
+          rateLabels.budget_low = `Low Rate · ${formatMoney(rate)}/hr`;
         } else {
           rawPoints += 0; flags.push('budget_too_low');
+          rateLabels.budget_too_low = `Low Rate · <${formatMoney(rate)}/hr`;
         }
       }
     }
     // ─── FIXED PRICE LOGIC ───────────────────────────────────────────────────────
     else if (budgetType === 'fixed') {
       const clientBudget = budgetMax ?? budgetMin ?? 0;
+      const budgetStr = `${formatMoney(clientBudget)} fixed`;
 
       // Use comparison logic if user's fixed range is set
       if (userFixedMin && userFixedMax && userFixedMin > 0 && userFixedMax > 0) {
@@ -85,24 +98,35 @@
 
         if (clientBudget < userFixedMin) {
           rawPoints += 0; flags.push('fixed_not_viable');
+          rateLabels.fixed_not_viable = `Too Low · ${budgetStr}`;
         } else if (clientBudget <= yourMidpoint) {
           rawPoints += 20; flags.push('fixed_acceptable');
+          rateLabels.fixed_acceptable = `Acceptable · ${budgetStr}`;
         } else if (clientBudget <= userFixedMax) {
           rawPoints += 30; flags.push('fixed_good_fit');
+          rateLabels.fixed_good_fit = `Good Fit · ${budgetStr}`;
         } else {
           rawPoints += 35; flags.push('fixed_premium_opportunity');
+          rateLabels.fixed_premium_opportunity = `Premium · ${formatMoney(clientBudget)}+ fixed`;
         }
       } else {
         // FALLBACK: Use original fixed thresholds
         console.log('[UJM] Using fallback fixed logic (no user range set)');
+        const rangeStr = (budgetMin != null && budgetMax != null && budgetMin !== budgetMax)
+          ? `${formatMoney(budgetMin)}-${formatMoney(budgetMax)} fixed`
+          : budgetStr;
         if (clientBudget >= 100 && clientBudget <= 500) {
           rawPoints += 30; flags.push('budget_match');
+          rateLabels.budget_match = `Good Price · ${rangeStr}`;
         } else if (clientBudget > 500 && clientBudget <= 1000) {
           rawPoints += 20; flags.push('budget_high');
+          rateLabels.budget_high = `High Price · ${formatMoney(clientBudget)}+ fixed`;
         } else if (clientBudget > 1000) {
           rawPoints += 15; flags.push('budget_very_high');
+          rateLabels.budget_very_high = `High Price · ${formatMoney(clientBudget)}+ fixed`;
         } else {
           rawPoints += 5; flags.push('budget_too_low');
+          rateLabels.budget_too_low = `Low Price · <${formatMoney(clientBudget)} fixed`;
         }
       }
     }
@@ -136,12 +160,17 @@
     }
 
     const score = Math.round((rawPoints / RAW_MAX) * 100);
-    return { score: Math.min(100, Math.max(0, score)), flags };
+    return { score: Math.min(100, Math.max(0, score)), flags, rateLabels };
   }
 
   function extractNumber(str) {
     const match = str.match(/(\d+)/);
     return match ? parseInt(match[1], 10) : 0;
+  }
+
+  function formatMoney(n) {
+    if (n >= 1000) return `$${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k`;
+    return `$${Math.round(n)}`;
   }
 
   // ─── Custom rules evaluator (additive bonus/penalty on top of base scoring) ─
@@ -190,7 +219,7 @@
   }
 
   // ─── State ─────────────────────────────────────────────────────────────────
-  const processedCards = new WeakSet();
+  let processedCards = new WeakSet();
   const inFlightIds = new Set();
   let extensionEnabled = true;
   let userHourlyRate = undefined;
@@ -232,6 +261,15 @@
         processAllVisible();
       } else {
         // Disable and remove all badges
+        document.querySelectorAll('.ujm-title-row').forEach(wrapper => {
+          // Move title back out before removing
+          const title = wrapper.querySelector('a[data-test*="job-tile-title"], [data-test="UpCLineClamp"], h2, h3');
+          if (title && wrapper.parentNode) {
+            wrapper.parentNode.insertBefore(title, wrapper);
+          }
+          wrapper.remove();
+        });
+        document.querySelectorAll('.ujm-flags-row').forEach(el => el.remove());
         document.querySelectorAll('.ujm-wrapper').forEach(el => el.remove());
       }
     });
@@ -331,22 +369,6 @@
     just_posted:        'Just Posted',
     recently_posted:    'Recent',
     old_posting:        'Old Post',
-    budget_match:       'Budget Match',
-    budget_high:        'Budget High',
-    budget_very_high:   'Budget High',
-    budget_low:         'Budget Low',
-    budget_too_low:     'Budget Low',
-    // Hourly rate flags (new logic)
-    hourly_below_minimum:      '$ Below Minimum',
-    hourly_budget_friendly:    '$ Budget Friendly',
-    hourly_near_top:           '$ Near Top of Range',
-    hourly_above_market:       '$ Above Market',
-    hourly_premium:            '$ Premium',
-    // Fixed price flags (new logic)
-    fixed_not_viable:          '$ Not Viable',
-    fixed_acceptable:          '$ Acceptable',
-    fixed_good_fit:            '$ Good Fit',
-    fixed_premium_opportunity: '$ Premium Opportunity',
     preferred_location: 'Top Location',
     good_location:      'Good Location',
     acceptable_location:'OK Location',
@@ -383,19 +405,34 @@
 
   function injectLoadingBadge(card, uid) {
     removeBadge(card);
-    const wrapper = document.createElement('div');
-    wrapper.className = 'ujm-wrapper';
 
     const badge = document.createElement('div');
     badge.className = 'ujm-badge ujm-loading';
     badge.dataset.ujmId = uid;
     badge.textContent = '…';
 
-    wrapper.appendChild(badge);
-    card.appendChild(wrapper);
+    // Inject inline with title if possible
+    const titleEl = card.querySelector('[data-test="job-tile-title-link UpLink"]') ||
+      card.querySelector('[data-test="UpCLineClamp"]') ||
+      card.querySelector('h2') || card.querySelector('h3');
+
+    if (titleEl) {
+      // Create a narrow flex wrapper around just the title + loading badge
+      const titleWrapper = document.createElement('div');
+      titleWrapper.className = 'ujm-title-row';
+      titleEl.before(titleWrapper);
+      titleWrapper.appendChild(titleEl);
+      titleWrapper.appendChild(badge);
+    } else {
+      // Fallback: absolute positioning
+      const wrapper = document.createElement('div');
+      wrapper.className = 'ujm-wrapper';
+      wrapper.appendChild(badge);
+      card.appendChild(wrapper);
+    }
   }
 
-  function injectBadge(card, { score, reason, flags, llmScore, rulesScore, optimizationSkipped }) {
+  function injectBadge(card, { score, reason, flags, llmScore, rulesScore, optimizationSkipped }, rateLabels) {
     removeBadge(card);
 
     const colorClass = score >= SCORE_THRESHOLDS.GREEN ? 'ujm-green'
@@ -404,22 +441,14 @@
 
     const rulesOnly = llmScore === null;
 
-    const wrapper = document.createElement('div');
-    wrapper.className = 'ujm-wrapper';
+    // Find the title element to inject inline beside it
+    const titleEl = card.querySelector('[data-test="job-tile-title-link UpLink"]') ||
+      card.querySelector('[data-test="UpCLineClamp"]') ||
+      card.querySelector('h2') || card.querySelector('h3');
 
-    // Score chips row: [R:50] [AI:74] [⇒64]
+    // Score row: just the final score badge (R: and AI: moved to tooltip only)
     const chipRow = document.createElement('div');
     chipRow.className = 'ujm-chip-row';
-
-    const rulesChip = document.createElement('span');
-    rulesChip.className = 'ujm-chip ujm-chip-rules';
-    rulesChip.textContent = `R:${rulesScore ?? '—'}`;
-    rulesChip.title = 'Rules score';
-
-    const aiChip = document.createElement('span');
-    aiChip.className = 'ujm-chip ujm-chip-ai';
-    aiChip.textContent = rulesOnly ? 'AI:—' : `AI:${llmScore}`;
-    aiChip.title = rulesOnly ? 'AI scoring unavailable' : 'AI (LLM) score';
 
     const finalChip = document.createElement('div');
     finalChip.className = `ujm-badge ${colorClass}${rulesOnly ? ' ujm-rules-only' : ''}${optimizationSkipped ? ' ujm-optimization-skipped' : ''}`;
@@ -452,7 +481,7 @@
           <span class="ujm-tooltip-val">${rulesOnly ? '—' : llmScore}</span>
         </div>
         <div class="ujm-tooltip-score-row ujm-tooltip-final">
-          <span class="ujm-tooltip-label">Final Weighted Score</span>
+          <span class="ujm-tooltip-label">Final Score</span>
           <span class="ujm-tooltip-val">${score}/100</span>
         </div>
       </div>
@@ -462,25 +491,21 @@
 
     finalChip.appendChild(tooltip);
 
-    chipRow.appendChild(rulesChip);
-    chipRow.appendChild(aiChip);
     chipRow.appendChild(finalChip);
-    wrapper.appendChild(chipRow);
 
     // Flag pills (both known system flags and custom rule flags)
     const allPillFlags = (flags || []).filter(f => FLAG_LABELS[f] || f);
+    const pillRow = document.createElement('div');
+    pillRow.className = 'ujm-flags-row';
     if (allPillFlags.length) {
-      const pillRow = document.createElement('div');
-      pillRow.className = 'ujm-flags-row';
       allPillFlags.forEach(f => {
         const pill = document.createElement('span');
-        const isCustom = !FLAG_LABELS[f];
+        const isCustom = !FLAG_LABELS[f] && !rateLabels?.[f];
         const color = isCustom ? 'blue' : (FLAG_PILL_COLOR[f] || 'gray');
         pill.className = `ujm-pill ujm-pill-${color}`;
-        pill.textContent = isCustom ? f : FLAG_LABELS[f];
+        pill.textContent = rateLabels?.[f] || FLAG_LABELS[f] || f;
         pillRow.appendChild(pill);
       });
-      wrapper.appendChild(pillRow);
     }
 
     // If optimization was skipped, make the badge clickable for manual analysis
@@ -491,10 +516,40 @@
       });
     }
 
-    card.appendChild(wrapper);
+    // Inject relative to title element for inline layout
+    if (titleEl) {
+      // Create a narrow flex wrapper around just the title + chips
+      const titleWrapper = document.createElement('div');
+      titleWrapper.className = 'ujm-title-row';
+      titleEl.before(titleWrapper);
+      titleWrapper.appendChild(titleEl);
+      titleWrapper.appendChild(chipRow);
+      // Pill row goes after the wrapper so it drops below
+      titleWrapper.after(pillRow);
+    } else {
+      // Fallback: no title found, use wrapper with absolute positioning
+      const wrapper = document.createElement('div');
+      wrapper.className = 'ujm-wrapper';
+      wrapper.appendChild(chipRow);
+      if (allPillFlags.length) wrapper.appendChild(pillRow);
+      card.appendChild(wrapper);
+    }
   }
 
   function removeBadge(card) {
+    // Unwrap title from our flex container
+    const titleRow = card.querySelector('.ujm-title-row');
+    if (titleRow && titleRow.parentNode) {
+      // Move the original title element back out before removing the wrapper
+      const title = titleRow.querySelector('a[data-test*="job-tile-title"], [data-test="UpCLineClamp"], h2, h3');
+      if (title) {
+        titleRow.parentNode.insertBefore(title, titleRow);
+      }
+      titleRow.remove(); // also removes chipRow and loading badge inside it
+    }
+    // Clean up pill row (sibling of the removed wrapper)
+    card.querySelector('.ujm-flags-row')?.remove();
+    // Fallback cleanup for absolute-positioned wrapper
     card.querySelector('.ujm-wrapper')?.remove();
   }
 
@@ -510,7 +565,7 @@
     const jobData = scrapeCard(card);
     if (!jobData.title) return;
 
-    const { score: rulesScore, flags } = applyRulesScore(jobData);
+    const { score: rulesScore, flags, rateLabels } = applyRulesScore(jobData);
     const { bonusPoints, flags: customFlags } = applyCustomRules(jobData, customRules);
     const adjustedRulesScore = Math.min(100, Math.max(0, rulesScore + bonusPoints));
     const allFlags = [...flags, ...customFlags];
@@ -535,7 +590,7 @@
     if (!result) {
       result = { score: adjustedRulesScore, reason: 'No response from service worker.', flags: allFlags, llmScore: null, rulesScore: adjustedRulesScore };
     }
-    injectBadge(card, result);
+    injectBadge(card, result, rateLabels);
   }
 
   // ─── Check if extension is enabled ────────────────────────────────────────────
@@ -567,6 +622,14 @@
         processAllVisible();
       } else {
         // Extension was disabled, remove all badges
+        document.querySelectorAll('.ujm-title-row').forEach(wrapper => {
+          const title = wrapper.querySelector('a[data-test*="job-tile-title"], [data-test="UpCLineClamp"], h2, h3');
+          if (title && wrapper.parentNode) {
+            wrapper.parentNode.insertBefore(title, wrapper);
+          }
+          wrapper.remove();
+        });
+        document.querySelectorAll('.ujm-flags-row').forEach(el => el.remove());
         document.querySelectorAll('.ujm-wrapper').forEach(el => el.remove());
       }
     }
@@ -586,7 +649,7 @@
     if (inFlightIds.has(jobData.uid)) return;
     inFlightIds.add(jobData.uid);
 
-    const { score: rulesScore, flags } = applyRulesScore(jobData);
+    const { score: rulesScore, flags, rateLabels } = applyRulesScore(jobData);
     const { bonusPoints, flags: customFlags } = applyCustomRules(jobData, customRules);
     const adjustedRulesScore = Math.min(100, Math.max(0, rulesScore + bonusPoints));
     const allFlags = [...flags, ...customFlags];
@@ -623,7 +686,7 @@
     if (!result) {
       result = { score: adjustedRulesScore, reason: 'No response from service worker.', flags: allFlags, llmScore: null, rulesScore: adjustedRulesScore };
     }
-    injectBadge(card, result);
+    injectBadge(card, result, rateLabels);
     inFlightIds.delete(jobData.uid);
   }
 
@@ -668,41 +731,52 @@
   urlObserver.observe(document.body, { childList: true, subtree: true });
 
   // ─── Initial scan ──────────────────────────────────────────────────────────
-  // Load user hourly rate and fixed price range at initialization
+  // Load user hourly rate and fixed price range BEFORE processing any cards
+  // to prevent race condition where cards are scored with undefined settings
   chrome.storage.sync.get([STORAGE_KEYS.USER_HOURLY_RATE, STORAGE_KEYS.USER_FIXED_MIN, STORAGE_KEYS.USER_FIXED_MAX, STORAGE_KEYS.CUSTOM_RULES], (data) => {
     userHourlyRate = data[STORAGE_KEYS.USER_HOURLY_RATE] || null;
     userFixedMin = data[STORAGE_KEYS.USER_FIXED_MIN] || null;
     userFixedMax = data[STORAGE_KEYS.USER_FIXED_MAX] || null;
     customRules = Array.isArray(data[STORAGE_KEYS.CUSTOM_RULES]) ? data[STORAGE_KEYS.CUSTOM_RULES] : [];
     console.log('[UJM] Loaded user settings:', { userHourlyRate, userFixedMin, userFixedMax, customRulesCount: customRules.length });
+
+    // Process cards AFTER settings are loaded
+    checkExtensionEnabled().then(() => {
+      processAllVisible();
+      // Retry after short delay in case cards load after document_idle
+      setTimeout(processAllVisible, 1500);
+    });
   });
 
   // Listen for changes to user hourly rate and fixed price range
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'sync') {
+      let settingsChanged = false;
       if (changes[STORAGE_KEYS.USER_HOURLY_RATE]) {
         userHourlyRate = changes[STORAGE_KEYS.USER_HOURLY_RATE].newValue || null;
         console.log('[UJM] Updated userHourlyRate:', userHourlyRate);
+        settingsChanged = true;
       }
       if (changes[STORAGE_KEYS.USER_FIXED_MIN]) {
         userFixedMin = changes[STORAGE_KEYS.USER_FIXED_MIN].newValue || null;
         console.log('[UJM] Updated userFixedMin:', userFixedMin);
+        settingsChanged = true;
       }
       if (changes[STORAGE_KEYS.USER_FIXED_MAX]) {
         userFixedMax = changes[STORAGE_KEYS.USER_FIXED_MAX].newValue || null;
         console.log('[UJM] Updated userFixedMax:', userFixedMax);
+        settingsChanged = true;
       }
       if (changes[STORAGE_KEYS.CUSTOM_RULES]) {
         customRules = Array.isArray(changes[STORAGE_KEYS.CUSTOM_RULES].newValue) ? changes[STORAGE_KEYS.CUSTOM_RULES].newValue : [];
         console.log('[UJM] Updated customRules:', customRules.length, 'rules');
+        settingsChanged = true;
+      }
+      if (settingsChanged) {
+        processedCards = new WeakSet();
+        if (extensionEnabled) processAllVisible();
       }
     }
-  });
-
-  checkExtensionEnabled().then(() => {
-    processAllVisible();
-    // Retry after short delay in case cards load after document_idle
-    setTimeout(processAllVisible, 1500);
   });
 
 })();

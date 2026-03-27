@@ -1,21 +1,20 @@
 /* content/content.css — badge + tooltip styles */
 
 :root {
-  --ujm-primary: #14a800;
-  --ujm-primary-hover: #108a00;
-  --ujm-primary-light: #e8f5e2;
-  --ujm-warning: #f5a623;
-  --ujm-warning-light: #fef4e6;
-  --ujm-danger: #d93025;
-  --ujm-danger-light: #fce8e6;
-  --ujm-muted: #8a8f98;
-  --ujm-muted-light: #f1f2f4;
-  --ujm-text: #001e00;
-  --ujm-text-muted: #575a62;
-  --ujm-text-tertiary: #8a8f98;
-  --ujm-border: #e0e0e4;
-  --ujm-border-hover: #c8c8cc;
-  --ujm-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --ujm-primary: #10b981;
+  --ujm-primary-light: #ecfdf5;
+  --ujm-warning: #f59e0b;
+  --ujm-warning-light: #fffbeb;
+  --ujm-danger: #ef4444;
+  --ujm-danger-light: #fef2f2;
+  --ujm-muted: #64748b;
+  --ujm-muted-light: #f1f5f9;
+  --ujm-text: #0f172a;
+  --ujm-text-muted: #475569;
+  --ujm-text-tertiary: #94a3b8;
+  --ujm-border: #e2e8f0;
+  --ujm-border-hover: #cbd5e1;
+  --ujm-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   --ujm-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -94,7 +93,24 @@
   text-transform: uppercase;
 }
 
-/* Wrapper: column — chip row on top, flag pills below */
+/* Flex row that wraps title + badge, isolating them from the rest of the card */
+.ujm-title-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Shrink the title link so badge can sit beside it */
+.ujm-title-row > a,
+.ujm-title-row > [data-test="UpCLineClamp"],
+.ujm-title-row > h2,
+.ujm-title-row > h3 {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+/* Fallback wrapper for cards without a title element */
 .ujm-wrapper {
   position: absolute;
   top: 12px;
@@ -107,58 +123,54 @@
   max-width: 450px;
 }
 
-/* Three-chip row: [R:50] [AI:74] [⇒64] */
+/* Chip row — now only holds the final score badge */
 .ujm-chip-row {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-/* Flat label chips for Rules and AI */
+/* Flat label chips — used inside tooltip only, not inline */
 .ujm-chip {
-  height: 28px;
-  padding: 0 12px;
-  border-radius: 14px;
-  display: flex;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 6px;
+  display: inline-flex;
   align-items: center;
   font-size: 11px;
-  font-weight: 700;
-  background: #ffffff;
+  font-weight: 600;
+  background: var(--ujm-muted-light);
   border: 1px solid var(--ujm-border);
   color: var(--ujm-text-muted);
   font-family: var(--ujm-font);
   white-space: nowrap;
-  letter-spacing: 0.4px;
-  animation: ujm-fade-in 0.2s ease;
-  box-shadow: var(--ujm-shadow);
 }
 
 .ujm-chip-ai {
   color: var(--ujm-primary);
-  border-color: rgba(20, 168, 0, 0.3);
+  border-color: rgba(16, 185, 129, 0.3);
   background: var(--ujm-primary-light);
 }
 
-/* Final score badge — colored, with tooltip */
+/* Final score badge — compact pill with just the number */
 .ujm-badge {
-  height: 32px;
-  min-width: 48px;
-  padding: 0 14px;
-  border-radius: 16px;
+  height: 28px;
+  min-width: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 700;
   color: #fff;
   cursor: default;
-  box-shadow: var(--ujm-shadow);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   font-family: var(--ujm-font);
   animation: ujm-fade-in 0.2s ease;
   flex-shrink: 0;
-  letter-spacing: 0.5px;
   position: relative;
-  border: none;
+  border: 1px solid rgba(255,255,255,0.2);
   transition: opacity 0.2s ease;
 }
 
@@ -167,19 +179,19 @@
   to   { opacity: 1; }
 }
 
-/* Color variants — flat solid colors */
-.ujm-green  { background: #14a800; }
-.ujm-yellow { background: #f5a623; }
-.ujm-red    { background: #d93025; }
-.ujm-grey   { background: #8a8f98; }
+/* Color variants — modern palette */
+.ujm-green  { background: #10b981; }
+.ujm-yellow { background: #f59e0b; }
+.ujm-red    { background: #ef4444; }
+.ujm-grey   { background: #94a3b8; }
 
 .ujm-loading {
   background: var(--ujm-muted-light);
   border: 1px solid var(--ujm-border);
   animation: ujm-pulse 2s ease infinite;
   height: 28px;
-  min-width: 90px;
-  border-radius: 14px;
+  min-width: 70px;
+  border-radius: 8px;
   color: var(--ujm-muted);
 }
 
@@ -195,13 +207,13 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 900;
   color: #fff;
   border: 2px solid #fff;
@@ -210,18 +222,18 @@
 
 .ujm-badge.ujm-rules-only::after {
   content: 'R';
-  background: #575a62;
+  background: #64748b;
 }
 
 .ujm-badge.ujm-optimization-skipped::after {
   content: '⚡';
-  background: #f5a623;
+  background: #f59e0b;
 }
 
 .ujm-badge.ujm-optimization-skipped {
   background: var(--ujm-warning-light);
-  border: 1px dashed rgba(245, 166, 35, 0.4);
-  color: #f5a623;
+  border: 1px dashed rgba(245, 158, 11, 0.4);
+  color: #f59e0b;
   box-shadow: none;
 }
 
@@ -233,56 +245,64 @@
   opacity: 0.85;
 }
 
-/* Flag pill row */
+/* Flag pill row — drops to full width below title/badge via flex-wrap */
 .ujm-flags-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
   gap: 6px;
+  width: 100%;
 }
 
-/* Pill base */
+/* Pill base — tag-like with left-border accent */
 .ujm-pill {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
   white-space: nowrap;
   font-family: var(--ujm-font);
-  border: 1px solid transparent;
-  transition: border-color 0.2s ease;
 }
 
-.ujm-pill:hover {
-  border-color: var(--ujm-border);
-}
-
-/* Pill color variants — light tinted backgrounds */
-.ujm-pill-green  { background: #e8f5e2; color: #0d7a00; border-color: rgba(20, 168, 0, 0.2); }
-.ujm-pill-red    { background: #fce8e6; color: #b71c1c; border-color: rgba(217, 48, 37, 0.2); }
-.ujm-pill-yellow { background: #fef4e6; color: #b37a00; border-color: rgba(245, 166, 35, 0.2); }
-.ujm-pill-gray   { background: #f1f2f4; color: #575a62; border-color: rgba(138, 143, 152, 0.2); }
-.ujm-pill-blue   { background: #e3f2fd; color: #1565c0; border-color: rgba(21, 101, 192, 0.2); }
+/* Pill color variants — left-border accent style */
+.ujm-pill-green  { background: #f0fdf4; color: #15803d; border-left: 3px solid #22c55e; border-right: 1px solid #e2e8f0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+.ujm-pill-red    { background: #fef2f2; color: #b91c1c; border-left: 3px solid #ef4444; border-right: 1px solid #e2e8f0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+.ujm-pill-yellow { background: #fffbeb; color: #a16207; border-left: 3px solid #f59e0b; border-right: 1px solid #e2e8f0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+.ujm-pill-gray   { background: #f8fafc; color: #475569; border-left: 3px solid #94a3b8; border-right: 1px solid #e2e8f0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+.ujm-pill-blue   { background: #eff6ff; color: #1d4ed8; border-left: 3px solid #3b82f6; border-right: 1px solid #e2e8f0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
 
 /* Tooltip — shown on hover of final badge */
 .ujm-tooltip {
   display: none;
   position: absolute;
-  top: 40px;
+  top: 36px;
   right: 0;
   width: 280px;
   background: #ffffff;
   color: var(--ujm-text);
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 16px;
   font-size: 13px;
   line-height: 1.6;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   z-index: 1000;
   pointer-events: none;
   font-family: var(--ujm-font);
   border: 1px solid var(--ujm-border);
   animation: ujm-tooltip-in 0.15s ease;
+}
+
+/* Arrow pointer at top of tooltip */
+.ujm-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 16px;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border-left: 1px solid var(--ujm-border);
+  border-top: 1px solid var(--ujm-border);
+  transform: rotate(45deg);
 }
 
 @keyframes ujm-tooltip-in {
@@ -298,10 +318,10 @@
 .ujm-tooltip-header {
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 800;
-  color: var(--ujm-primary);
-  margin-bottom: 16px;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+  color: var(--ujm-muted);
+  margin-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -318,9 +338,9 @@
 .ujm-tooltip-scores {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 16px;
-  padding-bottom: 16px;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--ujm-border);
 }
 
@@ -363,7 +383,7 @@
 .ujm-tooltip-reason {
   color: var(--ujm-text-muted);
   font-size: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   line-height: 1.5;
   padding-left: 10px;
   border-left: 2px solid var(--ujm-border);
@@ -393,7 +413,9 @@
   overflow: visible !important;
 }
 
-/* Elevate hovered card's wrapper above all others so tooltip isn't obscured */
+/* Elevate hovered card's chip row above all others so tooltip isn't obscured */
+.ujm-chip-row:has(.ujm-badge:hover),
 .ujm-wrapper:has(.ujm-badge:hover) {
   z-index: 2147483647 !important;
+  position: relative;
 }

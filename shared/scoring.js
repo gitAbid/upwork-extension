@@ -23,6 +23,7 @@
  */
 function applyRulesScore(jobData, userHourlyRate, userFixedMin, userFixedMax) {
   const flags = [];
+  const rateLabels = {};
   let rawPoints = 0;
   const RAW_MAX = 130;
 
@@ -50,41 +51,53 @@ function applyRulesScore(jobData, userHourlyRate, userFixedMin, userFixedMax) {
   if (budgetType === 'hourly') {
     const rangeLow = budgetMin ?? budgetMax ?? 0;
     const rangeHigh = budgetMax ?? budgetMin ?? 0;
+    const rangeStr = rangeLow === rangeHigh
+      ? `${formatMoney(rangeLow)}/hr`
+      : `${formatMoney(rangeLow)}-${formatMoney(rangeHigh)}/hr`;
 
     // Use comparison logic if user rate is set
     if (userHourlyRate && userHourlyRate > 0) {
       const midpoint = (rangeLow + rangeHigh) / 2;
       const premiumThreshold = rangeHigh * 1.5;
 
-      // Determine primary flag based on user's rate vs client's range
       if (userHourlyRate < rangeLow) {
         rawPoints += 0; flags.push('hourly_below_minimum');
+        rateLabels.hourly_below_minimum = `Below Min · ${rangeStr}`;
       } else if (userHourlyRate <= midpoint) {
         rawPoints += 30; flags.push('hourly_budget_friendly');
+        rateLabels.hourly_budget_friendly = `Sweet Spot · ${rangeStr}`;
       } else if (userHourlyRate <= rangeHigh) {
         rawPoints += 25; flags.push('hourly_near_top');
+        rateLabels.hourly_near_top = `Near Top · ${rangeStr}`;
       } else if (userHourlyRate <= premiumThreshold) {
         rawPoints += 15; flags.push('hourly_above_market');
+        rateLabels.hourly_above_market = `Above Market · ${rangeStr}`;
       } else {
         rawPoints += 5; flags.push('hourly_premium');
+        rateLabels.hourly_premium = `Premium · ${rangeStr}`;
       }
     } else {
       // FALLBACK: Use original fixed thresholds
       const rate = rangeHigh;
       if (rate >= 30 && rate <= 80) {
         rawPoints += 30; flags.push('budget_match');
+        rateLabels.budget_match = `Good Rate · ${rangeStr}`;
       } else if (rate > 80 && rate <= 150) {
         rawPoints += 20; flags.push('budget_high');
+        rateLabels.budget_high = `High Rate · ${formatMoney(rate)}+/hr`;
       } else if (rate >= 20 && rate < 30) {
         rawPoints += 15; flags.push('budget_low');
+        rateLabels.budget_low = `Low Rate · ${formatMoney(rate)}/hr`;
       } else {
         rawPoints += 0; flags.push('budget_too_low');
+        rateLabels.budget_too_low = `Low Rate · <${formatMoney(rate)}/hr`;
       }
     }
   }
   // ─── FIXED PRICE LOGIC ───────────────────────────────────────────────────────
   else if (budgetType === 'fixed') {
     const clientBudget = budgetMax ?? budgetMin ?? 0;
+    const budgetStr = `${formatMoney(clientBudget)} fixed`;
 
     // Use comparison logic if user's fixed range is set
     if (userFixedMin && userFixedMax && userFixedMin > 0 && userFixedMax > 0) {
@@ -92,23 +105,34 @@ function applyRulesScore(jobData, userHourlyRate, userFixedMin, userFixedMax) {
 
       if (clientBudget < userFixedMin) {
         rawPoints += 0; flags.push('fixed_not_viable');
+        rateLabels.fixed_not_viable = `Too Low · ${budgetStr}`;
       } else if (clientBudget <= yourMidpoint) {
         rawPoints += 20; flags.push('fixed_acceptable');
+        rateLabels.fixed_acceptable = `Acceptable · ${budgetStr}`;
       } else if (clientBudget <= userFixedMax) {
         rawPoints += 30; flags.push('fixed_good_fit');
+        rateLabels.fixed_good_fit = `Good Fit · ${budgetStr}`;
       } else {
         rawPoints += 35; flags.push('fixed_premium_opportunity');
+        rateLabels.fixed_premium_opportunity = `Premium · ${formatMoney(clientBudget)}+ fixed`;
       }
     } else {
       // FALLBACK: Use original fixed thresholds
+      const rangeStr = (budgetMin != null && budgetMax != null && budgetMin !== budgetMax)
+        ? `${formatMoney(budgetMin)}-${formatMoney(budgetMax)} fixed`
+        : budgetStr;
       if (clientBudget >= 100 && clientBudget <= 500) {
         rawPoints += 30; flags.push('budget_match');
+        rateLabels.budget_match = `Good Price · ${rangeStr}`;
       } else if (clientBudget > 500 && clientBudget <= 1000) {
         rawPoints += 20; flags.push('budget_high');
+        rateLabels.budget_high = `High Price · ${formatMoney(clientBudget)}+ fixed`;
       } else if (clientBudget > 1000) {
         rawPoints += 15; flags.push('budget_very_high');
+        rateLabels.budget_very_high = `High Price · ${formatMoney(clientBudget)}+ fixed`;
       } else {
         rawPoints += 5; flags.push('budget_too_low');
+        rateLabels.budget_too_low = `Low Price · <${formatMoney(clientBudget)} fixed`;
       }
     }
   }
@@ -149,12 +173,17 @@ function applyRulesScore(jobData, userHourlyRate, userFixedMin, userFixedMax) {
   }
 
   const score = Math.round((rawPoints / RAW_MAX) * 100);
-  return { score: Math.min(100, Math.max(0, score)), flags };
+  return { score: Math.min(100, Math.max(0, score)), flags, rateLabels };
 }
 
 function extractNumber(str) {
   const match = str.match(/(\d+)/);
   return match ? parseInt(match[1], 10) : 0;
+}
+
+function formatMoney(n) {
+  if (n >= 1000) return `$${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k`;
+  return `$${Math.round(n)}`;
 }
 
 /**
