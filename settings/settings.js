@@ -1,4 +1,3 @@
-// settings/settings.js — chrome.storage.sync read/write for all settings
 import { STORAGE_KEYS, MESSAGE_TYPES, DEFAULT_PROVIDER, DEFAULT_WEIGHTS, DEFAULT_THRESHOLDS, DEFAULT_TARGET_COUNTRIES, DEFAULT_MODELS, PROVIDER_MODELS, DEFAULT_CUSTOM_RULES, DEFAULT_STACK_KEYWORDS } from '../shared/constants.js';
 
 const API_KEY_LINKS = {
@@ -9,24 +8,34 @@ const API_KEY_LINKS = {
   custom: null,
 };
 
-// --- DOM refs (will be initialized after DOM is ready) ---
-let form, profileEl, userHourlyRateEl, userFixedMinEl, userFixedMaxEl, customPromptEl, apiKeyEl, toggleKeyBtn, apiKeyLink, customUrlEl, customUrlRow;
+let sidebarItems, tabPanes, profileEl, userHourlyRateEl, userFixedMinEl, userFixedMaxEl, customPromptEl;
+let apiKeyEl, toggleKeyBtn, apiKeyLink, customUrlEl, customUrlRow;
 let modelSelect, modelStatus, refreshModelsBtn, refreshIcon;
 let weightRulesEl, weightLlmEl, weightRulesVal, weightLlmVal;
 let maxProposalsEl, hourlyMinEl, hourlyMaxEl, fixedMinEl, fixedMaxEl;
 let countriesList, newCountryEl, addCountryBtn;
-let saveStatus, resetBtn, resetUsageBtn, tokenUsageTable;
-let logEnabledEl, clearLogBtn, logList;
+let saveStatus, resetBtn, resetUsageBtn, logEnabledEl, clearLogBtn, logList;
 let rulesList, addRuleBtn, resetRulesBtn;
 let optimizationEnabledEl, keywordsList, newKeywordEl, addKeywordBtn;
+let totalTokenCostEl, totalApiCallsEl;
+
+// Settings states
+let currentProvider = DEFAULT_PROVIDER;
+let targetCountries = [...DEFAULT_TARGET_COUNTRIES];
+let stackKeywords = [...DEFAULT_STACK_KEYWORDS];
+let customRules = JSON.parse(JSON.stringify(DEFAULT_CUSTOM_RULES));
+let storedModels = {};
 
 function initDOMRefs() {
-  form = document.getElementById('settings-form');
-  profileEl = document.getElementById('profile');
+  sidebarItems = document.querySelectorAll('.sidebar-nav li');
+  tabPanes = document.querySelectorAll('.tab-pane');
+
+  profileEl = document.getElementById('profile-bio');
   userHourlyRateEl = document.getElementById('user-hourly-rate');
   userFixedMinEl = document.getElementById('user-fixed-min');
   userFixedMaxEl = document.getElementById('user-fixed-max');
   customPromptEl = document.getElementById('custom-prompt');
+
   apiKeyEl = document.getElementById('api-key');
   toggleKeyBtn = document.getElementById('toggle-key');
   apiKeyLink = document.getElementById('api-key-link');
@@ -36,165 +45,156 @@ function initDOMRefs() {
   modelStatus = document.getElementById('model-status');
   refreshModelsBtn = document.getElementById('refresh-models-btn');
   refreshIcon = document.getElementById('refresh-icon');
+
   weightRulesEl = document.getElementById('weight-rules');
   weightLlmEl = document.getElementById('weight-llm');
   weightRulesVal = document.getElementById('weight-rules-val');
   weightLlmVal = document.getElementById('weight-llm-val');
+
   maxProposalsEl = document.getElementById('max-proposals');
   hourlyMinEl = document.getElementById('hourly-min');
   hourlyMaxEl = document.getElementById('hourly-max');
   fixedMinEl = document.getElementById('fixed-min');
   fixedMaxEl = document.getElementById('fixed-max');
+
   countriesList = document.getElementById('countries-list');
   newCountryEl = document.getElementById('new-country');
   addCountryBtn = document.getElementById('add-country-btn');
+
   saveStatus = document.getElementById('save-status');
   resetBtn = document.getElementById('reset-btn');
   resetUsageBtn = document.getElementById('reset-usage-btn');
-  tokenUsageTable = document.getElementById('token-usage-table');
+  
+  totalTokenCostEl = document.getElementById('totalTokenCost');
+  totalApiCallsEl = document.getElementById('totalApiCalls');
+
   logEnabledEl = document.getElementById('log-enabled');
   clearLogBtn = document.getElementById('clear-log-btn');
   logList = document.getElementById('log-list');
+
   rulesList = document.getElementById('rules-list');
   addRuleBtn = document.getElementById('add-rule-btn');
   resetRulesBtn = document.getElementById('reset-rules-btn');
+
   optimizationEnabledEl = document.getElementById('optimization-enabled');
   keywordsList = document.getElementById('keywords-list');
   newKeywordEl = document.getElementById('new-keyword');
   addKeywordBtn = document.getElementById('add-keyword-btn');
 }
 
-let currentProvider = DEFAULT_PROVIDER;
-let targetCountries = [...DEFAULT_TARGET_COUNTRIES];
-let stackKeywords = [...DEFAULT_STACK_KEYWORDS];
-let customRules = JSON.parse(JSON.stringify(DEFAULT_CUSTOM_RULES));
-// Stores per-provider selected model: { openai: 'gpt-4o-mini', anthropic: '...', gemini: '...', zai: '...', custom: '...' }
-let storedModels = {};
+function setupThemeLogic() {
+  const savedTheme = localStorage.getItem('ujm-theme');
+  const themeIcon = document.getElementById('theme-icon');
+  const themeText = document.getElementById('theme-text');
+  
+  const setDark = () => {
+    document.documentElement.removeAttribute('data-theme');
+    if (themeIcon) themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+    if (themeText) themeText.textContent = 'Dark Theme';
+  };
+  const setLight = () => {
+    document.documentElement.setAttribute('data-theme', 'light');
+    if (themeIcon) themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+    if (themeText) themeText.textContent = 'Light Theme';
+  };
 
-// --- Dark mode (applied early to avoid flash) ---
-async function applyDarkMode() {
-  const stored = await chrome.storage.local.get(STORAGE_KEYS.DARK_MODE);
-  const isDark = stored[STORAGE_KEYS.DARK_MODE] || false;
-  document.body.classList.toggle('dark', isDark);
-  const btn = document.getElementById('dark-mode-btn');
-  if (btn) {
-    btn.textContent = isDark ? '☀️' : '🌙';
+  if (savedTheme === 'light') setLight();
+  else setDark();
+
+  const darkModeBtn = document.getElementById('dark-mode-btn');
+  if (darkModeBtn) {
+    darkModeBtn.addEventListener('click', () => {
+      if (document.documentElement.getAttribute('data-theme') === 'light') {
+        localStorage.setItem('ujm-theme', 'dark');
+        setDark();
+      } else {
+        localStorage.setItem('ujm-theme', 'light');
+        setLight();
+      }
+    });
   }
 }
 
-function setupDarkModeToggle() {
-  const btn = document.getElementById('dark-mode-btn');
-  if (!btn) return;
-
-  // Remove any existing listeners to prevent duplicates
-  const newBtn = btn.cloneNode(true);
-  btn.parentNode.replaceChild(newBtn, btn);
-
-  newBtn.addEventListener('click', async () => {
-    const isDark = document.body.classList.toggle('dark');
-    newBtn.textContent = isDark ? '☀️' : '🌙';
-    await chrome.storage.local.set({ [STORAGE_KEYS.DARK_MODE]: isDark });
+function setupTabLogic() {
+  if (!sidebarItems) return;
+  sidebarItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const tabId = item.getAttribute('data-tab');
+      if (!tabId) return;
+      sidebarItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      tabPanes.forEach(pane => pane.classList.remove('active'));
+      const activePane = document.getElementById(tabId);
+      if (activePane) activePane.classList.add('active');
+    });
   });
 }
 
-// --- Load settings on page open ---
+function getApiKeyStorageKey(provider) {
+  return { 
+    openai: STORAGE_KEYS.API_KEY_OPENAI, 
+    anthropic: STORAGE_KEYS.API_KEY_ANTHROPIC, 
+    gemini: STORAGE_KEYS.API_KEY_GEMINI, 
+    zai: STORAGE_KEYS.API_KEY_CUSTOM, 
+    custom: STORAGE_KEYS.API_KEY_CUSTOM 
+  }[provider];
+}
+
 async function loadSettings() {
-  // Initialize DOM references first
-  initDOMRefs();
-
-  // Apply dark mode first to avoid flash
-  await applyDarkMode();
-
-  // Get all sync data - use getAll to be resilient to key changes
   const allSyncData = await chrome.storage.sync.get(null);
   const localData = await chrome.storage.local.get(null);
 
-  // Extract only the keys we need from the retrieved data
-  const data = {
-    [STORAGE_KEYS.PROFILE]: allSyncData[STORAGE_KEYS.PROFILE] || '',
-    [STORAGE_KEYS.PROVIDER]: allSyncData[STORAGE_KEYS.PROVIDER] || DEFAULT_PROVIDER,
-    [STORAGE_KEYS.MODEL]: allSyncData[STORAGE_KEYS.MODEL] || {},
-    [STORAGE_KEYS.API_KEY_OPENAI]: allSyncData[STORAGE_KEYS.API_KEY_OPENAI] || '',
-    [STORAGE_KEYS.API_KEY_ANTHROPIC]: allSyncData[STORAGE_KEYS.API_KEY_ANTHROPIC] || '',
-    [STORAGE_KEYS.API_KEY_GEMINI]: allSyncData[STORAGE_KEYS.API_KEY_GEMINI] || '',
-    [STORAGE_KEYS.API_KEY_CUSTOM]: allSyncData[STORAGE_KEYS.API_KEY_CUSTOM] || '',
-    [STORAGE_KEYS.CUSTOM_URL]: allSyncData[STORAGE_KEYS.CUSTOM_URL] || '',
-    [STORAGE_KEYS.CUSTOM_PROMPT]: allSyncData[STORAGE_KEYS.CUSTOM_PROMPT] || '',
-    [STORAGE_KEYS.WEIGHTS]: allSyncData[STORAGE_KEYS.WEIGHTS] || DEFAULT_WEIGHTS,
-    [STORAGE_KEYS.THRESHOLDS]: allSyncData[STORAGE_KEYS.THRESHOLDS] || DEFAULT_THRESHOLDS,
-    [STORAGE_KEYS.TARGET_COUNTRIES]: allSyncData[STORAGE_KEYS.TARGET_COUNTRIES] || [...DEFAULT_TARGET_COUNTRIES],
-    [STORAGE_KEYS.CUSTOM_RULES]: allSyncData[STORAGE_KEYS.CUSTOM_RULES] || JSON.parse(JSON.stringify(DEFAULT_CUSTOM_RULES)),
-    [STORAGE_KEYS.STACK_KEYWORDS]: allSyncData[STORAGE_KEYS.STACK_KEYWORDS] || [...DEFAULT_STACK_KEYWORDS],
-    [STORAGE_KEYS.OPTIMIZATION_ENABLED]: allSyncData[STORAGE_KEYS.OPTIMIZATION_ENABLED] || false,
-    [STORAGE_KEYS.EXTENSION_ENABLED]: allSyncData[STORAGE_KEYS.EXTENSION_ENABLED],
-  };
+  if (profileEl) profileEl.value = allSyncData[STORAGE_KEYS.PROFILE] || '';
+  if (userHourlyRateEl) userHourlyRateEl.value = allSyncData[STORAGE_KEYS.USER_HOURLY_RATE] || '';
+  if (userFixedMinEl) userFixedMinEl.value = allSyncData[STORAGE_KEYS.USER_FIXED_MIN] || '';
+  if (userFixedMaxEl) userFixedMaxEl.value = allSyncData[STORAGE_KEYS.USER_FIXED_MAX] || '';
+  if (customPromptEl) customPromptEl.value = allSyncData[STORAGE_KEYS.CUSTOM_PROMPT] || '';
 
-  // Extension enabled - Note: The actual toggle is now on the Upwork page as a floating button
-  // We just store/retrieve the state here for persistence
-  const extensionEnabled = data[STORAGE_KEYS.EXTENSION_ENABLED] !== false; // default true
-  // Update global variable for extension state (used by other parts)
-  window.extensionEnabledState = extensionEnabled;
-
-  profileEl.value = data[STORAGE_KEYS.PROFILE] || '';
-  userHourlyRateEl.value = allSyncData[STORAGE_KEYS.USER_HOURLY_RATE] || '';
-  userFixedMinEl.value = allSyncData[STORAGE_KEYS.USER_FIXED_MIN] || '';
-  userFixedMaxEl.value = allSyncData[STORAGE_KEYS.USER_FIXED_MAX] || '';
-  customPromptEl.value = data[STORAGE_KEYS.CUSTOM_PROMPT] || '';
-
-  currentProvider = data[STORAGE_KEYS.PROVIDER] || DEFAULT_PROVIDER;
-  const providerRadio = document.querySelector(`input[name="provider"][value="${currentProvider}"]`);
-  if (providerRadio) providerRadio.checked = true;
-  updateApiKeySection();
+  currentProvider = allSyncData[STORAGE_KEYS.PROVIDER] || DEFAULT_PROVIDER;
+  document.querySelector(`input[name="provider"][value="${currentProvider}"]`)?.click();
 
   const keyForProvider = getApiKeyStorageKey(currentProvider);
-  apiKeyEl.value = data[keyForProvider] || '';
-  customUrlEl.value = data[STORAGE_KEYS.CUSTOM_URL] || '';
-
-  storedModels = data[STORAGE_KEYS.MODEL] || {};
-
-  // Populate model dropdown with fallback static list, then try refresh
+  if (apiKeyEl) apiKeyEl.value = allSyncData[keyForProvider] || '';
+  if (customUrlEl) customUrlEl.value = allSyncData[STORAGE_KEYS.CUSTOM_URL] || '';
+  
+  storedModels = allSyncData[STORAGE_KEYS.MODEL] || {};
   populateModelDropdown(PROVIDER_MODELS[currentProvider] || [], storedModels[currentProvider] || DEFAULT_MODELS[currentProvider]);
 
-  const weights = data[STORAGE_KEYS.WEIGHTS] || DEFAULT_WEIGHTS;
-  weightRulesEl.value = weights.rules;
-  weightLlmEl.value = weights.llm;
-  weightRulesVal.textContent = weights.rules + '%';
-  weightLlmVal.textContent = weights.llm + '%';
+  const weights = allSyncData[STORAGE_KEYS.WEIGHTS] || DEFAULT_WEIGHTS;
+  if (weightRulesEl) weightRulesEl.value = weights.rules;
+  if (weightLlmEl) weightLlmEl.value = weights.llm;
+  if (weightRulesVal) weightRulesVal.textContent = weights.rules + '%';
+  if (weightLlmVal) weightLlmVal.textContent = weights.llm + '%';
 
-  // Custom rules
-  customRules = data[STORAGE_KEYS.CUSTOM_RULES] || JSON.parse(JSON.stringify(DEFAULT_CUSTOM_RULES));
+  customRules = allSyncData[STORAGE_KEYS.CUSTOM_RULES] || JSON.parse(JSON.stringify(DEFAULT_CUSTOM_RULES));
   renderRules();
 
-  // Optimization and keywords
-  optimizationEnabledEl.checked = data[STORAGE_KEYS.OPTIMIZATION_ENABLED] || false;
-  stackKeywords = data[STORAGE_KEYS.STACK_KEYWORDS] || [...DEFAULT_STACK_KEYWORDS];
+  if (optimizationEnabledEl) optimizationEnabledEl.checked = allSyncData[STORAGE_KEYS.OPTIMIZATION_ENABLED] || false;
+  const storedKeywords = allSyncData[STORAGE_KEYS.STACK_KEYWORDS];
+  stackKeywords = Array.isArray(storedKeywords) ? storedKeywords : [...DEFAULT_STACK_KEYWORDS];
   renderKeywords();
 
-  const thresholds = data[STORAGE_KEYS.THRESHOLDS] || DEFAULT_THRESHOLDS;
-  maxProposalsEl.value = thresholds.maxProposals;
-  hourlyMinEl.value = thresholds.hourlyMin;
-  hourlyMaxEl.value = thresholds.hourlyMax;
-  fixedMinEl.value = thresholds.fixedMin;
-  fixedMaxEl.value = thresholds.fixedMax;
+  const thresholds = allSyncData[STORAGE_KEYS.THRESHOLDS] || DEFAULT_THRESHOLDS;
+  if (maxProposalsEl) maxProposalsEl.value = thresholds.maxProposals;
+  if (hourlyMinEl) hourlyMinEl.value = thresholds.hourlyMin;
+  if (hourlyMaxEl) hourlyMaxEl.value = thresholds.hourlyMax;
+  if (fixedMinEl) fixedMinEl.value = thresholds.fixedMin;
+  if (fixedMaxEl) fixedMaxEl.value = thresholds.fixedMax;
 
-  targetCountries = data[STORAGE_KEYS.TARGET_COUNTRIES] || [...DEFAULT_TARGET_COUNTRIES];
+  const storedCountries = allSyncData[STORAGE_KEYS.TARGET_COUNTRIES];
+  targetCountries = Array.isArray(storedCountries) ? storedCountries : [...DEFAULT_TARGET_COUNTRIES];
   renderCountries();
 
-  // Log
-  logEnabledEl.checked = localData[STORAGE_KEYS.LOG_ENABLED] || false;
+  if (logEnabledEl) logEnabledEl.checked = localData[STORAGE_KEYS.LOG_ENABLED] || false;
   renderLog(localData[STORAGE_KEYS.REQUEST_LOG] || []);
-
-  renderTokenUsage(localData[STORAGE_KEYS.TOKEN_USAGE] || {});
+  renderStats(localData[STORAGE_KEYS.TOKEN_USAGE] || {}, localData[STORAGE_KEYS.REQUEST_LOG] || []);
 }
 
-// --- Model dropdown helpers ---
 function populateModelDropdown(models, selectedId) {
+  if (!modelSelect) return;
   modelSelect.innerHTML = '';
-  if (!models.length) {
-    const opt = document.createElement('option');
-    opt.value = '';
-    opt.textContent = '— enter API key then click Refresh —';
-    modelSelect.appendChild(opt);
+  if (!models || !models.length) {
+    modelSelect.innerHTML = '<option value="">— refresh to load models —</option>';
     return;
   }
   models.forEach(m => {
@@ -204,618 +204,302 @@ function populateModelDropdown(models, selectedId) {
     if (m.id === selectedId) opt.selected = true;
     modelSelect.appendChild(opt);
   });
-  if (selectedId && !models.find(m => m.id === selectedId)) {
-    // Selected model not in list — add it
-    const opt = document.createElement('option');
-    opt.value = selectedId;
-    opt.textContent = selectedId + ' (saved)';
-    opt.selected = true;
-    modelSelect.prepend(opt);
-  }
-}
-
-async function refreshModels() {
-  const apiKey = apiKeyEl.value.trim();
-  const customUrl = customUrlEl.value.trim();
-
-  if (currentProvider === 'custom' && !customUrl) {
-    modelStatus.textContent = 'Enter a Custom API URL first.';
-    modelStatus.style.color = '#ef4444';
-    return;
-  }
-
-  if (currentProvider !== 'custom' && !apiKey) {
-    modelStatus.textContent = 'Enter an API key first.';
-    modelStatus.style.color = '#ef4444';
-    return;
-  }
-
-  refreshIcon.style.animation = 'ujm-spin 0.8s linear infinite';
-  refreshModelsBtn.disabled = true;
-  modelStatus.textContent = 'Fetching models…';
-  modelStatus.style.color = '';
-
-  try {
-    const response = await new Promise((resolve, reject) => {
-      chrome.runtime.sendMessage(
-        { type: MESSAGE_TYPES.FETCH_MODELS, provider: currentProvider, apiKey, customUrl },
-        res => {
-          if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
-          resolve(res);
-        }
-      );
-    });
-
-    if (response.error) throw new Error(response.error);
-
-    const models = response.models || [];
-    if (!models.length) throw new Error('No models returned');
-
-    const currentSelected = modelSelect.value || storedModels[currentProvider] || DEFAULT_MODELS[currentProvider];
-    populateModelDropdown(models, currentSelected);
-    modelStatus.textContent = `${models.length} models loaded.`;
-    modelStatus.style.color = '#16a34a';
-  } catch (err) {
-    modelStatus.textContent = 'Error: ' + err.message;
-    modelStatus.style.color = '#ef4444';
-    // Fall back to static list
-    populateModelDropdown(PROVIDER_MODELS[currentProvider] || [], storedModels[currentProvider] || DEFAULT_MODELS[currentProvider]);
-  } finally {
-    refreshIcon.style.animation = '';
-    refreshModelsBtn.disabled = false;
-    setTimeout(() => { if (modelStatus.style.color === 'rgb(22, 163, 74)') modelStatus.textContent = ''; }, 3000);
-  }
-}
-
-// --- Save settings ---
-async function saveSettings(e) {
-  e.preventDefault();
-
-  // Persist selected model for current provider
-  storedModels[currentProvider] = modelSelect.value || DEFAULT_MODELS[currentProvider];
-
-  const weights = {
-    rules: parseInt(weightRulesEl.value, 10),
-    llm: parseInt(weightLlmEl.value, 10),
-  };
-
-  const thresholds = {
-    maxProposals: parseInt(maxProposalsEl.value, 10),
-    hourlyMin: parseFloat(hourlyMinEl.value),
-    hourlyMax: parseFloat(hourlyMaxEl.value),
-    fixedMin: parseFloat(fixedMinEl.value),
-    fixedMax: parseFloat(fixedMaxEl.value),
-  };
-
-  const toSave = {
-    [STORAGE_KEYS.PROFILE]: profileEl.value.trim(),
-    [STORAGE_KEYS.USER_HOURLY_RATE]: userHourlyRateEl.value ? parseFloat(userHourlyRateEl.value) : null,
-    [STORAGE_KEYS.USER_FIXED_MIN]: userFixedMinEl.value ? parseFloat(userFixedMinEl.value) : null,
-    [STORAGE_KEYS.USER_FIXED_MAX]: userFixedMaxEl.value ? parseFloat(userFixedMaxEl.value) : null,
-    [STORAGE_KEYS.PROVIDER]: currentProvider,
-    [STORAGE_KEYS.MODEL]: storedModels,
-    [STORAGE_KEYS.CUSTOM_PROMPT]: customPromptEl.value.trim(),
-    [STORAGE_KEYS.WEIGHTS]: weights,
-    [STORAGE_KEYS.THRESHOLDS]: thresholds,
-    [STORAGE_KEYS.TARGET_COUNTRIES]: targetCountries,
-    [STORAGE_KEYS.CUSTOM_RULES]: customRules,
-    [STORAGE_KEYS.STACK_KEYWORDS]: stackKeywords,
-    [STORAGE_KEYS.OPTIMIZATION_ENABLED]: optimizationEnabledEl.checked,
-    [STORAGE_KEYS.CUSTOM_URL]: customUrlEl.value.trim(),
-    [STORAGE_KEYS.EXTENSION_ENABLED]: window.extensionEnabledState !== false,
-  };
-
-  if (currentProvider === 'custom') {
-    toSave[STORAGE_KEYS.API_KEY_CUSTOM] = apiKeyEl.value.trim();
-  } else {
-    toSave[getApiKeyStorageKey(currentProvider)] = apiKeyEl.value.trim();
-  }
-
-  try {
-    await chrome.storage.sync.set(toSave);
-    showStatus('Settings saved!', false);
-  } catch (err) {
-    showStatus('Error saving: ' + err.message, true);
-  }
 }
 
 function updateApiKeySection() {
   const link = API_KEY_LINKS[currentProvider];
-  // Show/hide custom URL input
+  if (!apiKeyEl) return;
   if (currentProvider === 'custom') {
-    customUrlRow.style.display = 'block';
-    apiKeyEl.placeholder = 'Optional API key (leave empty if not required)';
-    apiKeyLink.innerHTML = '';
+    if (customUrlRow) customUrlRow.style.display = 'flex';
+    apiKeyEl.placeholder = 'Optional API key...';
+    if (apiKeyLink) apiKeyLink.innerHTML = '';
   } else {
-    customUrlRow.style.display = 'none';
-    apiKeyEl.placeholder = currentProvider === 'openai' ? 'sk-...'
-      : currentProvider === 'anthropic' ? 'sk-ant-...'
-      : currentProvider === 'gemini' ? 'AIza...'
-      : currentProvider === 'zai' ? 'zai-...'
-      : 'Enter API key';
-    apiKeyLink.innerHTML = link ? `<a href="${link}" target="_blank" rel="noopener">Get API key ↗</a>` : '';
+    if (customUrlRow) customUrlRow.style.display = 'none';
+    apiKeyEl.placeholder = 'Enter API key';
+    if (apiKeyLink) apiKeyLink.innerHTML = link ? `<a href="${link}" target="_blank" style="color:var(--accent); text-decoration:none; margin-left:8px;">(Get Key)</a>` : '';
   }
 }
 
-// --- Custom Rules Editor ---
+async function refreshModels() {
+  const apiKey = apiKeyEl?.value.trim();
+  const customUrl = customUrlEl?.value.trim();
+  if (currentProvider === 'custom' && !customUrl) return showStatus('Enter Custom URL', true);
+  if (currentProvider !== 'custom' && !apiKey) return showStatus('Enter API Key', true);
+
+  if (refreshIcon) refreshIcon.classList.add('spinning');
+  if (refreshModelsBtn) refreshModelsBtn.disabled = true;
+
+  try {
+    const res = await new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage({ type: MESSAGE_TYPES.FETCH_MODELS, provider: currentProvider, apiKey, customUrl }, result => {
+        chrome.runtime.lastError ? reject(chrome.runtime.lastError) : resolve(result);
+      });
+    });
+    if (res.error) throw new Error(res.error);
+    const selected = modelSelect.value || storedModels[currentProvider];
+    populateModelDropdown(res.models || [], selected);
+    showStatus('Models loaded successfully');
+  } catch (err) {
+    showStatus('Error: ' + err.message, true);
+  } finally {
+    if (refreshIcon) refreshIcon.classList.remove('spinning');
+    if (refreshModelsBtn) refreshModelsBtn.disabled = false;
+  }
+}
+
 function renderRules() {
+  if (!rulesList) return;
   rulesList.innerHTML = '';
-
-  if (!customRules.length) {
-    rulesList.innerHTML = '<p class="usage-empty">No rules defined. Click "Add Rule" to create one.</p>';
-    return;
-  }
-
   customRules.forEach((rule, index) => {
-    const ruleEl = document.createElement('div');
-    ruleEl.className = 'rule-item';
-    ruleEl.innerHTML = `
-      <div class="rule-header">
-        <input type="text" class="rule-name" value="${escapeHtml(rule.name)}" placeholder="Rule name" data-index="${index}">
-        <button class="btn-danger-xs" data-index="${index}" title="Delete rule">×</button>
-      </div>
-      <div class="rule-body">
-        <div class="rule-field-row">
-          <label>Field</label>
-          <select class="rule-field" data-index="${index}">
-            <option value="proposals" ${rule.field === 'proposals' ? 'selected' : ''}>Proposals</option>
-            <option value="hourly" ${rule.field === 'hourly' ? 'selected' : ''}>Hourly Rate</option>
-            <option value="fixed" ${rule.field === 'fixed' ? 'selected' : ''}>Fixed Budget</option>
-            <option value="country" ${rule.field === 'country' ? 'selected' : ''}>Client Country</option>
-            <option value="posted" ${rule.field === 'posted' ? 'selected' : ''}>Posted Time</option>
-            <option value="skills" ${rule.field === 'skills' ? 'selected' : ''}>Skills Contains</option>
-          </select>
-        </div>
-        <div class="rule-field-row">
-          <label>Operator</label>
-          <select class="rule-operator" data-index="${index}">
-            <option value="lt" ${rule.operator === 'lt' ? 'selected' : ''}>Less than</option>
-            <option value="lte" ${rule.operator === 'lte' ? 'selected' : ''}>Less than or equal</option>
-            <option value="gt" ${rule.operator === 'gt' ? 'selected' : ''}>Greater than</option>
-            <option value="gte" ${rule.operator === 'gte' ? 'selected' : ''}>Greater than or equal</option>
-            <option value="eq" ${rule.operator === 'eq' ? 'selected' : ''}>Equal to</option>
-            <option value="range" ${rule.operator === 'range' ? 'selected' : ''}>Range (e.g., 30-80)</option>
-            <option value="contains" ${rule.operator === 'contains' ? 'selected' : ''}>Contains text</option>
-            <option value="in" ${rule.operator === 'in' ? 'selected' : ''}>In list (comma-separated)</option>
-          </select>
-        </div>
-        <div class="rule-field-row">
-          <label>Value</label>
-          <input type="text" class="rule-value" value="${escapeHtml(String(rule.value))}" placeholder="Value to compare" data-index="${index}">
-        </div>
-        <div class="rule-field-row">
-          <label>Points</label>
-          <input type="number" class="rule-points" value="${rule.points}" min="0" max="100" data-index="${index}">
-        </div>
-        <div class="rule-field-row">
-          <label>Flag</label>
-          <input type="text" class="rule-flag" value="${escapeHtml(rule.flag || '')}" placeholder="e.g., budget_match (optional)" data-index="${index}">
-        </div>
-      </div>
-    `;
-    rulesList.appendChild(ruleEl);
-  });
+    const row = document.createElement('div');
+    row.className = 'rule-item';
 
-  // Add event listeners
-  document.querySelectorAll('.rule-name').forEach(el => {
-    el.addEventListener('change', (e) => {
-      customRules[e.target.dataset.index].name = e.target.value;
-    });
-  });
+    const inputName = document.createElement('input');
+    inputName.type = 'text';
+    inputName.value = rule.name;
+    inputName.placeholder = 'Rule Description';
+    inputName.addEventListener('input', (e) => customRules[index].name = e.target.value);
 
-  document.querySelectorAll('.rule-field').forEach(el => {
-    el.addEventListener('change', (e) => {
-      customRules[e.target.dataset.index].field = e.target.value;
+    const selectField = document.createElement('select');
+    ['proposals', 'hourly', 'fixed', 'country'].forEach(f => {
+      const opt = document.createElement('option');
+      opt.value = f; opt.textContent = f.toUpperCase();
+      if (rule.field === f) opt.selected = true;
+      selectField.appendChild(opt);
     });
-  });
+    selectField.addEventListener('change', (e) => customRules[index].field = e.target.value);
 
-  document.querySelectorAll('.rule-operator').forEach(el => {
-    el.addEventListener('change', (e) => {
-      customRules[e.target.dataset.index].operator = e.target.value;
-    });
-  });
+    const btnRemove = document.createElement('button');
+    btnRemove.className = 'danger-btn-sm';
+    btnRemove.type = 'button';
+    btnRemove.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+    btnRemove.addEventListener('click', () => { customRules.splice(index, 1); renderRules(); });
 
-  document.querySelectorAll('.rule-value').forEach(el => {
-    el.addEventListener('change', (e) => {
-      customRules[e.target.dataset.index].value = e.target.value;
-    });
-  });
-
-  document.querySelectorAll('.rule-points').forEach(el => {
-    el.addEventListener('change', (e) => {
-      customRules[e.target.dataset.index].points = parseInt(e.target.value, 10) || 0;
-    });
-  });
-
-  document.querySelectorAll('.rule-flag').forEach(el => {
-    el.addEventListener('change', (e) => {
-      customRules[e.target.dataset.index].flag = e.target.value;
-    });
-  });
-
-  document.querySelectorAll('.btn-danger-xs').forEach(el => {
-    el.addEventListener('click', (e) => {
-      customRules.splice(parseInt(e.target.dataset.index, 10), 1);
-      renderRules();
-    });
+    row.appendChild(inputName);
+    row.appendChild(selectField);
+    row.appendChild(btnRemove);
+    rulesList.appendChild(row);
   });
 }
 
-// --- Countries tag list ---
 function renderCountries() {
+  if (!countriesList) return;
   countriesList.innerHTML = '';
-  targetCountries.forEach((country, i) => {
-    const tag = document.createElement('span');
-    tag.className = 'tag';
-    tag.innerHTML = `${escapeHtml(country)}<button class="tag-remove" data-i="${i}" title="Remove">×</button>`;
-    countriesList.appendChild(tag);
+  targetCountries.forEach((c, i) => {
+    const t = document.createElement('div'); t.className = 'tag';
+    t.innerHTML = `${escapeHtml(c)} <span class="tag-remove" data-i="${i}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>`;
+    countriesList.appendChild(t);
   });
 }
 
-// --- Keywords tag list ---
 function renderKeywords() {
+  if (!keywordsList) return;
   keywordsList.innerHTML = '';
-  stackKeywords.forEach((keyword, i) => {
-    const tag = document.createElement('span');
-    tag.className = 'tag';
-    tag.innerHTML = `${escapeHtml(keyword)}<button class="tag-remove" data-type="keyword" data-i="${i}" title="Remove">×</button>`;
-    keywordsList.appendChild(tag);
+  stackKeywords.forEach((k, i) => {
+    const t = document.createElement('div'); t.className = 'tag';
+    t.innerHTML = `${escapeHtml(k)} <span class="tag-remove" data-i="${i}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span>`;
+    keywordsList.appendChild(t);
   });
 }
+
+function renderStats(usageObj, logsArr) {
+  let total = 0;
+  for (const p in usageObj) for (const m in usageObj[p]) total += (usageObj[p][m].input || 0) + (usageObj[p][m].output || 0);
+  if (totalTokenCostEl) totalTokenCostEl.textContent = total.toLocaleString();
+  if (totalApiCallsEl) totalApiCallsEl.textContent = logsArr.length.toString();
+}
+
+let activeLogEntry = null;
 
 function renderLog(entries) {
+  if (!logList) return;
   logList.innerHTML = '';
-
-  const valid = entries.filter(e => e && e.ts && e.provider);
-
-  if (!valid.length) {
-    logList.innerHTML = '<p class="usage-empty">No log entries yet.</p>';
+  if (!entries.length) {
+    logList.innerHTML = '<div style="padding:12px; color:var(--text-muted); font-size:0.85rem;">No activity logs found.</div>';
     return;
   }
-
-  const sorted = [...valid].reverse();
-  sorted.forEach(entry => {
-    const finalScore = entry.score;
-    const scoreClass = finalScore === null || finalScore === undefined
-      ? 'score-null'
-      : finalScore >= 80 ? 'score-green'
-      : finalScore >= 50 ? 'score-yellow'
-      : 'score-red';
-    const scoreText = finalScore === null || finalScore === undefined ? '—' : finalScore;
-    const totalTok = (entry.tokensIn || 0) + (entry.tokensOut || 0);
-    const ts = new Date(entry.ts).toLocaleString(undefined, {
-      month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit',
-    });
-
-    const llmPart = entry.llmScore !== null && entry.llmScore !== undefined ? entry.llmScore : '—';
-    const rulesPart = entry.rulesScore !== null && entry.rulesScore !== undefined ? entry.rulesScore : '—';
-    const scoreTitle = `Final (weighted): ${scoreText}  |  LLM: ${llmPart}  |  Rules: ${rulesPart}`;
-
-    const header = document.createElement('div');
-    header.className = 'log-header';
-    header.innerHTML = `
-      <span class="log-chevron">▶</span>
-      <span class="log-ts">${escapeHtml(ts)}</span>
-      <span class="log-pill">${escapeHtml(entry.provider)}/${escapeHtml(entry.model)}</span>
-      <span class="log-title">${escapeHtml((entry.jobTitle || 'N/A').slice(0, 50))}</span>
-      <span class="log-scores">
-        <span class="log-score-chip score-rules" title="Rules score">R:${rulesPart}</span>
-        <span class="log-score-chip score-ai" title="AI (LLM) score">AI:${llmPart}</span>
-        <span class="log-score-chip ${scoreClass}" title="Final weighted score">⇒${scoreText}</span>
-      </span>
-      <span class="log-meta">${totalTok}t</span>
-      <span class="log-meta">${entry.durationMs}ms</span>
-    `;
-
-    const body = document.createElement('div');
-    body.className = 'log-body';
-
-    if (entry.error) {
-      const sec = document.createElement('div');
-      sec.className = 'log-section log-section--error';
-      sec.innerHTML = `<div class="log-section-label">Error</div><pre class="log-pre">${escapeHtml(entry.error)}</pre>`;
-      body.appendChild(sec);
-    }
-
-    const fields = [
-      { label: 'Score Breakdown', value: `Rules: ${rulesPart}  |  AI (LLM): ${llmPart}  |  Final (weighted): ${scoreText}` },
-      { label: 'Reason', value: entry.reason },
-      { label: 'System Prompt', value: entry.systemPrompt },
-      { label: 'User Message', value: entry.userMessage },
-      { label: 'Raw Response', value: entry.rawResponse },
-    ];
-    fields.forEach(({ label, value }) => {
-      if (!value) return;
-      const sec = document.createElement('div');
-      sec.className = 'log-section';
-      sec.innerHTML = `<div class="log-section-label">${label}</div><pre class="log-pre">${escapeHtml(value)}</pre>`;
-      body.appendChild(sec);
-    });
-
-    header.addEventListener('click', () => {
-      const isOpen = body.classList.contains('log-body--open');
-      body.classList.toggle('log-body--open', !isOpen);
-      header.classList.toggle('log-header--open', !isOpen);
-      header.querySelector('.log-chevron').textContent = isOpen ? '▶' : '▼';
-    });
-
-    const row = document.createElement('div');
-    row.className = 'log-entry';
-    row.appendChild(header);
-    row.appendChild(body);
-    logList.appendChild(row);
+  entries.slice(-20).reverse().forEach(entry => {
+    const div = document.createElement('div');
+    div.className = 'log-entry';
+    div.innerHTML = `
+      <div class="log-title">${escapeHtml(entry.jobTitle || 'Unknown Job')}</div>
+      <div class="log-meta">
+        <span class="badge" style="background:var(--primary); color:#fff">★ ${entry.score ?? 'N/A'}</span>
+        <span>${new Date(entry.ts || Date.now()).toLocaleTimeString()}</span>
+      </div>`;
+    div.addEventListener('click', () => openLogModal(entry));
+    logList.appendChild(div);
   });
 }
 
-// --- Token usage ---
-function renderTokenUsage(usage) {
-  tokenUsageTable.innerHTML = '';
+const logModal = document.getElementById('log-modal');
+const logModalBody = document.getElementById('log-modal-body');
+const modalTabs = document.querySelectorAll('.modal-tab');
 
-  const entries = [];
-  for (const [provider, models] of Object.entries(usage)) {
-    for (const [model, stats] of Object.entries(models)) {
-      entries.push({ provider, model, ...stats });
-    }
-  }
-
-  if (!entries.length) {
-    tokenUsageTable.innerHTML = '<p class="usage-empty">No usage recorded yet.</p>';
-    return;
-  }
-
-  const table = document.createElement('table');
-  table.className = 'usage-tbl';
-  table.innerHTML = `
-    <thead>
-      <tr>
-        <th>Provider</th>
-        <th>Model</th>
-        <th>Calls</th>
-        <th>Input tokens</th>
-        <th>Output tokens</th>
-        <th>Total tokens</th>
-      </tr>
-    </thead>
-  `;
-  const tbody = document.createElement('tbody');
-  let totalIn = 0, totalOut = 0, totalCalls = 0;
-  for (const e of entries) {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${escapeHtml(e.provider)}</td>
-      <td class="model-cell">${escapeHtml(e.model)}</td>
-      <td>${e.calls.toLocaleString()}</td>
-      <td>${e.input.toLocaleString()}</td>
-      <td>${e.output.toLocaleString()}</td>
-      <td><strong>${(e.input + e.output).toLocaleString()}</strong></td>
-    `;
-    tbody.appendChild(tr);
-    totalIn += e.input;
-    totalOut += e.output;
-    totalCalls += e.calls;
-  }
-  if (entries.length > 1) {
-    const tr = document.createElement('tr');
-    tr.className = 'usage-total-row';
-    tr.innerHTML = `
-      <td colspan="2"><strong>Total</strong></td>
-      <td>${totalCalls.toLocaleString()}</td>
-      <td>${totalIn.toLocaleString()}</td>
-      <td>${totalOut.toLocaleString()}</td>
-      <td><strong>${(totalIn + totalOut).toLocaleString()}</strong></td>
-    `;
-    tbody.appendChild(tr);
-  }
-  table.appendChild(tbody);
-  tokenUsageTable.appendChild(table);
+function openLogModal(entry) {
+  activeLogEntry = entry;
+  modalTabs.forEach(t => t.classList.remove('active'));
+  document.querySelector('.modal-tab[data-target="log-response"]').classList.add('active');
+  logModalBody.textContent = JSON.stringify(entry.response || {info: 'No response saved'}, null, 2);
+  logModal.classList.add('active');
 }
 
-// --- Helpers ---
-function getApiKeyStorageKey(provider) {
-  return {
-    openai: STORAGE_KEYS.API_KEY_OPENAI,
-    anthropic: STORAGE_KEYS.API_KEY_ANTHROPIC,
-    gemini: STORAGE_KEYS.API_KEY_GEMINI,
-    zai: STORAGE_KEYS.API_KEY_CUSTOM,
-    custom: STORAGE_KEYS.API_KEY_CUSTOM,
-  }[provider];
+function setupModalListeners() {
+  document.querySelector('.modal-close')?.addEventListener('click', () => logModal?.classList.remove('active'));
+  logModal?.addEventListener('click', e => { if (e.target === logModal) logModal.classList.remove('active'); });
+
+  modalTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      modalTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      if (!activeLogEntry) return;
+      
+      const target = tab.getAttribute('data-target');
+      if (target === 'log-request') logModalBody.textContent = JSON.stringify(activeLogEntry.request || {info:'No data'}, null, 2);
+      else if (target === 'log-response') logModalBody.textContent = JSON.stringify(activeLogEntry.response || {info:'No data'}, null, 2);
+      else if (target === 'log-job') logModalBody.textContent = JSON.stringify(activeLogEntry.jobContext || {info:'No data'}, null, 2);
+    });
+  });
 }
 
-function showStatus(msg, isError) {
+async function saveAllSettings() {
+  storedModels[currentProvider] = modelSelect ? modelSelect.value : DEFAULT_MODELS[currentProvider];
+
+  const toSaveSync = {
+    [STORAGE_KEYS.PROFILE]: profileEl ? profileEl.value.trim() : '',
+    [STORAGE_KEYS.USER_HOURLY_RATE]: userHourlyRateEl?.value ? parseFloat(userHourlyRateEl.value) : null,
+    [STORAGE_KEYS.USER_FIXED_MIN]: userFixedMinEl?.value ? parseFloat(userFixedMinEl.value) : null,
+    [STORAGE_KEYS.USER_FIXED_MAX]: userFixedMaxEl?.value ? parseFloat(userFixedMaxEl.value) : null,
+    [STORAGE_KEYS.PROVIDER]: currentProvider,
+    [STORAGE_KEYS.MODEL]: storedModels,
+    [STORAGE_KEYS.CUSTOM_PROMPT]: customPromptEl ? customPromptEl.value.trim() : '',
+    [STORAGE_KEYS.WEIGHTS]: {
+      rules: weightRulesEl ? parseInt(weightRulesEl.value, 10) : DEFAULT_WEIGHTS.rules,
+      llm: weightLlmEl ? parseInt(weightLlmEl.value, 10) : DEFAULT_WEIGHTS.llm,
+    },
+    [STORAGE_KEYS.THRESHOLDS]: {
+      maxProposals: maxProposalsEl ? parseInt(maxProposalsEl.value, 10) : DEFAULT_THRESHOLDS.maxProposals,
+      hourlyMin: hourlyMinEl ? parseFloat(hourlyMinEl.value) : DEFAULT_THRESHOLDS.hourlyMin,
+      hourlyMax: hourlyMaxEl ? parseFloat(hourlyMaxEl.value) : DEFAULT_THRESHOLDS.hourlyMax,
+      fixedMin: fixedMinEl ? parseFloat(fixedMinEl.value) : DEFAULT_THRESHOLDS.fixedMin,
+      fixedMax: fixedMaxEl ? parseFloat(fixedMaxEl.value) : DEFAULT_THRESHOLDS.fixedMax,
+    },
+    [STORAGE_KEYS.TARGET_COUNTRIES]: targetCountries,
+    [STORAGE_KEYS.CUSTOM_RULES]: customRules,
+    [STORAGE_KEYS.STACK_KEYWORDS]: stackKeywords,
+    [STORAGE_KEYS.OPTIMIZATION_ENABLED]: optimizationEnabledEl ? optimizationEnabledEl.checked : false,
+    [STORAGE_KEYS.CUSTOM_URL]: customUrlEl ? customUrlEl.value.trim() : '',
+  };
+
+  if (apiKeyEl) toSaveSync[getApiKeyStorageKey(currentProvider)] = apiKeyEl.value.trim();
+
+  const toSaveLocal = {
+    [STORAGE_KEYS.LOG_ENABLED]: logEnabledEl ? logEnabledEl.checked : false
+  };
+
+  try {
+    await chrome.storage.sync.set(toSaveSync);
+    await chrome.storage.local.set(toSaveLocal);
+    showStatus('✓ Settings saved', false);
+  } catch (err) {
+    showStatus('Error: ' + err.message, true);
+  }
+}
+
+function showStatus(msg, isError = false) {
+  if (!saveStatus) return;
   saveStatus.textContent = msg;
-  saveStatus.className = 'save-status' + (isError ? ' error' : '');
+  saveStatus.style.color = isError ? 'var(--danger)' : 'var(--success)';
   setTimeout(() => { saveStatus.textContent = ''; }, 3000);
 }
 
-function escapeHtml(str) {
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-// Boot - wait for DOM to be ready
-function boot() {
-  initDOMRefs();
-  setupDarkModeToggle();
-  setupEventListeners();
-  loadSettings();
-}
+function escapeHtml(str) { return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
 function setupEventListeners() {
-  // Show/hide API key
-  toggleKeyBtn.addEventListener('click', () => {
-    apiKeyEl.type = apiKeyEl.type === 'password' ? 'text' : 'password';
-    toggleKeyBtn.innerHTML = apiKeyEl.type === 'password' ? '&#128065;' : '&#128683;';
-  });
-
-  // Provider switching
+  document.getElementById('save-btn')?.addEventListener('click', saveAllSettings);
+  
   document.querySelectorAll('input[name="provider"]').forEach(radio => {
     radio.addEventListener('change', async () => {
-      // Save current key + model before switching
-      if (apiKeyEl.value.trim()) {
-        await chrome.storage.sync.set({ [getApiKeyStorageKey(currentProvider)]: apiKeyEl.value.trim() });
-      }
-      storedModels[currentProvider] = modelSelect.value || DEFAULT_MODELS[currentProvider];
-
       currentProvider = radio.value;
       updateApiKeySection();
-
-      // Load key for new provider
-      const data = await chrome.storage.sync.get([getApiKeyStorageKey(currentProvider), STORAGE_KEYS.MODEL, STORAGE_KEYS.CUSTOM_URL]);
-      apiKeyEl.value = data[getApiKeyStorageKey(currentProvider)] || '';
-      customUrlEl.value = data[STORAGE_KEYS.CUSTOM_URL] || '';
-      storedModels = data[STORAGE_KEYS.MODEL] || storedModels;
-
-      // Reset model list to static fallback for new provider
+      const storageKey = getApiKeyStorageKey(currentProvider);
+      const data = await chrome.storage.sync.get([storageKey]);
+      if (apiKeyEl) apiKeyEl.value = data[storageKey] || '';
       populateModelDropdown(PROVIDER_MODELS[currentProvider] || [], storedModels[currentProvider] || DEFAULT_MODELS[currentProvider]);
-      modelStatus.textContent = '';
     });
   });
 
-  // Linked sliders
-  weightRulesEl.addEventListener('input', () => {
-    const v = parseInt(weightRulesEl.value, 10);
-    weightLlmEl.value = 100 - v;
-    weightRulesVal.textContent = v + '%';
-    weightLlmVal.textContent = (100 - v) + '%';
-  });
+  toggleKeyBtn?.addEventListener('click', () => { if (apiKeyEl) apiKeyEl.type = apiKeyEl.type === 'password' ? 'text' : 'password'; });
+  refreshModelsBtn?.addEventListener('click', refreshModels);
 
-  weightLlmEl.addEventListener('input', () => {
-    const v = parseInt(weightLlmEl.value, 10);
-    weightRulesEl.value = 100 - v;
-    weightLlmVal.textContent = v + '%';
-    weightRulesVal.textContent = (100 - v) + '%';
-  });
+  if (weightRulesEl && weightLlmEl) {
+    weightRulesEl.addEventListener('input', () => {
+      weightLlmEl.value = 100 - weightRulesEl.value;
+      if (weightRulesVal) weightRulesVal.textContent = weightRulesEl.value + '%';
+      if (weightLlmVal) weightLlmVal.textContent = weightLlmEl.value + '%';
+    });
+    weightLlmEl.addEventListener('input', () => {
+      weightRulesEl.value = 100 - weightLlmEl.value;
+      if (weightLlmVal) weightLlmVal.textContent = weightLlmEl.value + '%';
+      if (weightRulesVal) weightRulesVal.textContent = weightRulesEl.value + '%';
+    });
+  }
 
-  // Add rule button
-  addRuleBtn.addEventListener('click', () => {
-    const newRule = {
-      id: 'r' + Date.now(),
-      name: 'New Rule',
-      field: 'proposals',
-      operator: 'lt',
-      value: '10',
-      points: 10,
-      flag: ''
-    };
-    customRules.push(newRule);
+  addRuleBtn?.addEventListener('click', () => {
+    customRules.push({ id: 'r' + Date.now(), name: '', field: 'proposals', operator: 'lt', value: '10', points: 10, flag: '' });
     renderRules();
   });
 
-  // Reset rules button
-  resetRulesBtn.addEventListener('click', () => {
-    if (!confirm('Reset rules to defaults?')) return;
-    customRules = JSON.parse(JSON.stringify(DEFAULT_CUSTOM_RULES));
-    renderRules();
-    showStatus('Rules reset to defaults.', false);
+  resetRulesBtn?.addEventListener('click', () => {
+    if (confirm('Reset scoring rules?')) { customRules = JSON.parse(JSON.stringify(DEFAULT_CUSTOM_RULES)); renderRules(); }
   });
 
-  // Countries tag list
-  countriesList.addEventListener('click', e => {
-    if (e.target.classList.contains('tag-remove')) {
-      const i = parseInt(e.target.dataset.i, 10);
-      targetCountries.splice(i, 1);
-      renderCountries();
+  addCountryBtn?.addEventListener('click', () => {
+    const v = newCountryEl?.value.trim();
+    if (v && !targetCountries.includes(v)) { targetCountries.push(v); renderCountries(); }
+    if (newCountryEl) newCountryEl.value = '';
+  });
+
+  countriesList?.addEventListener('click', e => {
+    const closeBtn = e.target.closest('.tag-remove');
+    if (closeBtn) { targetCountries.splice(closeBtn.dataset.i, 1); renderCountries(); }
+  });
+
+  addKeywordBtn?.addEventListener('click', () => {
+    const v = newKeywordEl?.value.trim().toLowerCase();
+    if (v && !stackKeywords.includes(v)) { stackKeywords.push(v); renderKeywords(); }
+    if (newKeywordEl) newKeywordEl.value = '';
+  });
+
+  keywordsList?.addEventListener('click', e => {
+    const closeBtn = e.target.closest('.tag-remove');
+    if (closeBtn) { stackKeywords.splice(closeBtn.dataset.i, 1); renderKeywords(); }
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    if (confirm('Erase all settings?')) {
+      chrome.storage.sync.clear(() => chrome.storage.local.clear(() => window.location.reload()));
     }
   });
 
-  addCountryBtn.addEventListener('click', () => {
-    const val = newCountryEl.value.trim();
-    if (val && !targetCountries.includes(val)) {
-      targetCountries.push(val);
-      renderCountries();
-    }
-    newCountryEl.value = '';
-  });
-
-  newCountryEl.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); addCountryBtn.click(); }
-  });
-
-  // Keywords tag list
-  keywordsList.addEventListener('click', e => {
-    if (e.target.classList.contains('tag-remove') && e.target.dataset.type === 'keyword') {
-      const i = parseInt(e.target.dataset.i, 10);
-      stackKeywords.splice(i, 1);
-      renderKeywords();
+  resetUsageBtn?.addEventListener('click', () => {
+    if (confirm('Clear statistics?')) {
+      chrome.storage.local.set({ [STORAGE_KEYS.TOKEN_USAGE]: {} }, () => renderStats({}, []));
     }
   });
 
-  addKeywordBtn.addEventListener('click', () => {
-    const val = newKeywordEl.value.trim().toLowerCase();
-    if (val && !stackKeywords.includes(val)) {
-      stackKeywords.push(val);
-      renderKeywords();
+  clearLogBtn?.addEventListener('click', () => {
+    if (confirm('Delete all logs?')) {
+      chrome.storage.local.set({ [STORAGE_KEYS.REQUEST_LOG]: [] }, () => renderLog([]));
     }
-    newKeywordEl.value = '';
   });
-
-  newKeywordEl.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); addKeywordBtn.click(); }
-  });
-
-  // Request Log
-  logEnabledEl.addEventListener('change', async () => {
-    await chrome.storage.local.set({ [STORAGE_KEYS.LOG_ENABLED]: logEnabledEl.checked });
-  });
-
-  clearLogBtn.addEventListener('click', async () => {
-    if (!confirm('Clear all request log entries?')) return;
-    await chrome.storage.local.set({ [STORAGE_KEYS.REQUEST_LOG]: [] });
-    renderLog([]);
-    showStatus('Log cleared.', false);
-  });
-
-  // Token usage reset
-  resetUsageBtn.addEventListener('click', async () => {
-    if (!confirm('Reset all token usage counters?')) return;
-    await chrome.storage.local.set({ [STORAGE_KEYS.TOKEN_USAGE]: {} });
-    renderTokenUsage({});
-    showStatus('Usage reset.', false);
-  });
-
-  // Reset button
-  resetBtn.addEventListener('click', async () => {
-    if (!confirm('Reset all settings to defaults?')) return;
-    profileEl.value = '';
-    customPromptEl.value = '';
-    apiKeyEl.value = '';
-    customUrlEl.value = '';
-    currentProvider = DEFAULT_PROVIDER;
-    document.querySelector(`input[name="provider"][value="${DEFAULT_PROVIDER}"]`).checked = true;
-    updateApiKeySection();
-    storedModels = {};
-    populateModelDropdown(PROVIDER_MODELS[DEFAULT_PROVIDER] || [], DEFAULT_MODELS[DEFAULT_PROVIDER]);
-    modelStatus.textContent = '';
-    weightRulesEl.value = DEFAULT_WEIGHTS.rules;
-    weightLlmEl.value = DEFAULT_WEIGHTS.llm;
-    weightRulesVal.textContent = DEFAULT_WEIGHTS.rules + '%';
-    weightLlmVal.textContent = DEFAULT_WEIGHTS.llm + '%';
-    maxProposalsEl.value = DEFAULT_THRESHOLDS.maxProposals;
-    hourlyMinEl.value = DEFAULT_THRESHOLDS.hourlyMin;
-    hourlyMaxEl.value = DEFAULT_THRESHOLDS.hourlyMax;
-    fixedMinEl.value = DEFAULT_THRESHOLDS.fixedMin;
-    fixedMaxEl.value = DEFAULT_THRESHOLDS.fixedMax;
-    targetCountries = [...DEFAULT_TARGET_COUNTRIES];
-    renderCountries();
-    customRules = JSON.parse(JSON.stringify(DEFAULT_CUSTOM_RULES));
-    renderRules();
-    stackKeywords = [...DEFAULT_STACK_KEYWORDS];
-    renderKeywords();
-    optimizationEnabledEl.checked = false;
-    window.extensionEnabledState = true;
-    showStatus('Reset to defaults.', false);
-  });
-
-  // Form submit
-  form.addEventListener('submit', saveSettings);
-
-  // Refresh models button
-  refreshModelsBtn.addEventListener('click', refreshModels);
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => boot());
-} else {
-  // DOM is already ready
-  boot();
-}
+document.addEventListener('DOMContentLoaded', () => {
+  initDOMRefs();
+  setupThemeLogic();
+  setupTabLogic();
+  setupModalListeners();
+  setupEventListeners();
+  loadSettings();
+});

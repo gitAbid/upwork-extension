@@ -4,240 +4,306 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upwork Job Matcher — Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="settings.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="header-content">
-        <div>
-          <h1>Upwork Job Matcher</h1>
-          <p class="subtitle">Configure your profile and AI scoring preferences</p>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-orb">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
         </div>
-        <button id="dark-mode-btn" title="Toggle dark mode" type="button">🌙</button>
+        <h1>Matcher Settings</h1>
       </div>
-    </header>
-
-    <form id="settings-form">
-
-      <!-- Section 1: Profile -->
-      <section class="card">
-        <h2>Your Profile</h2>
-        <p class="help-text">Paste your resume, bio, or skill summary. The AI uses this to evaluate job fit.</p>
-        <textarea id="profile" name="profile" rows="12"
-          placeholder="e.g. Senior full-stack developer with 8 years experience in React, Node.js, PostgreSQL..."></textarea>
-      </section>
-
-      <!-- Section 1.5: Your Hourly Rate -->
-      <section class="card">
-        <h2>Your Hourly Rate <span class="optional">optional</span></h2>
-        <p class="help-text">Enter your typical hourly rate to compare jobs against your rate.</p>
-        <div class="field-row">
-          <label for="user-hourly-rate">Your Hourly Rate ($/hr)</label>
-          <input type="number" id="user-hourly-rate" min="0" max="1000" step="5" placeholder="e.g., 50">
-        </div>
-        <p class="help-text">Leave empty to use fixed thresholds (30-80/hr = good)</p>
-      </section>
-
-      <!-- Section 1.6: Your Fixed Price Range -->
-      <section class="card">
-        <h2>Fixed Price Range <span class="optional">optional</span></h2>
-        <p class="help-text">Set your acceptable range for fixed-price projects to compare against client budgets.</p>
-        <div class="threshold-grid">
-          <div class="field-row">
-            <label for="user-fixed-min">Your Minimum ($)</label>
-            <input type="number" id="user-fixed-min" min="0" max="100000" step="50" placeholder="e.g., 100">
-          </div>
-          <div class="field-row">
-            <label for="user-fixed-max">Your Maximum ($)</label>
-            <input type="number" id="user-fixed-max" min="0" max="100000" step="50" placeholder="e.g., 1000">
-          </div>
-        </div>
-        <p class="help-text">Leave empty to use fixed thresholds ($100-500 = good)</p>
-      </section>
-
-      <!-- Section 2: LLM Provider + Model -->
-      <section class="card">
-        <h2>AI Provider &amp; Model</h2>
-        <div class="radio-group">
-          <label class="radio-label">
-            <input type="radio" name="provider" value="openai" checked>
-            <span>OpenAI</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" name="provider" value="anthropic">
-            <span>Anthropic</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" name="provider" value="gemini">
-            <span>Google Gemini</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" name="provider" value="zai">
-            <span>Z.ai</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" name="provider" value="custom">
-            <span>Custom (OpenAI-compatible)</span>
-          </label>
-        </div>
-
-        <div class="field-row" style="margin-top:14px">
-          <label for="api-key">API Key <span class="optional">(optional for Custom)</span></label>
-          <div class="input-with-toggle">
-            <input type="password" id="api-key" name="api-key" placeholder="Paste your API key here" autocomplete="off">
-            <button type="button" id="toggle-key" class="icon-btn" title="Show/hide key">&#128065;</button>
-          </div>
-          <p class="help-text" id="api-key-link"></p>
-        </div>
-
-        <div class="field-row custom-url-row" style="margin-top:12px; display:none;">
-          <label for="custom-url">Custom API URL</label>
-          <input type="text" id="custom-url" name="custom-url" placeholder="https://api.example.com/v1/chat/completions">
-          <p class="help-text">OpenAI-compatible endpoint URL (e.g., for local LLMs or other providers)</p>
-        </div>
-
-        <div class="field-row" style="margin-top:12px">
-          <div class="model-label-row">
-            <label for="model-select">Model</label>
-            <button type="button" id="refresh-models-btn" class="btn-icon-text" title="Fetch models from provider">
-              <span id="refresh-icon">↻</span> Refresh
-            </button>
-          </div>
-          <select id="model-select">
-            <option value="">— enter API key then click Refresh —</option>
-          </select>
-          <p class="help-text" id="model-status"></p>
-        </div>
-      </section>
-
-      <!-- Section 3: Custom System Prompt -->
-      <section class="card">
-        <h2>Custom Instructions <span class="optional">optional</span></h2>
-        <p class="help-text">Additional instructions appended to the AI system prompt.</p>
-        <textarea id="custom-prompt" name="custom-prompt" rows="4"
-          placeholder="e.g. Prefer jobs that mention long-term collaboration. Penalize jobs with vague descriptions."></textarea>
-      </section>
-
-      <!-- Section 4: Scoring Weights -->
-      <section class="card">
-        <h2>Scoring Weights</h2>
-        <p class="help-text">Rules + AI weights must sum to 100.</p>
-        <div class="slider-row">
-          <label>Rules Score</label>
-          <input type="range" id="weight-rules" min="0" max="100" value="40">
-          <span id="weight-rules-val" class="weight-val">40%</span>
-        </div>
-        <div class="slider-row">
-          <label>AI Score</label>
-          <input type="range" id="weight-llm" min="0" max="100" value="60">
-          <span id="weight-llm-val" class="weight-val">60%</span>
-        </div>
-      </section>
-
-      <!-- Section 5: Custom Rules -->
-      <section class="card">
-        <div class="section-header-row">
-          <h2>Custom Rules</h2>
-          <button type="button" id="add-rule-btn" class="btn-secondary-sm">+ Add Rule</button>
-        </div>
-        <p class="help-text">Define custom scoring rules. Jobs matching these rules earn points.</p>
-        <div id="rules-list" class="rules-list"></div>
-        <button type="button" id="reset-rules-btn" class="btn-secondary-sm" style="margin-top:12px;">Reset to Defaults</button>
-      </section>
-
-      <!-- Section 6: Optimization -->
-      <section class="card">
-        <h2>Optimization</h2>
-        <p class="help-text">Enable smart optimization to save API calls. Only analyze jobs that match your stack/keywords.</p>
-        <label class="toggle-switch">
-          <input type="checkbox" id="optimization-enabled">
-          <span class="toggle-slider"></span>
-          Enable Stack-Based Optimization
-        </label>
-
-        <div class="field-row" style="margin-top:16px">
-          <label>Stack / Domain Keywords</label>
-          <div id="keywords-list" class="tags-container"></div>
-          <div class="add-keyword-row">
-            <input type="text" id="new-keyword" placeholder="Add keyword (e.g., react, python, aws)...">
-            <button type="button" id="add-keyword-btn" class="btn-secondary">Add</button>
-          </div>
-          <p class="help-text">Jobs containing these keywords in title, description, or skills will trigger full AI analysis.</p>
-        </div>
-      </section>
-
-      <!-- Section 7: Filter Thresholds -->
-      <section class="card">
-        <h2>Filter Thresholds</h2>
-        <div class="threshold-grid">
-          <div class="field-row">
-            <label for="max-proposals">Max Proposals</label>
-            <input type="number" id="max-proposals" min="1" max="200" value="50">
-          </div>
-          <div class="field-row">
-            <label for="hourly-min">Hourly Min ($/hr)</label>
-            <input type="number" id="hourly-min" min="0" max="500" value="30">
-          </div>
-          <div class="field-row">
-            <label for="hourly-max">Hourly Max ($/hr)</label>
-            <input type="number" id="hourly-max" min="0" max="500" value="80">
-          </div>
-          <div class="field-row">
-            <label for="fixed-min">Fixed Min ($)</label>
-            <input type="number" id="fixed-min" min="0" max="100000" value="100">
-          </div>
-          <div class="field-row">
-            <label for="fixed-max">Fixed Max ($)</label>
-            <input type="number" id="fixed-max" min="0" max="100000" value="500">
-          </div>
-        </div>
-
-        <div class="field-row" style="margin-top:16px">
-          <label>Target Countries</label>
-          <div id="countries-list" class="tags-container"></div>
-          <div class="add-country-row">
-            <input type="text" id="new-country" placeholder="Add country…">
-            <button type="button" id="add-country-btn" class="btn-secondary">Add</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Section 8: Request Log -->
-      <section class="card">
-        <div class="section-header-row">
-          <h2>Request Log</h2>
-          <button type="button" id="clear-log-btn" class="btn-danger-sm">Clear Log</button>
-        </div>
-        <p class="help-text">Log every LLM call for debugging. Stores up to 200 entries locally.</p>
-        <label class="toggle-switch">
-          <input type="checkbox" id="log-enabled">
-          <span class="toggle-slider"></span>
-          Enable Request Logging
-        </label>
-        <div id="log-list" class="log-list"></div>
-      </section>
-
-      <!-- Section 9: Token Usage -->
-      <section class="card">
-        <div class="section-header-row">
-          <h2>Token Usage</h2>
-          <button type="button" id="reset-usage-btn" class="btn-danger-sm">Reset</button>
-        </div>
-        <p class="help-text">Cumulative tokens consumed across all scored jobs.</p>
-        <div id="token-usage-table" class="usage-table">
-          <p class="usage-empty">No usage recorded yet.</p>
-        </div>
-      </section>
-
-      <!-- Actions -->
-      <div class="actions">
-        <button type="submit" class="btn-primary">Save Settings</button>
-        <button type="button" id="reset-btn" class="btn-secondary">Reset to Defaults</button>
-        <span id="save-status" class="save-status"></span>
+      <nav class="sidebar-nav">
+        <ul>
+          <li class="active" data-tab="profile">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Profile</span>
+          </li>
+          <li data-tab="ai-provider">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+            <span>AI Provider</span>
+          </li>
+          <li data-tab="scoring">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span>Scoring Rules</span>
+          </li>
+          <li data-tab="filters">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            <span>Filters</span>
+          </li>
+          <li data-tab="tools">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <span>Logs & Tools</span>
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="dark-mode-btn" type="button" class="icon-btn-text">
+          <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <span id="theme-text">Dark Mode</span>
+        </button>
+        <div class="version-info">v1.1.1</div>
       </div>
+    </aside>
 
-    </form>
+    <main class="main-content">
+      <form id="settings-form">
+        <!-- Section 1: Profile -->
+        <div id="profile" class="tab-pane active">
+          <header class="tab-header">
+            <h2>Your Expert Profile</h2>
+            <p>Define your core skills and pricing goals.</p>
+          </header>
+          
+          <section class="card">
+            <h3>Bio & Experience</h3>
+            <p class="help-text">Paste your resume or bio. The AI uses this for job fit analysis.</p>
+            <textarea id="profile-bio" name="profile" rows="8" placeholder="e.g. Senior full-stack developer with 8 years experience..."></textarea>
+          </section>
+
+          <div class="grid-2">
+            <section class="card">
+              <h3>Hourly Rate</h3>
+              <p class="help-text">Ideal target hourly rate.</p>
+              <div class="field-row">
+                <label for="user-hourly-rate">Target Rate ($/hr)</label>
+                <input type="number" id="user-hourly-rate" min="0" max="1000" step="5" placeholder="e.g., 50">
+              </div>
+            </section>
+
+            <section class="card">
+              <h3>Fixed Price Range</h3>
+              <p class="help-text">Ideal budget span for fixed contracts.</p>
+              <div class="grid-2">
+                <div class="field-row">
+                  <label for="user-fixed-min">Min Budget ($)</label>
+                  <input type="number" id="user-fixed-min" min="0" step="50" placeholder="e.g., 500">
+                </div>
+                <div class="field-row">
+                  <label for="user-fixed-max">Max Budget ($)</label>
+                  <input type="number" id="user-fixed-max" min="0" step="50" placeholder="e.g., 5000">
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- Section 2: AI Provider -->
+        <div id="ai-provider" class="tab-pane">
+          <header class="tab-header">
+            <h2>AI Infrastructure</h2>
+            <p>Connect your preferred LLM provider for analysis.</p>
+          </header>
+
+          <section class="card">
+            <h3>Service Provider</h3>
+            <div class="radio-group chips">
+              <label class="chip-label"><input type="radio" name="provider" value="openai" checked><span>OpenAI</span></label>
+              <label class="chip-label"><input type="radio" name="provider" value="anthropic"><span>Anthropic</span></label>
+              <label class="chip-label"><input type="radio" name="provider" value="gemini"><span>Gemini</span></label>
+              <label class="chip-label"><input type="radio" name="provider" value="zai"><span>Z.ai</span></label>
+              <label class="chip-label"><input type="radio" name="provider" value="custom"><span>Custom</span></label>
+            </div>
+
+            <div class="field-row" style="margin-top:20px">
+              <label for="api-key">API Key <span id="api-key-link"></span></label>
+              <div class="input-with-toggle">
+                <input type="password" id="api-key" placeholder="Paste your key here" autocomplete="off">
+                <button type="button" id="toggle-key" class="icon-btn" title="Toggle visibility">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="field-row custom-url-row" style="margin-top:16px; display:none;">
+              <label for="custom-url">Custom Endpoint</label>
+              <input type="text" id="custom-url" placeholder="https://api.openai.com/v1">
+            </div>
+
+            <div class="field-row" style="margin-top:16px">
+              <label for="model-select">Model Selection <span id="model-status" class="status-badge"></span></label>
+              <div class="select-with-btn">
+                <select id="model-select"><option value="">— Refresh to load —</option></select>
+                <button type="button" id="refresh-models-btn" class="secondary-btn-sm" title="Refresh Models">
+                  <svg id="refresh-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg> 
+                  Refresh
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Section 3: Scoring -->
+        <div id="scoring" class="tab-pane">
+          <header class="tab-header">
+            <h2>Scoring Engine</h2>
+            <p>Fine-tune how jobs are ranked and matched.</p>
+          </header>
+
+          <section class="card">
+            <h3>Algorithm Balance</h3>
+            <p class="help-text">Weights must sum to 100%.</p>
+            <div class="slider-group">
+              <div class="slider-row">
+                <label>Hard Rules</label>
+                <input type="range" id="weight-rules" min="0" max="100" value="40">
+                <span id="weight-rules-val" class="badge">40%</span>
+              </div>
+              <div class="slider-row">
+                <label>AI Analysis</label>
+                <input type="range" id="weight-llm" min="0" max="100" value="60">
+                <span id="weight-llm-val" class="badge">60%</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>Special Instructions</h3>
+            <textarea id="custom-prompt" rows="3" placeholder="e.g. Always prioritize high-budget enterprise contracts..."></textarea>
+          </section>
+
+          <section class="card">
+            <div class="section-header-row">
+              <h3>Custom Logic Rules</h3>
+              <button type="button" id="add-rule-btn" class="secondary-btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> 
+                Add Rule
+              </button>
+            </div>
+            <div id="rules-list" class="rules-list"></div>
+            <button type="button" id="reset-rules-btn" class="icon-btn-text" style="width:auto; padding:0; margin-top:12px; font-size:0.8rem;">Reset to Defaults</button>
+          </section>
+
+          <section class="card">
+            <h3>Efficiency Optimization</h3>
+            <label class="toggle-switch" style="margin-bottom:16px;">
+              <input type="checkbox" id="optimization-enabled">
+              <span class="toggle-slider"></span>
+              <span>Only run AI on keyword match</span>
+            </label>
+            <div class="field-row">
+              <label>Stack Keywords</label>
+              <div id="keywords-list" class="tags-container"></div>
+              <div class="add-keyword-row">
+                <input type="text" id="new-keyword" placeholder="e.g. react, node">
+                <button type="button" id="add-keyword-btn" class="secondary-btn">Add</button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Section 4: Filters -->
+        <div id="filters" class="tab-pane">
+          <header class="tab-header">
+            <h2>Hard Thresholds</h2>
+            <p>Jobs failing these will be completely ignored.</p>
+          </header>
+
+          <section class="card">
+            <div class="grid-2">
+              <div class="field-row">
+                <label for="max-proposals">Max Proposals</label>
+                <input type="number" id="max-proposals" min="1" max="200" value="50">
+              </div>
+              <div class="field-row"></div>
+              <div class="field-row">
+                <label for="hourly-min">Hourly Min ($/hr)</label>
+                <input type="number" id="hourly-min" min="0" value="30">
+              </div>
+              <div class="field-row">
+                <label for="hourly-max">Hourly Max ($/hr)</label>
+                <input type="number" id="hourly-max" min="0" value="80">
+              </div>
+              <div class="field-row">
+                <label for="fixed-min">Fixed Min ($)</label>
+                <input type="number" id="fixed-min" min="0" value="100">
+              </div>
+              <div class="field-row">
+                <label for="fixed-max">Fixed Max ($)</label>
+                <input type="number" id="fixed-max" min="0" value="5000">
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>Target Countries</h3>
+            <div id="countries-list" class="tags-container"></div>
+            <div class="add-country-row">
+              <input type="text" id="new-country" placeholder="Add country…">
+              <button type="button" id="add-country-btn" class="secondary-btn">Add</button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Section 5: Tools & Logs -->
+        <div id="tools" class="tab-pane">
+          <header class="tab-header">
+            <h2>Diagnostics & Usage</h2>
+            <p>Monitor your token usage and execution history.</p>
+          </header>
+
+          <div class="stats-overview">
+            <div class="stat-card">
+              <span class="stat-label">Total Tokens</span>
+              <span id="totalTokenCost" class="stat-value">0</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Jobs Analysed</span>
+              <span id="totalApiCalls" class="stat-value">0</span>
+            </div>
+          </div>
+
+          <section class="card">
+            <div class="section-header-row">
+              <h3>Analysis Logs</h3>
+              <button type="button" id="clear-log-btn" class="danger-btn-sm">Clear Logs</button>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="log-enabled">
+              <span class="toggle-slider"></span>
+              <span>Record payload logs</span>
+            </label>
+            <div id="log-list" class="log-list"></div>
+          </section>
+
+          <section class="card">
+            <h3>Configuration Data</h3>
+            <div style="display:flex; gap:12px; margin-top:16px;">
+              <button type="button" id="reset-usage-btn" class="secondary-btn">Clear Usage</button>
+              <button type="button" id="reset-btn" class="danger-btn">Factory Reset</button>
+            </div>
+          </section>
+        </div>
+
+        <footer class="footer-actions">
+          <span id="save-status" class="save-status"></span>
+          <button type="button" id="save-btn" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            Save Settings
+          </button>
+        </footer>
+      </form>
+    </main>
+  </div>
+
+  <div id="log-modal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Log Details</h3>
+        <button class="modal-close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+      </div>
+      <div class="modal-tabs">
+        <div class="modal-tab active" data-target="log-request">Request</div>
+        <div class="modal-tab" data-target="log-response">Response</div>
+        <div class="modal-tab" data-target="log-job">Job Payload</div>
+      </div>
+      <div class="modal-body" id="log-modal-body"></div>
+    </div>
   </div>
 
   <script type="module" src="settings.js"></script>

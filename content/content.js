@@ -394,18 +394,19 @@
     ).join('');
 
     tooltip.innerHTML = `
+      <div class="ujm-tooltip-header">Job Match Analysis</div>
       <div class="ujm-tooltip-scores">
         <div class="ujm-tooltip-score-row">
-          <span class="ujm-tooltip-label">Rules</span>
+          <span class="ujm-tooltip-label">Rules Match</span>
           <span class="ujm-tooltip-val">${rulesScore ?? '—'}</span>
         </div>
         <div class="ujm-tooltip-score-row">
-          <span class="ujm-tooltip-label">AI</span>
+          <span class="ujm-tooltip-label">AI Analysis</span>
           <span class="ujm-tooltip-val">${rulesOnly ? '—' : llmScore}</span>
         </div>
         <div class="ujm-tooltip-score-row ujm-tooltip-final">
-          <span class="ujm-tooltip-label">Final</span>
-          <span class="ujm-tooltip-val">${score}/100${rulesOnly ? ' <small>(rules only)</small>' : ''}${optimizationSkipped ? ' <small>(optimized)</small>' : ''}</span>
+          <span class="ujm-tooltip-label">Final Weighted Score</span>
+          <span class="ujm-tooltip-val">${score}/100</span>
         </div>
       </div>
       ${reason ? `<div class="ujm-tooltip-reason">${escapeHtml(reason)}</div>` : ''}

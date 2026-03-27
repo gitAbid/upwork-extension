@@ -1,176 +1,249 @@
 /* content/content.css — badge + tooltip styles */
 
+:root {
+  --ujm-primary: #10b981;
+  --ujm-primary-glow: rgba(16, 185, 129, 0.25);
+  --ujm-secondary: #6366f1;
+  --ujm-accent: #8b5cf6;
+  --ujm-glass-bg: rgba(15, 23, 42, 0.85);
+  --ujm-glass-border: rgba(255, 255, 255, 0.08);
+  --ujm-text: #f8fafc;
+  --ujm-text-muted: #94a3b8;
+  --ujm-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --ujm-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.4);
+  --ujm-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --ujm-font: 'Inter', -apple-system, system-ui, sans-serif;
+}
+
 /* Floating toggle button for extension on/off */
 .ujm-floating-toggle {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 32px;
+  right: 32px;
   z-index: 10000;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  animation: ujm-slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ujm-slide-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .ujm-toggle-btn {
-  background: #14a800;
-  border: none;
-  border-radius: 50px;
-  padding: 12px 20px;
+  background: var(--ujm-glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--ujm-glass-border);
+  border-radius: 24px;
+  padding: 12px 28px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
+  box-shadow: var(--ujm-shadow-lg);
+  transition: var(--ujm-transition);
+  font-family: var(--ujm-font);
+  color: var(--ujm-text);
+  overflow: hidden;
+  position: relative;
+  outline: none;
+}
+
+.ujm-toggle-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  transform: translateX(-100%);
+  transition: 0.8s;
+}
+
+.ujm-toggle-btn:hover::before {
+  transform: translateX(100%);
 }
 
 .ujm-toggle-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .ujm-toggle-btn:active {
-  transform: translateY(0);
+  transform: scale(0.97);
 }
 
 .ujm-toggle-on .ujm-toggle-btn {
-  background: #14a800;
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--ujm-primary);
+  box-shadow: 0 0 25px var(--ujm-primary-glow), var(--ujm-shadow-lg);
 }
 
 .ujm-toggle-off .ujm-toggle-btn {
-  background: #6b7280;
+  background: rgba(71, 85, 105, 0.3);
+  border-color: rgba(148, 163, 184, 0.2);
+  opacity: 0.9;
 }
 
 .ujm-toggle-icon {
-  font-size: 16px;
-  line-height: 1;
+  font-size: 18px;
+  transition: var(--ujm-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ujm-toggle-on .ujm-toggle-icon {
+  color: var(--ujm-primary);
+  filter: drop-shadow(0 0 8px var(--ujm-primary));
 }
 
 .ujm-toggle-text {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
 }
 
 /* Wrapper: column — chip row on top, flag pills below */
 .ujm-wrapper {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 12px;
+  right: 12px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 5px;
+  gap: 8px;
   z-index: 999;
-  max-width: 420px;
+  max-width: 450px;
 }
 
 /* Three-chip row: [R:50] [AI:74] [⇒64] */
 .ujm-chip-row {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 6px;
 }
 
 /* Flat label chips for Rules and AI */
 .ujm-chip {
-  height: 22px;
-  padding: 0 7px;
-  border-radius: 11px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--ujm-glass-border);
+  color: var(--ujm-text-muted);
+  font-family: var(--ujm-font);
   white-space: nowrap;
-  letter-spacing: 0.2px;
-  animation: ujm-fade-in 0.3s ease;
-}
-
-.ujm-chip-rules {
-  background: rgba(0, 0, 0, 0.55);
-  color: #d1d5db;
+  letter-spacing: 0.4px;
+  animation: ujm-fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--ujm-shadow-sm);
 }
 
 .ujm-chip-ai {
-  background: rgba(0, 0, 0, 0.55);
   color: #a5b4fc;
+  border-color: rgba(165, 180, 252, 0.25);
+  background: rgba(99, 102, 241, 0.05);
 }
 
 /* Final score badge — colored, with tooltip */
 .ujm-badge {
-  height: 22px;
-  min-width: 36px;
-  padding: 0 8px;
-  border-radius: 11px;
+  height: 32px;
+  min-width: 48px;
+  padding: 0 14px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 800;
   color: #fff;
   cursor: default;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  animation: ujm-fade-in 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  font-family: var(--ujm-font);
+  animation: ujm-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: var(--ujm-transition);
 }
 
 @keyframes ujm-fade-in {
-  from { opacity: 0; transform: scale(0.7); }
-  to   { opacity: 1; transform: scale(1); }
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 /* Color variants */
-.ujm-green  { background: #16a34a; }
-.ujm-yellow { background: #ca8a04; }
-.ujm-red    { background: #dc2626; }
-.ujm-grey   { background: #6b7280; }
+.ujm-green  { background: linear-gradient(135deg, #10b981, #059669); }
+.ujm-yellow { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.ujm-red    { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.ujm-grey   { background: linear-gradient(135deg, #64748b, #475569); }
+
+.ujm-badge.ujm-green {
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
+}
+
 .ujm-loading {
-  background: #9ca3af;
-  animation: ujm-pulse 1.2s ease-in-out infinite;
-  height: 22px;
-  min-width: 80px;
-  border-radius: 11px;
+  background: rgba(148, 163, 184, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: ujm-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  height: 28px;
+  min-width: 90px;
+  border-radius: 14px;
 }
 
 @keyframes ujm-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.5; }
+  0%, 100% { opacity: 0.8; background: rgba(148, 163, 184, 0.1); }
+  50%       { opacity: 0.3; background: rgba(148, 163, 184, 0.2); }
 }
 
-/* Rules-only indicator — small blue dot on final badge */
-.ujm-badge.ujm-rules-only::after {
-  content: 'R';
+/* Indicators on final badge */
+.ujm-badge.ujm-rules-only::after,
+.ujm-badge.ujm-optimization-skipped::after {
+  content: '';
   position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 14px;
-  height: 14px;
+  top: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: #1d4ed8;
-  font-size: 8px;
-  font-weight: 700;
-  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 14px;
-  text-align: center;
+  font-size: 10px;
+  font-weight: 900;
+  color: #fff;
+  border: 2px solid #0f172a;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
 }
 
-/* Optimization-skipped state — dashed border, clickable */
+.ujm-badge.ujm-rules-only::after {
+  content: 'R';
+  background: var(--ujm-secondary);
+}
+
+.ujm-badge.ujm-optimization-skipped::after {
+  content: '⚡';
+  background: #f59e0b;
+}
+
 .ujm-badge.ujm-optimization-skipped {
-  border: 2px dashed #9ca3af;
-  background: #f3f4f6;
-  color: #6b7280;
-  animation: none;
+  background: rgba(245, 158, 11, 0.05);
+  border: 1px dashed rgba(245, 158, 11, 0.4);
+  color: #f59e0b;
+  box-shadow: none;
 }
 
 .ujm-badge.ujm-clickable {
@@ -178,32 +251,9 @@
 }
 
 .ujm-badge.ujm-clickable:hover {
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-
-.ujm-badge.ujm-clickable:active {
-  transform: scale(0.98);
-}
-
-/* Optimization-skipped indicator — small orange dot on final badge */
-.ujm-badge.ujm-optimization-skipped::after {
-  content: '⚡';
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #f97316;
-  font-size: 8px;
-  font-weight: 700;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 14px;
-  text-align: center;
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+  filter: brightness(1.15);
 }
 
 /* Flag pill row */
@@ -211,104 +261,159 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 4px;
+  gap: 6px;
 }
 
 /* Pill base */
 .ujm-pill {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
   white-space: nowrap;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--ujm-font);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: var(--ujm-transition);
+  box-shadow: var(--ujm-shadow-sm);
+}
+
+.ujm-pill:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.2);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
 }
 
 /* Pill color variants */
-.ujm-pill-green  { background: #dcfce7; color: #15803d; }
-.ujm-pill-red    { background: #fee2e2; color: #b91c1c; }
-.ujm-pill-yellow { background: #fef9c3; color: #a16207; }
-.ujm-pill-gray   { background: #f3f4f6; color: #4b5563; }
+.ujm-pill-green  { background: rgba(16, 185, 129, 0.12); color: #4ade80; border-color: rgba(16, 185, 129, 0.3); }
+.ujm-pill-red    { background: rgba(239, 68, 68, 0.12); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+.ujm-pill-yellow { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
+.ujm-pill-gray   { background: rgba(148, 163, 184, 0.12); color: #cbd5e1; border-color: rgba(148, 163, 184, 0.3); }
 
 /* Tooltip — shown on hover of final badge */
 .ujm-tooltip {
   display: none;
   position: absolute;
-  top: 28px;
+  top: 40px;
   right: 0;
-  width: 200px;
-  background: #1f2937;
-  color: #f9fafb;
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 12px;
-  line-height: 1.5;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  width: 280px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  color: var(--ujm-text);
+  border-radius: 20px;
+  padding: 20px;
+  font-size: 13px;
+  line-height: 1.6;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.6);
   z-index: 1000;
   pointer-events: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--ujm-font);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: ujm-tooltip-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ujm-tooltip-in {
+  from { opacity: 0; transform: translateY(15px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .ujm-badge:hover .ujm-tooltip {
   display: block;
 }
 
+/* Tooltip Header */
+.ujm-tooltip-header {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 800;
+  color: var(--ujm-accent);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ujm-tooltip-header::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.3), transparent);
+}
+
 /* Score breakdown table inside tooltip */
 .ujm-tooltip-scores {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  margin-bottom: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #374151;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .ujm-tooltip-score-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11px;
 }
 
 .ujm-tooltip-label {
-  color: #9ca3af;
+  color: var(--ujm-text-muted);
   font-weight: 500;
 }
 
 .ujm-tooltip-val {
   font-weight: 700;
-  color: #f9fafb;
+  color: var(--ujm-text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+}
+
+.ujm-tooltip-final {
+  margin-top: 6px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .ujm-tooltip-final .ujm-tooltip-label {
-  color: #d1d5db;
+  color: var(--ujm-text);
+  font-weight: 700;
 }
 
 .ujm-tooltip-final .ujm-tooltip-val {
-  font-size: 13px;
-  color: #fff;
+  font-size: 20px;
+  color: var(--ujm-primary);
+  text-shadow: 0 0 15px var(--ujm-primary-glow);
 }
 
 .ujm-tooltip-reason {
-  color: #d1d5db;
-  font-size: 11px;
-  margin-bottom: 6px;
+  color: var(--ujm-text-muted);
+  font-size: 12px;
+  margin-bottom: 14px;
+  line-height: 1.5;
+  padding-left: 10px;
+  border-left: 2px solid var(--ujm-glass-border);
 }
 
 .ujm-tooltip-flags {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 4px;
+  gap: 6px;
 }
 
 .ujm-flag {
-  background: #374151;
-  border-radius: 4px;
-  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 4px 10px;
   font-size: 10px;
-  color: #9ca3af;
-  white-space: nowrap;
+  font-weight: 600;
+  color: var(--ujm-text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  text-transform: capitalize;
 }
 
 /* Make job cards position:relative so badge can be absolute */
@@ -316,3 +421,4 @@
 [data-test="JobsList"] article[data-test="JobTile"] {
   position: relative !important;
 }
+
