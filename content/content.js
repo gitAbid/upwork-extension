@@ -12,6 +12,7 @@
     USER_HOURLY_RATE: 'ujm_user_hourly_rate',
     USER_FIXED_MIN: 'ujm_user_fixed_min',
     USER_FIXED_MAX: 'ujm_user_fixed_max',
+    CUSTOM_RULES: 'ujm_custom_rules',
   };
 
   const DEFAULT_WEIGHTS = { rules: 40, llm: 60 };
@@ -143,6 +144,51 @@
     return match ? parseInt(match[1], 10) : 0;
   }
 
+  // ─── Custom rules evaluator (additive bonus/penalty on top of base scoring) ─
+  const NUMERIC_FIELDS = ['proposals', 'budget_min', 'budget_max'];
+
+  function applyCustomRules(jobData, rules) {
+    const flags = [];
+    let bonusPoints = 0;
+
+    for (const rule of rules) {
+      if (!rule.name || !rule.operator) continue;
+
+      let fieldValue;
+      switch (rule.field) {
+        case 'proposals':   fieldValue = jobData.proposalCount ?? 999; break;
+        case 'budget_min':  fieldValue = jobData.budgetMin ?? 0; break;
+        case 'budget_max':  fieldValue = jobData.budgetMax ?? 0; break;
+        case 'country':     fieldValue = (jobData.clientCountry ?? '').toLowerCase(); break;
+        case 'posted_time': fieldValue = jobData.postedTime ?? ''; break;
+        case 'title':       fieldValue = (jobData.title ?? '').toLowerCase(); break;
+        default: continue;
+      }
+
+      const ruleValue = NUMERIC_FIELDS.includes(rule.field)
+        ? parseFloat(rule.value) || 0
+        : String(rule.value || '').toLowerCase();
+
+      let matched = false;
+      switch (rule.operator) {
+        case 'lt':           matched = typeof fieldValue === 'number' && fieldValue < ruleValue; break;
+        case 'lte':          matched = typeof fieldValue === 'number' && fieldValue <= ruleValue; break;
+        case 'gt':           matched = typeof fieldValue === 'number' && fieldValue > ruleValue; break;
+        case 'gte':          matched = typeof fieldValue === 'number' && fieldValue >= ruleValue; break;
+        case 'eq':           matched = String(fieldValue) === String(ruleValue); break;
+        case 'contains':     matched = String(fieldValue).includes(String(ruleValue)); break;
+        case 'not_contains': matched = !String(fieldValue).includes(String(ruleValue)); break;
+      }
+
+      if (matched) {
+        bonusPoints += rule.points || 0;
+        if (rule.flag) flags.push(rule.flag);
+      }
+    }
+
+    return { bonusPoints, flags };
+  }
+
   // ─── State ─────────────────────────────────────────────────────────────────
   const processedCards = new WeakSet();
   const inFlightIds = new Set();
@@ -150,6 +196,7 @@
   let userHourlyRate = undefined;
   let userFixedMin = undefined;
   let userFixedMax = undefined;
+  let customRules = [];
 
   // ─── Inject floating toggle button ───────────────────────────────────────────
   let toggleButton = null;
@@ -420,16 +467,17 @@
     chipRow.appendChild(finalChip);
     wrapper.appendChild(chipRow);
 
-    // Flag pills
-    const knownFlags = (flags || []).filter(f => FLAG_LABELS[f]);
-    if (knownFlags.length) {
+    // Flag pills (both known system flags and custom rule flags)
+    const allPillFlags = (flags || []).filter(f => FLAG_LABELS[f] || f);
+    if (allPillFlags.length) {
       const pillRow = document.createElement('div');
       pillRow.className = 'ujm-flags-row';
-      knownFlags.forEach(f => {
+      allPillFlags.forEach(f => {
         const pill = document.createElement('span');
-        const color = FLAG_PILL_COLOR[f] || 'gray';
+        const isCustom = !FLAG_LABELS[f];
+        const color = isCustom ? 'blue' : (FLAG_PILL_COLOR[f] || 'gray');
         pill.className = `ujm-pill ujm-pill-${color}`;
-        pill.textContent = FLAG_LABELS[f];
+        pill.textContent = isCustom ? f : FLAG_LABELS[f];
         pillRow.appendChild(pill);
       });
       wrapper.appendChild(pillRow);
@@ -463,11 +511,14 @@
     if (!jobData.title) return;
 
     const { score: rulesScore, flags } = applyRulesScore(jobData);
+    const { bonusPoints, flags: customFlags } = applyCustomRules(jobData, customRules);
+    const adjustedRulesScore = Math.min(100, Math.max(0, rulesScore + bonusPoints));
+    const allFlags = [...flags, ...customFlags];
 
     injectLoadingBadge(card, jobData.uid);
 
     // Send forced analysis request
-    const payload = { ...jobData, rulesScore, flags, forceAnalysis: true };
+    const payload = { ...jobData, rulesScore: adjustedRulesScore, flags: allFlags, forceAnalysis: true };
     let result;
     try {
       result = await new Promise((resolve, reject) => {
@@ -477,12 +528,12 @@
         });
       });
     } catch (err) {
-      result = { score: rulesScore, reason: 'Extension error: ' + err.message, flags, llmScore: null, rulesScore };
+      result = { score: adjustedRulesScore, reason: 'Extension error: ' + err.message, flags: allFlags, llmScore: null, rulesScore: adjustedRulesScore };
     }
 
     if (!document.contains(card)) return;
     if (!result) {
-      result = { score: rulesScore, reason: 'No response from service worker.', flags, llmScore: null, rulesScore };
+      result = { score: adjustedRulesScore, reason: 'No response from service worker.', flags: allFlags, llmScore: null, rulesScore: adjustedRulesScore };
     }
     injectBadge(card, result);
   }
@@ -536,6 +587,9 @@
     inFlightIds.add(jobData.uid);
 
     const { score: rulesScore, flags } = applyRulesScore(jobData);
+    const { bonusPoints, flags: customFlags } = applyCustomRules(jobData, customRules);
+    const adjustedRulesScore = Math.min(100, Math.max(0, rulesScore + bonusPoints));
+    const allFlags = [...flags, ...customFlags];
 
     injectLoadingBadge(card, jobData.uid);
 
@@ -547,7 +601,7 @@
     } catch (_) {}
 
     // Send to service worker for LLM scoring
-    const payload = { ...jobData, rulesScore, flags };
+    const payload = { ...jobData, rulesScore: adjustedRulesScore, flags: allFlags };
     let result;
     try {
       result = await new Promise((resolve, reject) => {
@@ -557,7 +611,7 @@
         });
       });
     } catch (err) {
-      result = { score: rulesScore, reason: 'Extension error: ' + err.message, flags, llmScore: null, rulesScore };
+      result = { score: adjustedRulesScore, reason: 'Extension error: ' + err.message, flags: allFlags, llmScore: null, rulesScore: adjustedRulesScore };
     }
 
     // Guard: card may have been removed from DOM
@@ -567,7 +621,7 @@
     }
 
     if (!result) {
-      result = { score: rulesScore, reason: 'No response from service worker.', flags, llmScore: null, rulesScore };
+      result = { score: adjustedRulesScore, reason: 'No response from service worker.', flags: allFlags, llmScore: null, rulesScore: adjustedRulesScore };
     }
     injectBadge(card, result);
     inFlightIds.delete(jobData.uid);
@@ -615,11 +669,12 @@
 
   // ─── Initial scan ──────────────────────────────────────────────────────────
   // Load user hourly rate and fixed price range at initialization
-  chrome.storage.sync.get([STORAGE_KEYS.USER_HOURLY_RATE, STORAGE_KEYS.USER_FIXED_MIN, STORAGE_KEYS.USER_FIXED_MAX], (data) => {
+  chrome.storage.sync.get([STORAGE_KEYS.USER_HOURLY_RATE, STORAGE_KEYS.USER_FIXED_MIN, STORAGE_KEYS.USER_FIXED_MAX, STORAGE_KEYS.CUSTOM_RULES], (data) => {
     userHourlyRate = data[STORAGE_KEYS.USER_HOURLY_RATE] || null;
     userFixedMin = data[STORAGE_KEYS.USER_FIXED_MIN] || null;
     userFixedMax = data[STORAGE_KEYS.USER_FIXED_MAX] || null;
-    console.log('[UJM] Loaded user settings:', { userHourlyRate, userFixedMin, userFixedMax });
+    customRules = Array.isArray(data[STORAGE_KEYS.CUSTOM_RULES]) ? data[STORAGE_KEYS.CUSTOM_RULES] : [];
+    console.log('[UJM] Loaded user settings:', { userHourlyRate, userFixedMin, userFixedMax, customRulesCount: customRules.length });
   });
 
   // Listen for changes to user hourly rate and fixed price range
@@ -636,6 +691,10 @@
       if (changes[STORAGE_KEYS.USER_FIXED_MAX]) {
         userFixedMax = changes[STORAGE_KEYS.USER_FIXED_MAX].newValue || null;
         console.log('[UJM] Updated userFixedMax:', userFixedMax);
+      }
+      if (changes[STORAGE_KEYS.CUSTOM_RULES]) {
+        customRules = Array.isArray(changes[STORAGE_KEYS.CUSTOM_RULES].newValue) ? changes[STORAGE_KEYS.CUSTOM_RULES].newValue : [];
+        console.log('[UJM] Updated customRules:', customRules.length, 'rules');
       }
     }
   });

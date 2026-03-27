@@ -158,6 +158,56 @@ function extractNumber(str) {
 }
 
 /**
+ * applyCustomRules(jobData, rules) → { bonusPoints: number, flags: string[] }
+ *
+ * Evaluates user-defined custom rules as additive modifiers on top of base scoring.
+ * Positive points = bonus, negative = penalty, 0 = flag only.
+ */
+function applyCustomRules(jobData, rules) {
+  const flags = [];
+  let bonusPoints = 0;
+
+  const NUMERIC_FIELDS = ['proposals', 'budget_min', 'budget_max'];
+
+  for (const rule of rules) {
+    if (!rule.name || !rule.operator) continue;
+
+    let fieldValue;
+    switch (rule.field) {
+      case 'proposals':   fieldValue = jobData.proposalCount ?? 999; break;
+      case 'budget_min':  fieldValue = jobData.budgetMin ?? 0; break;
+      case 'budget_max':  fieldValue = jobData.budgetMax ?? 0; break;
+      case 'country':     fieldValue = (jobData.clientCountry ?? '').toLowerCase(); break;
+      case 'posted_time': fieldValue = jobData.postedTime ?? ''; break;
+      case 'title':       fieldValue = (jobData.title ?? '').toLowerCase(); break;
+      default: continue;
+    }
+
+    const ruleValue = NUMERIC_FIELDS.includes(rule.field)
+      ? parseFloat(rule.value) || 0
+      : String(rule.value || '').toLowerCase();
+
+    let matched = false;
+    switch (rule.operator) {
+      case 'lt':           matched = typeof fieldValue === 'number' && fieldValue < ruleValue; break;
+      case 'lte':          matched = typeof fieldValue === 'number' && fieldValue <= ruleValue; break;
+      case 'gt':           matched = typeof fieldValue === 'number' && fieldValue > ruleValue; break;
+      case 'gte':          matched = typeof fieldValue === 'number' && fieldValue >= ruleValue; break;
+      case 'eq':           matched = String(fieldValue) === String(ruleValue); break;
+      case 'contains':     matched = String(fieldValue).includes(String(ruleValue)); break;
+      case 'not_contains': matched = !String(fieldValue).includes(String(ruleValue)); break;
+    }
+
+    if (matched) {
+      bonusPoints += rule.points || 0;
+      if (rule.flag) flags.push(rule.flag);
+    }
+  }
+
+  return { bonusPoints, flags };
+}
+
+/**
  * combineScores(rulesScore, llmScore, weights) → final weighted score (0-100)
  * weights: { rules: 0-100, llm: 0-100 } (should sum to 100)
  */

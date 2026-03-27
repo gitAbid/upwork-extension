@@ -11,7 +11,7 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <div class="logo-mark">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          <img src="../icons/icon48.png" alt="UJM" width="28" height="28">
         </div>
         <h1>Matcher Settings</h1>
       </div>
@@ -58,9 +58,27 @@
           </header>
 
           <section class="card">
-            <h3>Bio & Experience</h3>
-            <p class="help-text">Paste your resume or bio. The AI uses this for job fit analysis.</p>
-            <textarea id="profile-bio" name="profile" rows="8" placeholder="e.g. Senior full-stack developer with 8 years experience..."></textarea>
+            <div class="bio-header">
+              <div>
+                <h3>Bio & Experience</h3>
+                <p class="help-text">Describe your skills, expertise, and experience. The AI uses this to evaluate job fit.</p>
+              </div>
+              <span class="bio-char-count" id="bio-char-count">0</span>
+            </div>
+            <textarea id="profile-bio" name="profile" rows="8" placeholder="Senior React developer with 6 years experience in SaaS products. Skilled in TypeScript, Node.js, PostgreSQL, and AWS. Built payment systems, dashboards, and real-time collaboration tools. Familiar with Agile/Scrum and CI/CD pipelines."></textarea>
+            <div class="bio-tips-toggle" id="bio-tips-toggle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span>What should I include?</span>
+              <svg class="bio-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="bio-tips" id="bio-tips">
+              <div class="bio-tip-item"><strong>Skills & technologies</strong> — languages, frameworks, tools you're proficient in</div>
+              <div class="bio-tip-item"><strong>Experience level</strong> — years of experience, seniority, domains</div>
+              <div class="bio-tip-item"><strong>Project types</strong> — what you've built (SaaS, mobile, e-commerce, etc.)</div>
+              <div class="bio-tip-item"><strong>Soft skills & methods</strong> — Agile, remote work, leadership, communication</div>
+              <div class="bio-tip-item"><strong>Industries</strong> — sectors you have experience in (fintech, healthcare, etc.)</div>
+              <div class="bio-tip-item"><strong>What you avoid</strong> — technologies or project types you don't want (optional)</div>
+            </div>
           </section>
 
           <div class="grid-2">
@@ -171,6 +189,22 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 Add Rule
               </button>
+            </div>
+            <p class="help-text" style="margin-top:0">Add bonus points or penalties on top of the base scoring engine.</p>
+            <div class="rule-guide-toggle" id="rule-guide-toggle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span>How do custom rules work?</span>
+              <svg class="bio-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="rule-guide" id="rule-guide">
+              <div class="bio-tip-item"><strong>How scoring works</strong> — Base scoring automatically evaluates proposals, budget, location, and posting time. Custom rules run on top as <em>additive modifiers</em>: positive points = bonus, negative points = penalty.</div>
+              <div class="bio-tip-item"><strong>Rule anatomy</strong> — Each rule has 6 parts: <em>Name</em> (label), <em>Field</em> (what to check: proposals, budget, country, title, etc.), <em>Operator</em> (how to compare: contains, gte, lt, etc.), <em>Value</em> (what to compare against), <em>Points</em> (reward or penalty), <em>Flag</em> (optional badge label shown on the job card).</div>
+              <div class="bio-tip-item"><strong>Examples:</strong><br>
+                &bull; Bonus React jobs → Field: <code>title</code>, Contains, <code>React</code>, +20 pts, Flag: <code>Has React</code><br>
+                &bull; Penalize high competition → Field: <code>proposals</code>, ≥ (gte), <code>50</code>, -20 pts<br>
+                &bull; Prefer US clients → Field: <code>country</code>, Contains, <code>United States</code>, +15 pts, Flag: <code>US Client</code>
+              </div>
+              <div class="bio-tip-item"><strong>Tips</strong> — Points can be negative for penalties. All matching rules stack. Leave Flag empty if you only want to adjust the score without a visible pill badge. Title field lets you keyword-match job titles.</div>
             </div>
             <div id="rules-list" class="rules-list"></div>
             <button type="button" id="reset-rules-btn" class="icon-btn-text" style="width:auto; padding:0; margin-top:12px; font-size:0.8rem;">Reset to Defaults</button>

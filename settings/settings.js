@@ -9,6 +9,7 @@ const API_KEY_LINKS = {
 };
 
 let sidebarItems, tabPanes, profileEl, userHourlyRateEl, userFixedMinEl, userFixedMaxEl, customPromptEl;
+let bioCharCount, bioTipsToggle, bioTips;
 let apiKeyEl, toggleKeyBtn, apiKeyLink, customUrlEl, customUrlRow;
 let modelSelect, modelStatus, refreshModelsBtn, refreshIcon;
 let weightRulesEl, weightLlmEl, weightRulesVal, weightLlmVal;
@@ -31,6 +32,9 @@ function initDOMRefs() {
   tabPanes = document.querySelectorAll('.tab-pane');
 
   profileEl = document.getElementById('profile-bio');
+  bioCharCount = document.getElementById('bio-char-count');
+  bioTipsToggle = document.getElementById('bio-tips-toggle');
+  bioTips = document.getElementById('bio-tips');
   userHourlyRateEl = document.getElementById('user-hourly-rate');
   userFixedMinEl = document.getElementById('user-fixed-min');
   userFixedMaxEl = document.getElementById('user-fixed-max');
@@ -80,6 +84,14 @@ function initDOMRefs() {
   keywordsList = document.getElementById('keywords-list');
   newKeywordEl = document.getElementById('new-keyword');
   addKeywordBtn = document.getElementById('add-keyword-btn');
+}
+
+function updateBioCharCount() {
+  if (!bioCharCount || !profileEl) return;
+  const len = profileEl.value.length;
+  bioCharCount.textContent = len.toLocaleString();
+  bioCharCount.classList.toggle('warn', len >= 3000 && len < 5000);
+  bioCharCount.classList.toggle('over', len >= 5000);
 }
 
 function setupThemeLogic() {
@@ -145,6 +157,7 @@ async function loadSettings() {
   const localData = await chrome.storage.local.get(null);
 
   if (profileEl) profileEl.value = allSyncData[STORAGE_KEYS.PROFILE] || '';
+  updateBioCharCount();
   if (userHourlyRateEl) userHourlyRateEl.value = allSyncData[STORAGE_KEYS.USER_HOURLY_RATE] || '';
   if (userFixedMinEl) userFixedMinEl.value = allSyncData[STORAGE_KEYS.USER_FIXED_MIN] || '';
   if (userFixedMaxEl) userFixedMaxEl.value = allSyncData[STORAGE_KEYS.USER_FIXED_MAX] || '';
@@ -250,25 +263,79 @@ async function refreshModels() {
 function renderRules() {
   if (!rulesList) return;
   rulesList.innerHTML = '';
+
+  const FIELD_OPTIONS = [
+    { value: 'proposals', label: 'Proposals' },
+    { value: 'budget_min', label: 'Budget Min' },
+    { value: 'budget_max', label: 'Budget Max' },
+    { value: 'country', label: 'Country' },
+    { value: 'posted_time', label: 'Posted Time' },
+    { value: 'title', label: 'Title' },
+  ];
+
+  const OPERATOR_OPTIONS = [
+    { value: 'lt', label: '< (lt)' },
+    { value: 'lte', label: '≤ (lte)' },
+    { value: 'gt', label: '> (gt)' },
+    { value: 'gte', label: '≥ (gte)' },
+    { value: 'eq', label: '= (eq)' },
+    { value: 'contains', label: 'Contains' },
+    { value: 'not_contains', label: 'Not Contains' },
+  ];
+
   customRules.forEach((rule, index) => {
     const row = document.createElement('div');
     row.className = 'rule-item';
 
+    // Name input
     const inputName = document.createElement('input');
     inputName.type = 'text';
-    inputName.value = rule.name;
-    inputName.placeholder = 'Rule Description';
+    inputName.value = rule.name || '';
+    inputName.placeholder = 'Rule name';
     inputName.addEventListener('input', (e) => customRules[index].name = e.target.value);
 
+    // Field select
     const selectField = document.createElement('select');
-    ['proposals', 'hourly', 'fixed', 'country'].forEach(f => {
+    FIELD_OPTIONS.forEach(f => {
       const opt = document.createElement('option');
-      opt.value = f; opt.textContent = f.toUpperCase();
-      if (rule.field === f) opt.selected = true;
+      opt.value = f.value; opt.textContent = f.label;
+      if (rule.field === f.value) opt.selected = true;
       selectField.appendChild(opt);
     });
     selectField.addEventListener('change', (e) => customRules[index].field = e.target.value);
 
+    // Operator select
+    const selectOp = document.createElement('select');
+    OPERATOR_OPTIONS.forEach(o => {
+      const opt = document.createElement('option');
+      opt.value = o.value; opt.textContent = o.label;
+      if (rule.operator === o.value) opt.selected = true;
+      selectOp.appendChild(opt);
+    });
+    selectOp.addEventListener('change', (e) => customRules[index].operator = e.target.value);
+
+    // Value input
+    const inputValue = document.createElement('input');
+    inputValue.type = 'text';
+    inputValue.value = rule.value || '';
+    inputValue.placeholder = 'Value';
+    inputValue.addEventListener('input', (e) => customRules[index].value = e.target.value);
+
+    // Points input
+    const inputPoints = document.createElement('input');
+    inputPoints.type = 'number';
+    inputPoints.value = rule.points ?? 0;
+    inputPoints.placeholder = '0';
+    inputPoints.addEventListener('input', (e) => customRules[index].points = parseInt(e.target.value, 10) || 0);
+
+    // Flag input
+    const inputFlag = document.createElement('input');
+    inputFlag.type = 'text';
+    inputFlag.value = rule.flag || '';
+    inputFlag.placeholder = 'Flag label';
+    inputFlag.addEventListener('input', (e) => customRules[index].flag = e.target.value);
+
+    // Remove button
     const btnRemove = document.createElement('button');
     btnRemove.className = 'danger-btn-sm';
     btnRemove.type = 'button';
@@ -277,6 +344,10 @@ function renderRules() {
 
     row.appendChild(inputName);
     row.appendChild(selectField);
+    row.appendChild(selectOp);
+    row.appendChild(inputValue);
+    row.appendChild(inputPoints);
+    row.appendChild(inputFlag);
     row.appendChild(btnRemove);
     rulesList.appendChild(row);
   });
@@ -315,18 +386,29 @@ function renderLog(entries) {
   if (!logList) return;
   logList.innerHTML = '';
   if (!entries.length) {
-    logList.innerHTML = '<div style="padding:12px; color:var(--text-muted); font-size:0.85rem;">No activity logs found.</div>';
+    logList.innerHTML = '<div style="padding:12px; color:var(--text-muted); font-size:0.82rem; font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;">No activity logs found.</div>';
     return;
   }
-  entries.slice(-20).reverse().forEach(entry => {
+  entries.slice(-50).reverse().forEach(entry => {
     const div = document.createElement('div');
     div.className = 'log-entry';
+    const ts = entry.ts ? new Date(entry.ts) : new Date();
+    const time = ts.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const date = ts.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    const score = entry.score ?? '—';
+    const provider = entry.provider || '?';
+    const model = entry.model ? entry.model.split('/').pop() : '';
+    const isError = !!entry.error;
+    const level = isError ? 'ERROR' : 'INFO';
+    const title = entry.jobTitle || 'Unknown Job';
+    const duration = entry.durationMs != null ? `${entry.durationMs}ms` : '';
     div.innerHTML = `
-      <div class="log-title">${escapeHtml(entry.jobTitle || 'Unknown Job')}</div>
-      <div class="log-meta">
-        <span class="badge" style="background:var(--primary); color:#fff">★ ${entry.score ?? 'N/A'}</span>
-        <span>${new Date(entry.ts || Date.now()).toLocaleTimeString()}</span>
-      </div>`;
+      <span class="log-expand-hint">&#9654;</span>
+      <span class="log-ts">${date} ${time}</span>
+      <span class="log-level log-level--${level.toLowerCase()}">${level}</span>
+      <span class="log-score">score:${score}</span>
+      <span class="log-provider">${escapeHtml(provider)}${model ? '/' + escapeHtml(model) : ''}</span>
+      <span class="log-msg">${escapeHtml(title)}${duration ? ' <span class="log-dur">(' + duration + ')</span>' : ''}</span>`;
     div.addEventListener('click', () => openLogModal(entry));
     logList.appendChild(div);
   });
@@ -537,7 +619,7 @@ function setupEventListeners() {
   }
 
   addRuleBtn?.addEventListener('click', () => {
-    customRules.push({ id: 'r' + Date.now(), name: '', field: 'proposals', operator: 'lt', value: '10', points: 10, flag: '' });
+    customRules.push({ id: 'r' + Date.now(), name: '', field: 'title', operator: 'contains', value: '', points: 0, flag: '' });
     renderRules();
   });
 
@@ -583,6 +665,18 @@ function setupEventListeners() {
     if (confirm('Delete all logs?')) {
       chrome.storage.local.set({ [STORAGE_KEYS.REQUEST_LOG]: [] }, () => renderLog([]));
     }
+  });
+
+  profileEl?.addEventListener('input', updateBioCharCount);
+
+  bioTipsToggle?.addEventListener('click', () => {
+    bioTipsToggle.classList.toggle('open');
+    bioTips?.classList.toggle('open');
+  });
+
+  document.getElementById('rule-guide-toggle')?.addEventListener('click', () => {
+    document.getElementById('rule-guide-toggle')?.classList.toggle('open');
+    document.getElementById('rule-guide')?.classList.toggle('open');
   });
 }
 

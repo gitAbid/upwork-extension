@@ -95,24 +95,12 @@ const MESSAGE_TYPES = {
   FETCH_MODELS: 'FETCH_MODELS',
 };
 
-// Default rules for rules-based scoring
+// Default custom rules — examples demonstrating the system (base scoring is hardcoded; these add bonus/penalty on top)
 const DEFAULT_CUSTOM_RULES = [
-  { id: 'r1', name: 'Low Proposals', field: 'proposals', operator: 'lt', value: '5', points: 30, flag: 'low_competition' },
-  { id: 'r2', name: 'Medium Proposals', field: 'proposals', operator: 'range', value: '5-14', points: 20, flag: '' },
-  { id: 'r3', name: 'High Proposals 15-29', field: 'proposals', operator: 'range', value: '15-29', points: 10, flag: '' },
-  { id: 'r4', name: 'High Proposals 30-49', field: 'proposals', operator: 'range', value: '30-49', points: 5, flag: 'high_competition' },
-  { id: 'r5', name: 'Too Many Proposals', field: 'proposals', operator: 'gte', value: '50', points: 0, flag: 'high_competition' },
-  { id: 'r6', name: 'Good Hourly Rate', field: 'hourly', operator: 'range', value: '30-80', points: 30, flag: 'budget_match' },
-  { id: 'r7', name: 'High Hourly Rate', field: 'hourly', operator: 'range', value: '81-150', points: 20, flag: 'budget_high' },
-  { id: 'r8', name: 'Low Hourly Rate', field: 'hourly', operator: 'range', value: '20-29', points: 15, flag: 'budget_low' },
-  { id: 'r9', name: 'Good Fixed Budget', field: 'fixed', operator: 'range', value: '100-500', points: 30, flag: 'budget_match' },
-  { id: 'r10', name: 'High Fixed Budget', field: 'fixed', operator: 'range', value: '501-1000', points: 20, flag: 'budget_high' },
-  { id: 'r11', name: 'Very High Fixed', field: 'fixed', operator: 'gt', value: '1000', points: 15, flag: 'budget_very_high' },
-  { id: 'r12', name: 'Top Location', field: 'country', operator: 'in', value: 'United States,United Kingdom,Australia', points: 25, flag: 'preferred_location' },
-  { id: 'r13', name: 'Good Location', field: 'country', operator: 'contains', value: 'Canada', points: 15, flag: 'good_location' },
-  { id: 'r14', name: 'Just Posted', field: 'posted', operator: 'lt_minutes', value: '60', points: 15, flag: 'just_posted' },
-  { id: 'r15', name: 'Recently Posted', field: 'posted', operator: 'range_hours', value: '1-6', points: 10, flag: 'recently_posted' },
-  { id: 'r16', name: 'Same Day', field: 'posted', operator: 'range_hours', value: '7-24', points: 5, flag: '' },
+  { id: 'r1', name: 'Penalize 50+ proposals', field: 'proposals', operator: 'gte', value: '50', points: -20, flag: '' },
+  { id: 'r2', name: 'Bonus for US/UK clients', field: 'country', operator: 'contains', value: 'United States', points: 15, flag: 'US Client' },
+  { id: 'r3', name: 'Avoid WordPress jobs', field: 'title', operator: 'contains', value: 'WordPress', points: -30, flag: 'WP Job' },
+  { id: 'r4', name: 'Bonus: React keyword', field: 'title', operator: 'contains', value: 'React', points: 20, flag: 'Has React' },
 ];
 
 const DEFAULT_STACK_KEYWORDS = ['react', 'node', 'python', 'javascript', 'typescript', 'next.js', 'vue', 'angular'];

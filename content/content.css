@@ -262,6 +262,7 @@
 .ujm-pill-red    { background: #fce8e6; color: #b71c1c; border-color: rgba(217, 48, 37, 0.2); }
 .ujm-pill-yellow { background: #fef4e6; color: #b37a00; border-color: rgba(245, 166, 35, 0.2); }
 .ujm-pill-gray   { background: #f1f2f4; color: #575a62; border-color: rgba(138, 143, 152, 0.2); }
+.ujm-pill-blue   { background: #e3f2fd; color: #1565c0; border-color: rgba(21, 101, 192, 0.2); }
 
 /* Tooltip — shown on hover of final badge */
 .ujm-tooltip {
