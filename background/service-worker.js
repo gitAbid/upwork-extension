@@ -17,6 +17,19 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       .catch(err => sendResponse({ models: [], error: err.message }));
     return true;
   }
+  if (msg.type === MESSAGE_TYPES.FETCH_JOB_DETAILS) {
+    console.log('[UJM SW] FETCH_JOB_DETAILS received:', msg.payload?.ciphertext);
+    handleFetchJobDetails(msg.payload)
+      .then(data => {
+        console.log('[UJM SW] FETCH_JOB_DETAILS success:', msg.payload?.ciphertext);
+        sendResponse({ success: true, data });
+      })
+      .catch(err => {
+        console.error('[UJM SW] FETCH_JOB_DETAILS error:', err.message);
+        sendResponse({ success: false, error: err.message });
+      });
+    return true;
+  }
   return false;
 });
 
@@ -439,4 +452,441 @@ function parseJsonResponse(text) {
     }
     throw new Error('Could not parse LLM JSON response');
   }
+}
+
+// ─── Upwork GraphQL API — Fetch deep job details ────────────────────────────
+
+const UPWORK_GQL_URL = 'https://www.upwork.com/api/graphql/v1';
+const JOB_DETAILS_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+
+let cachedAuthHeaders = null;
+let cachedAuthTime = 0;
+
+async function getUpworkAuthHeaders() {
+  // Re-use cached headers for up to 2 minutes
+  if (cachedAuthHeaders && Date.now() - cachedAuthTime < 2 * 60 * 1000) {
+    return cachedAuthHeaders;
+  }
+
+  const cookies = await chrome.cookies.getAll({ domain: '.upwork.com' });
+  console.log('[UJM SW] Found', cookies.length, 'upwork cookies');
+
+  // Find the bearer token cookie (name like '3e880535sb')
+  const bearerCookie = cookies.find(c => c.name.endsWith('sb') && c.value.startsWith('oauth2v2_'));
+  const orgUidCookie = cookies.find(c => c.name === 'current_organization_uid');
+
+  console.log('[UJM SW] Bearer cookie:', bearerCookie ? bearerCookie.name : 'NOT FOUND');
+  console.log('[UJM SW] Org UID cookie:', orgUidCookie ? 'found' : 'NOT FOUND');
+
+  if (!bearerCookie) {
+    throw new Error('Not authenticated — no Upwork bearer token found in cookies');
+  }
+
+  cachedAuthHeaders = {
+    'authorization': `bearer ${bearerCookie.value}`,
+    'content-type': 'application/json',
+    'accept': '*/*',
+    'x-upwork-accept-language': 'en-US',
+    'x-upwork-api-tenantid': orgUidCookie?.value || '',
+    'origin': 'https://www.upwork.com',
+    'referer': 'https://www.upwork.com/',
+  };
+  cachedAuthTime = Date.now();
+
+  return cachedAuthHeaders;
+}
+
+async function fetchGraphQL(alias, query, variables) {
+  const headers = await getUpworkAuthHeaders();
+  const url = alias ? `${UPWORK_GQL_URL}?alias=${alias}` : UPWORK_GQL_URL;
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers,
+    credentials: 'include',
+    body: JSON.stringify({ query, variables }),
+  });
+
+  if (res.status === 401) {
+    cachedAuthHeaders = null;
+    throw new Error('Upwork auth expired (401)');
+  }
+  if (res.status === 429) {
+    throw new Error('Upwork rate limited (429)');
+  }
+  if (!res.ok) {
+    throw new Error(`Upwork API ${res.status}`);
+  }
+
+  const data = await res.json();
+  if (data.errors?.length) {
+    throw new Error(`GraphQL error: ${data.errors[0].message}`);
+  }
+  return data.data;
+}
+
+// Minimal job details query — only fields we actually use
+const JOB_AUTH_DETAILS_QUERY = `
+fragment JobPubOpeningInfoFragment on Job {
+  ciphertext id type access title hideBudget createdOn premium
+}
+fragment JobPubOpeningSegmentationDataFragment on JobSegmentation {
+  customValue label name sortOrder type value
+  skill { description prettyName skill id }
+}
+fragment JobPubOpeningSandDataFragment on SandsData {
+  occupation { freeText ontologyId prefLabel id uid:id }
+  ontologySkills { groupId id freeText prefLabel groupPrefLabel relevance }
+  additionalSkills { groupId id freeText prefLabel relevance }
+}
+fragment JobPubOpeningFragment on JobPubOpeningInfo {
+  status postedOn publishTime workload contractorTier description
+  info { ...JobPubOpeningInfoFragment }
+  segmentationData { ...JobPubOpeningSegmentationDataFragment }
+  sandsData { ...JobPubOpeningSandDataFragment }
+  category { name urlSlug }
+  categoryGroup { name urlSlug }
+  budget { amount currencyCode }
+  annotations { customFields tags }
+  engagementDuration { label weeks }
+  extendedBudgetInfo { hourlyBudgetMin hourlyBudgetMax hourlyBudgetType }
+  clientActivity {
+    lastBuyerActivity totalApplicants totalHired totalInvitedToInterview
+    unansweredInvites invitationsSent numberOfPositionsToHire
+  }
+}
+fragment JobQualificationsFragment on JobQualifications {
+  countries languages minJobSuccessScore minOdeskHours prefEnglishSkill
+  risingTalent shouldHavePortfolio type locationCheckRequired
+}
+fragment JobAuthDetailsOpeningFragment on JobAuthOpeningInfo {
+  job { ...JobPubOpeningFragment }
+  qualifications { ...JobQualificationsFragment }
+  questions { question position }
+}
+fragment JobPubBuyerInfoFragment on JobPubBuyerInfo {
+  location { offsetFromUtcMillis countryTimezone city country }
+  stats {
+    totalAssignments activeAssignmentsCount hoursCount feedbackCount score
+    totalJobsWithHires totalCharges { amount }
+  }
+  company { name companyId isEDCReplicated contractDate profile { industry size } }
+  jobs { openCount postedCount openJobs { id uid:id isPtcPrivate ciphertext title type } }
+  avgHourlyJobsRate { amount }
+}
+fragment JobAuthDetailsBuyerWorkHistoryFragment on BuyerWorkHistoryItem {
+  isPtcJob status isEDCReplicated isPtcPrivate startDate endDate
+  totalCharge totalHours
+  jobInfo { title id uid:id access type ciphertext }
+  contractorInfo { contractorName accessType ciphertext }
+  rate { amount }
+  feedback { feedbackSuppressed score comment }
+  feedbackToClient { feedbackSuppressed score comment }
+}
+fragment JobAuthDetailsBuyerFragment on JobAuthBuyerInfo {
+  enterprise isPaymentMethodVerified
+  info { ...JobPubBuyerInfoFragment }
+  workHistory { ...JobAuthDetailsBuyerWorkHistoryFragment }
+}
+fragment JobAuthDetailsCurrentUserInfoFragment on JobCurrentUserInfo {
+  owner
+  freelancerInfo {
+    profileState applied hired
+    hourlyRate { amount }
+    qualificationsMatches {
+      matches {
+        clientPreferred clientPreferredLabel freelancerValue
+        freelancerValueLabel qualification qualified
+      }
+    }
+  }
+}
+query JobAuthDetailsQuery($id: ID!, $isFreelancerOrAgency: Boolean!) {
+  jobAuthDetails(id: $id) {
+    hiredApplicantNames
+    opening { ...JobAuthDetailsOpeningFragment }
+    buyer { ...JobAuthDetailsBuyerFragment }
+    currentUserInfo { ...JobAuthDetailsCurrentUserInfoFragment }
+    applicantsBidsStats {
+      avgRateBid { amount currencyCode }
+      minRateBid { amount currencyCode }
+      maxRateBid { amount currencyCode }
+    }
+    applicationContext @include(if: $isFreelancerOrAgency) { freelancerAllowed clientAllowed }
+  }
+}`;
+
+const CONNECTS_QUERY = `
+query connectsDataForFreelancer($jobId: ID!) {
+  pricingJobPost: jobConnectsPriceFreelancer(jobId: $jobId) {
+    price
+    context
+    auctionPrice
+  }
+  connectsSummary: jobFreelancerConnectsSummary {
+    connectsBalance
+  }
+}`;
+
+const SUGGESTED_BID_QUERY = `
+query ($jobPostUid: ID!) {
+  bidsJobPostUid(jobPostUid: $jobPostUid, includeSuggestedBid: true) {
+    suggestedBid { medianBid, p80Bid, p90Bid }
+  }
+}`;
+
+const COMPETITOR_BIDS_QUERY = `
+query ($jobPostUid: ID!) {
+  bidsJobPostUid(jobPostUid: $jobPostUid, filter: IN_THE_MONEY) {
+    bids { id, amount, createdTime }
+  }
+}`;
+
+async function fetchJobAuthDetails(ciphertext) {
+  return fetchGraphQL('gql-query-get-auth-job-details', JOB_AUTH_DETAILS_QUERY, {
+    id: ciphertext,
+    isFreelancerOrAgency: true,
+  });
+}
+
+async function fetchConnectsData(numericUid) {
+  return fetchGraphQL('gql-query-get-connects-data', CONNECTS_QUERY, {
+    jobId: numericUid,
+  });
+}
+
+async function fetchSuggestedBid(numericUid) {
+  return fetchGraphQL('gql-query-bidsjobpostuid', SUGGESTED_BID_QUERY, {
+    jobPostUid: numericUid,
+  });
+}
+
+async function fetchCompetitorBids(numericUid) {
+  return fetchGraphQL('gql-query-bidsjobpostuid', COMPETITOR_BIDS_QUERY, {
+    jobPostUid: numericUid,
+  });
+}
+
+function parseDeepData(jobAuthData) {
+  const details = jobAuthData?.jobAuthDetails || {};
+  const opening = details.opening?.job || {};
+  const buyer = details.buyer || {};
+  const buyerInfo = buyer.info || {};
+  const buyerStats = buyerInfo.stats || {};
+  const buyerLocation = buyerInfo.location || {};
+  const clientActivity = opening.clientActivity || {};
+  const qualifications = details.opening?.qualifications || {};
+  const questions = details.opening?.questions || [];
+  const currentUser = details.currentUserInfo?.freelancerInfo || {};
+  const bidsStats = details.applicantsBidsStats || {};
+  const engagement = opening.engagementDuration || {};
+  const extendedBudget = opening.extendedBudgetInfo || {};
+  const segmentationData = opening.segmentationData || [];
+
+  // Parse suggested bid
+  const suggestedBid = {};
+  const compBids = [];
+
+  // Parse qualification matches
+  const qualMatches = currentUser.qualificationsMatches?.matches || [];
+  const matchedQuals = qualMatches.filter(m => m.qualified).length;
+
+  return {
+    // Client info
+    client: {
+      rating: buyerStats.score ?? null,
+      feedbackCount: buyerStats.feedbackCount ?? 0,
+      totalAssignments: buyerStats.totalAssignments ?? 0,
+      activeAssignments: buyerStats.activeAssignmentsCount ?? 0,
+      totalSpend: buyerStats.totalCharges?.amount ?? 0,
+      totalJobsWithHires: buyerStats.totalJobsWithHires ?? 0,
+      hoursCount: buyerStats.hoursCount ?? 0,
+      avgHourlyRate: buyerInfo.avgHourlyJobsRate?.amount ?? null,
+      paymentVerified: buyer.isPaymentMethodVerified ?? false,
+      enterprise: buyer.enterprise ?? false,
+      country: buyerLocation.country ?? '',
+      city: buyerLocation.city ?? '',
+      openJobsCount: buyerInfo.jobs?.openCount ?? 0,
+      postedJobsCount: buyerInfo.jobs?.postedCount ?? 0,
+      companyName: buyerInfo.company?.name ?? null,
+      industry: buyerInfo.company?.profile?.industry ?? null,
+    },
+    // Job details
+    job: {
+      description: opening.description ?? '',
+      workload: opening.workload ?? '',
+      contractorTier: opening.contractorTier ?? '',
+      status: opening.status ?? '',
+      postedOn: opening.postedOn ?? '',
+      publishTime: opening.publishTime ?? '',
+      category: opening.category?.name ?? '',
+      categoryGroup: opening.categoryGroup?.name ?? '',
+      engagement: engagement.label ?? '',
+      engagementWeeks: engagement.weeks ?? 0,
+      hourlyBudgetMin: extendedBudget.hourlyBudgetMin ?? null,
+      hourlyBudgetMax: extendedBudget.hourlyBudgetMax ?? null,
+      hourlyBudgetType: extendedBudget.hourlyBudgetType ?? null,
+      budget: opening.budget ?? null,
+      premium: opening.info?.premium ?? false,
+    },
+    // Activity
+    activity: {
+      totalApplicants: clientActivity.totalApplicants ?? 0,
+      totalHired: clientActivity.totalHired ?? 0,
+      totalInvited: clientActivity.totalInvitedToInterview ?? 0,
+      invitationsSent: clientActivity.invitationsSent ?? 0,
+      numberOfPositions: clientActivity.numberOfPositionsToHire ?? 1,
+      lastBuyerActivity: clientActivity.lastBuyerActivity ?? null,
+    },
+    // Qualifications
+    qualifications: {
+      matched: matchedQuals,
+      total: qualMatches.length,
+      minJobSuccessScore: qualifications.minJobSuccessScore ?? 0,
+      minOdeskHours: qualifications.minOdeskHours ?? 0,
+      prefEnglishSkill: qualifications.prefEnglishSkill ?? 'ANY',
+      risingTalent: qualifications.risingTalent ?? false,
+    },
+    // Questions
+    questions: questions.map(q => q.question),
+    // Bid data
+    bids: {
+      medianBid: suggestedBid.medianBid ?? null,
+      p80Bid: suggestedBid.p80Bid ?? null,
+      p90Bid: suggestedBid.p90Bid ?? null,
+      avgRateBid: bidsStats.avgRateBid?.amount ?? null,
+      minRateBid: bidsStats.minRateBid?.amount ?? null,
+      maxRateBid: bidsStats.maxRateBid?.amount ?? null,
+      competitorBids: compBids.map(b => ({ amount: b.amount, time: b.createdTime })),
+    },
+    // Application context
+    application: {
+      freelancerAllowed: details.applicationContext?.freelancerAllowed ?? null,
+      clientAllowed: details.applicationContext?.clientAllowed ?? null,
+      alreadyApplied: currentUser.applied ?? false,
+      alreadyHired: currentUser.hired ?? false,
+      yourRate: currentUser.hourlyRate?.amount ?? null,
+    },
+    // Segmentation
+    segmentation: segmentationData.map(s => ({ name: s.name, label: s.label, value: s.value })),
+    // Hired applicant names
+    hiredApplicantNames: details.hiredApplicantNames || [],
+  };
+}
+
+// ─── Cache for job details ──────────────────────────────────────────────────
+
+async function getCachedJobDetails(cacheKey) {
+  try {
+    const stored = await chrome.storage.session.get(STORAGE_KEYS.JOB_DETAILS_CACHE);
+    const cache = stored[STORAGE_KEYS.JOB_DETAILS_CACHE] || {};
+    const entry = cache[cacheKey];
+    if (entry && Date.now() - entry.ts < JOB_DETAILS_CACHE_TTL) {
+      return entry.data;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function setCachedJobDetails(cacheKey, data) {
+  try {
+    const stored = await chrome.storage.session.get(STORAGE_KEYS.JOB_DETAILS_CACHE);
+    const cache = stored[STORAGE_KEYS.JOB_DETAILS_CACHE] || {};
+    cache[cacheKey] = { ts: Date.now(), data };
+
+    // Evict oldest entries if cache is too large (max 50)
+    const keys = Object.keys(cache);
+    if (keys.length > 50) {
+      keys.sort((a, b) => cache[a].ts - cache[b].ts);
+      const toEvict = keys.slice(0, keys.length - 50);
+      toEvict.forEach(k => delete cache[k]);
+    }
+
+    await chrome.storage.session.set({ [STORAGE_KEYS.JOB_DETAILS_CACHE]: cache });
+  } catch {
+    // Non-critical — ignore cache write failures
+  }
+}
+
+// ─── Main handler for FETCH_JOB_DETAILS messages ────────────────────────────
+
+async function handleFetchJobDetails(payload) {
+  const { ciphertext, jobPostUid } = payload;
+  console.log('[UJM SW] handleFetchJobDetails called, ciphertext:', ciphertext);
+
+  if (!ciphertext) {
+    throw new Error('No job ciphertext provided');
+  }
+
+  // Check cache first
+  const cacheKey = ciphertext.replace('~', 'j');
+  const cached = await getCachedJobDetails(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  // jobPostUid comes from content script (derived from ciphertext ~02 prefix)
+  // Fallback: derive from ciphertext by stripping ~02 prefix (~022... → 2038...)
+  const numericUid = jobPostUid || (ciphertext ? ciphertext.slice(3) : null);
+  console.log('[UJM SW] handleFetchJobDetails, numericUid:', numericUid, 'from jobPostUid:', !!jobPostUid);
+
+  // Fetch auth details + connects + bids in parallel
+  const fetches = [fetchJobAuthDetails(ciphertext)];
+  if (numericUid) {
+    fetches.push(fetchConnectsData(numericUid), fetchSuggestedBid(numericUid), fetchCompetitorBids(numericUid));
+  } else {
+    console.log('[UJM SW] No jobPostUid — skipping connects/bid queries');
+  }
+  const results = await Promise.allSettled(fetches);
+
+  const [jobAuthData, connectsData, suggestedBidData, competitorBidsData] = results;
+
+  // Job auth details is required — everything else is optional
+  if (jobAuthData.status === 'rejected') {
+    throw new Error(jobAuthData.reason?.message || 'Failed to fetch job details');
+  }
+
+  if (connectsData?.status === 'rejected') {
+    console.log('[UJM SW] Connects query failed:', connectsData.reason?.message);
+  }
+
+  const parsed = parseDeepData(jobAuthData.value);
+
+  // Add connects data (from separate query)
+  if (connectsData?.status === 'fulfilled' && connectsData.value) {
+    const raw = connectsData.value;
+    parsed.connects = {
+      price: raw.pricingJobPost?.price ?? null,
+      connectsBalance: raw.connectsSummary?.connectsBalance ?? null,
+    };
+  }
+
+  // Add suggested bid data (median/p80/p90)
+  if (suggestedBidData?.status === 'rejected') {
+    console.log('[UJM SW] Suggested bid query failed:', suggestedBidData.reason?.message);
+  }
+  if (suggestedBidData?.status === 'fulfilled' && suggestedBidData.value) {
+    const sb = suggestedBidData.value.bidsJobPostUid?.suggestedBid || {};
+    parsed.bids.medianBid = sb.medianBid ?? null;
+    parsed.bids.p80Bid = sb.p80Bid ?? null;
+    parsed.bids.p90Bid = sb.p90Bid ?? null;
+    console.log('[UJM SW] Suggested bid:', sb);
+  }
+
+  // Add competitor bids
+  if (competitorBidsData?.status === 'rejected') {
+    console.log('[UJM SW] Competitor bids query failed:', competitorBidsData.reason?.message);
+  }
+  if (competitorBidsData?.status === 'fulfilled' && competitorBidsData.value) {
+    const bids = competitorBidsData.value.bidsJobPostUid?.bids || [];
+    parsed.bids.competitorBids = bids.map(b => ({ amount: b.amount, time: b.createdTime }));
+    console.log('[UJM SW] Competitor bids:', bids.length, 'bids');
+  }
+
+  // Cache the result
+  await setCachedJobDetails(cacheKey, parsed);
+
+  return parsed;
 }

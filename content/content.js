@@ -17,7 +17,7 @@
 
   const DEFAULT_WEIGHTS = { rules: 40, llm: 60 };
   const SCORE_THRESHOLDS = { GREEN: 80, YELLOW: 50 };
-  const MESSAGE_TYPES = { SCORE_JOB: 'SCORE_JOB' };
+  const MESSAGE_TYPES = { SCORE_JOB: 'SCORE_JOB', FETCH_JOB_DETAILS: 'FETCH_JOB_DETAILS' };
 
   // ─── Rules-based scoring (inlined from shared/scoring.js) ─────────────────
   function applyRulesScore(jobData) {
@@ -324,7 +324,40 @@
     // Derive a stable job ID from the card
     const uid = card.dataset?.evOpeningUid || card.dataset?.evJobUid || card.dataset?.jobUid || hashStr(title + description.slice(0, 60));
 
-    return { uid, title, description, budgetType, budgetMin, budgetMax, proposalCount, clientCountry, skills, postedTime };
+    // Extract job ciphertext (~022XXXXXX) from the title link href for GraphQL API
+    // Actual DOM: <h3 class="job-tile-title"><a class="air3-link" href="/jobs/..._~022.../...">
+    const linkEl =
+      card.querySelector('h3.job-tile-title a.air3-link') ||
+      card.querySelector('h2.job-tile-title a.air3-link') ||
+      card.querySelector('a[href*="~"]') ||
+      card.querySelector('a[href*="%7E"]') ||
+      card.querySelector('a[data-test="job-tile-title-link UpLink"]') ||
+      card.querySelector('a[data-test*="job-tile-title"]') ||
+      card.querySelector('h2 a, h3 a');
+    const href = linkEl?.getAttribute('href') || '';
+    const ciphertextMatch = href.match(/(~|%7E)(\d+)/i) || href.match(/\/~(\d+)/);
+    const ciphertext = ciphertextMatch ? `~${ciphertextMatch[2] || ciphertextMatch[1]}` : null;
+
+    // Fallback: construct ciphertext from data-ev-opening_uid attribute on the card
+    // evOpeningUid is the numeric part (e.g. "2038231650943502613")
+    // Full ciphertext format requires "~02" prefix (e.g. "~022038231650943502613")
+    const fallbackCiphertext = !ciphertext && card.dataset?.evOpeningUid
+      ? `~02${card.dataset.evOpeningUid}`
+      : null;
+
+    console.log('[UJM] scrapeCard:', {
+      title: title.slice(0, 40),
+      href: href.slice(0, 80),
+      ciphertext: ciphertext || fallbackCiphertext,
+    });
+
+    // Derive numeric UID from ciphertext (~022... → 2038...) for bid/connects queries
+    // Strip ~ and the 02 prefix to get the raw numeric job post UID
+    const numericUid = (ciphertext || fallbackCiphertext)
+      ? (ciphertext || fallbackCiphertext).slice(3)
+      : null;
+
+    return { uid, numericUid, title, description, budgetType, budgetMin, budgetMax, proposalCount, clientCountry, skills, postedTime, ciphertext: ciphertext || fallbackCiphertext };
   }
 
   function parseBudget(raw) {
@@ -432,7 +465,7 @@
     }
   }
 
-  function injectBadge(card, { score, reason, flags, llmScore, rulesScore, optimizationSkipped }, rateLabels) {
+  function injectBadge(card, { score, reason, flags, llmScore, rulesScore, optimizationSkipped, deepData, deepBonus }, rateLabels) {
     removeBadge(card);
 
     const colorClass = score >= SCORE_THRESHOLDS.GREEN ? 'ujm-green'
@@ -469,6 +502,75 @@
       `<span class="ujm-flag">${f.replace(/_/g, ' ')}</span>`
     ).join('');
 
+    // Build deep data tooltip sections
+    let deepDataHtml = '';
+    if (deepData) {
+      const c = deepData.client || {};
+      const a = deepData.activity || {};
+      const b = deepData.bids || {};
+      const cn = deepData.connects || {};
+      const ap = deepData.application || {};
+      const q = deepData.qualifications || {};
+      const j = deepData.job || {};
+
+      // Client section
+      const clientRating = c.rating != null ? `${c.rating.toFixed(1)} rating` : '';
+      const clientSpend = c.totalSpend > 0 ? `$${c.totalSpend >= 1000 ? (c.totalSpend / 1000).toFixed(1) + 'k' : Math.round(c.totalSpend)} spent` : '';
+      const clientJobs = c.totalAssignments > 0 ? `${c.totalAssignments} jobs` : '';
+      const clientVerified = c.paymentVerified ? 'Payment Verified' : '';
+      const clientCountry = c.country || '';
+      const clientLine = [clientRating, clientSpend, clientJobs].filter(Boolean).join('  |  ') || 'No client data';
+      const clientMeta = [clientVerified, clientCountry, c.enterprise ? 'Enterprise' : ''].filter(Boolean).join('  |  ');
+
+      // Activity section
+      const applicants = a.totalApplicants > 0 ? `${a.totalApplicants} applicants` : '';
+      const hired = a.totalHired > 0 ? `${a.totalHired} hired` : '';
+      const positions = a.numberOfPositions > 1 ? `${a.numberOfPositions} positions` : '';
+      const activityLine = [applicants, hired, positions].filter(Boolean).join('  |  ');
+
+      // Bid section — top 3 competitor bids + median/p80
+      const medianBid = b.medianBid != null ? `Median: $${b.medianBid}` : '';
+      const p80Bid = b.p80Bid != null ? `P80: $${b.p80Bid}` : '';
+      const bidStats = [medianBid, p80Bid].filter(Boolean).join('  |  ');
+      const topBids = (b.competitorBids || []).slice(0, 3);
+      const topBidsHtml = topBids.length
+        ? topBids.map(bid => `<span class="ujm-bid-item">$${bid.amount}</span>`).join('')
+        : '';
+      const bidLine = bidStats || (topBidsHtml ? 'Competitor bids:' : '');
+
+      // Qualification matches
+      const qualLine = q.matched != null ? `Qualifications: ${q.matched}/${q.total} matched` : '';
+
+      // Job details
+      const workload = j.workload || '';
+      const tier = j.contractorTier || '';
+      const engagement = j.engagement || '';
+      const jobMeta = [tier, engagement, workload].filter(Boolean).join('  |  ');
+
+      // Application status
+      const appliedLine = ap.alreadyApplied ? 'Already Applied' : (ap.alreadyHired ? 'Already Hired' : '');
+
+      // Connects section
+      const connectsLine = cn.price != null
+        ? `${cn.price} connects  |  Balance: ${cn.connectsBalance ?? '?'}${cn.connectsBalance != null && cn.connectsBalance < cn.price ? ' (insufficient)' : ''}`
+        : '';
+
+      deepDataHtml = `
+        <div class="ujm-tooltip-divider"></div>
+        <div class="ujm-tooltip-section-title">CLIENT</div>
+        <div class="ujm-tooltip-detail">${escapeHtml(clientLine)}</div>
+        ${clientMeta ? `<div class="ujm-tooltip-detail">${escapeHtml(clientMeta)}</div>` : ''}
+        <div class="ujm-tooltip-section-title">INSIGHTS</div>
+        ${activityLine ? `<div class="ujm-tooltip-detail ujm-tooltip-activity">📊 ${escapeHtml(activityLine)}</div>` : ''}
+        ${bidLine ? `<div class="ujm-tooltip-detail ujm-tooltip-bids">💰 ${escapeHtml(bidLine)}</div>` : ''}
+        ${topBidsHtml ? `<div class="ujm-tooltip-detail ujm-tooltip-top-bids">Top bids: ${topBidsHtml}</div>` : ''}
+        ${connectsLine ? `<div class="ujm-tooltip-detail ujm-tooltip-connects">🔗 ${escapeHtml(connectsLine)}</div>` : ''}
+        ${qualLine ? `<div class="ujm-tooltip-detail">✅ ${escapeHtml(qualLine)}</div>` : ''}
+        ${jobMeta ? `<div class="ujm-tooltip-detail">${escapeHtml(jobMeta)}</div>` : ''}
+        ${appliedLine ? `<div class="ujm-tooltip-detail ujm-tooltip-warning">${escapeHtml(appliedLine)}</div>` : ''}
+      `;
+    }
+
     tooltip.innerHTML = `
       <div class="ujm-tooltip-header">Job Match Analysis</div>
       <div class="ujm-tooltip-scores">
@@ -480,6 +582,10 @@
           <span class="ujm-tooltip-label">AI Analysis</span>
           <span class="ujm-tooltip-val">${rulesOnly ? '—' : llmScore}</span>
         </div>
+        ${deepBonus ? `<div class="ujm-tooltip-score-row">
+          <span class="ujm-tooltip-label">Deep Data</span>
+          <span class="ujm-tooltip-val">${deepBonus > 0 ? '+' : ''}${deepBonus}</span>
+        </div>` : ''}
         <div class="ujm-tooltip-score-row ujm-tooltip-final">
           <span class="ujm-tooltip-label">Final Score</span>
           <span class="ujm-tooltip-val">${score}/100</span>
@@ -487,6 +593,7 @@
       </div>
       ${reason ? `<div class="ujm-tooltip-reason">${escapeHtml(reason)}</div>` : ''}
       ${flagsHtml ? `<div class="ujm-tooltip-flags">${flagsHtml}</div>` : ''}
+      ${deepDataHtml}
     `;
 
     finalChip.appendChild(tooltip);
@@ -494,18 +601,42 @@
     chipRow.appendChild(finalChip);
 
     // Flag pills (both known system flags and custom rule flags), deduplicated
-    const allPillFlags = [...new Set((flags || []).filter(f => FLAG_LABELS[f] || f))];
+    const allPillFlags = [...new Set((flags || []).filter(f => FLAG_LABELS[f] || DEEP_FLAG_LABELS[f] || f))];
     const pillRow = document.createElement('div');
     pillRow.className = 'ujm-flags-row';
     if (allPillFlags.length) {
       allPillFlags.forEach(f => {
         const pill = document.createElement('span');
-        const isCustom = !FLAG_LABELS[f] && !rateLabels?.[f];
-        const color = isCustom ? 'blue' : (FLAG_PILL_COLOR[f] || 'gray');
+        const isDeep = !!DEEP_FLAG_LABELS[f];
+        const isCustom = !FLAG_LABELS[f] && !rateLabels?.[f] && !isDeep;
+        const color = isDeep ? (DEEP_PILL_COLORS[f] || 'gray') : (isCustom ? 'blue' : (FLAG_PILL_COLOR[f] || 'gray'));
         pill.className = `ujm-pill ujm-pill-${color}`;
-        pill.textContent = rateLabels?.[f] || FLAG_LABELS[f] || f;
+        pill.textContent = rateLabels?.[f] || DEEP_FLAG_LABELS[f] || FLAG_LABELS[f] || f;
         pillRow.appendChild(pill);
       });
+    }
+
+    // Bid info pill (from deep data)
+    if (deepData?.bids?.medianBid != null) {
+      const bidPill = document.createElement('span');
+      bidPill.className = 'ujm-pill ujm-pill-blue';
+      bidPill.textContent = `Median $${deepData.bids.medianBid}`;
+      pillRow.appendChild(bidPill);
+    }
+    if (deepData?.activity?.totalApplicants > 0) {
+      const compPill = document.createElement('span');
+      const appCount = deepData.activity.totalApplicants;
+      const compColor = appCount > 50 ? 'red' : appCount > 20 ? 'yellow' : 'green';
+      compPill.className = `ujm-pill ujm-pill-${compColor}`;
+      compPill.textContent = `${appCount} applicants`;
+      pillRow.appendChild(compPill);
+    }
+    if (deepData?.connects?.price != null) {
+      const cnPill = document.createElement('span');
+      const canAfford = deepData.connects.connectsBalance != null && deepData.connects.connectsBalance >= deepData.connects.price;
+      cnPill.className = `ujm-pill ujm-pill-${canAfford ? 'green' : 'red'}`;
+      cnPill.textContent = `${deepData.connects.price} connects`;
+      pillRow.appendChild(cnPill);
     }
 
     // If optimization was skipped, make the badge clickable for manual analysis
@@ -635,6 +766,209 @@
     }
   });
 
+  // ─── Deep data (GraphQL) scoring + display ──────────────────────────────────
+
+  const DEEP_FLAG_LABELS = {
+    client_payment_verified:     'Verified',
+    client_payment_unverified:   'Unverified',
+    client_high_rated:           '',
+    client_good_rated:           '',
+    client_high_spend:           'High Spend',
+    client_good_spend:           '',
+    client_active_hirer:         'Active Hirer',
+    client_new:                  'New Client',
+    high_competition_actual:     'High Comp',
+    low_competition_actual:      'Low Comp',
+    position_filled:             'Filled',
+    buyer_active_now:            'Active Now',
+    buyer_active_recent:         'Active',
+    already_applied:             'Applied',
+    already_hired:               'Hired',
+  };
+
+  const DEEP_PILL_COLORS = {
+    client_payment_verified:     'green',
+    client_payment_unverified:   'red',
+    client_high_rated:           'green',
+    client_good_rated:           'green',
+    client_high_spend:           'green',
+    client_good_spend:           'green',
+    client_active_hirer:         'green',
+    client_new:                  'yellow',
+    high_competition_actual:     'red',
+    low_competition_actual:      'green',
+    position_filled:             'red',
+    buyer_active_now:            'green',
+    buyer_active_recent:         'green',
+    already_applied:             'blue',
+    already_hired:               'gray',
+  };
+
+  function applyDeepDataScore(deepData) {
+    const flags = [];
+    const rateLabels = {};
+    let bonusPoints = 0;
+
+    if (!deepData) return { bonusPoints: 0, flags: [], rateLabels: {} };
+
+    const { client, activity, application, bids } = deepData;
+
+    // Client payment verified
+    if (client) {
+      if (client.paymentVerified) {
+        bonusPoints += 10;
+        flags.push('client_payment_verified');
+        rateLabels.client_payment_verified = 'Verified';
+      } else {
+        flags.push('client_payment_unverified');
+        rateLabels.client_payment_unverified = 'Unverified';
+      }
+
+      // Client rating
+      if (client.rating !== null && client.rating !== undefined) {
+        if (client.rating >= 4.8) {
+          bonusPoints += 10;
+          const label = `${client.rating.toFixed(1)} Client`;
+          flags.push('client_high_rated');
+          rateLabels.client_high_rated = label;
+        } else if (client.rating >= 4.0) {
+          bonusPoints += 5;
+          const label = `${client.rating.toFixed(1)} Client`;
+          flags.push('client_good_rated');
+          rateLabels.client_good_rated = label;
+        }
+      }
+
+      // Client total spend
+      if (client.totalSpend > 5000) {
+        bonusPoints += 10;
+        flags.push('client_high_spend');
+        const spendStr = client.totalSpend >= 1000 ? `$${(client.totalSpend / 1000).toFixed(1)}k spent` : `$${Math.round(client.totalSpend)} spent`;
+        rateLabels.client_high_spend = spendStr;
+      } else if (client.totalSpend > 1000) {
+        bonusPoints += 5;
+        flags.push('client_good_spend');
+        rateLabels.client_good_spend = `$${(client.totalSpend / 1000).toFixed(1)}k spent`;
+      }
+
+      // Client hire rate
+      if (client.totalAssignments > 0) {
+        const hireRate = client.totalJobsWithHires / Math.max(1, client.totalAssignments);
+        if (hireRate >= 0.8 && client.totalAssignments >= 5) {
+          bonusPoints += 5;
+          flags.push('client_active_hirer');
+          rateLabels.client_active_hirer = `${client.totalAssignments} hires`;
+        }
+      } else if (client.totalAssignments === 0 && client.totalSpend === 0) {
+        bonusPoints -= 5;
+        flags.push('client_new');
+        rateLabels.client_new = 'New Client';
+      }
+    }
+
+    // Competition (actual numbers from API)
+    if (activity) {
+      if (activity.totalApplicants > 50) {
+        bonusPoints -= 10;
+        flags.push('high_competition_actual');
+        rateLabels.high_competition_actual = `${activity.totalApplicants} apps`;
+      } else if (activity.totalApplicants > 0 && activity.totalApplicants <= 10) {
+        bonusPoints += 5;
+        flags.push('low_competition_actual');
+        rateLabels.low_competition_actual = `${activity.totalApplicants} apps`;
+      }
+
+      // Position already filled
+      if (activity.totalHired >= activity.numberOfPositions) {
+        bonusPoints -= 20;
+        flags.push('position_filled');
+        rateLabels.position_filled = `${activity.totalHired}/${activity.numberOfPositions} hired`;
+      }
+
+      // Buyer activity
+      if (activity.lastBuyerActivity) {
+        const lastActive = new Date(activity.lastBuyerActivity);
+        const hoursAgo = (Date.now() - lastActive.getTime()) / (1000 * 60 * 60);
+        if (hoursAgo < 1) {
+          bonusPoints += 5;
+          flags.push('buyer_active_now');
+          rateLabels.buyer_active_now = 'Active Now';
+        } else if (hoursAgo < 6) {
+          bonusPoints += 3;
+          flags.push('buyer_active_recent');
+          rateLabels.buyer_active_recent = 'Active';
+        }
+      }
+    }
+
+    // Application status
+    if (application) {
+      if (application.alreadyApplied) {
+        flags.push('already_applied');
+        rateLabels.already_applied = 'Applied';
+      }
+      if (application.alreadyHired) {
+        flags.push('already_hired');
+        rateLabels.already_hired = 'Hired';
+      }
+    }
+
+    return { bonusPoints, flags, rateLabels };
+  }
+
+  async function fetchAndInjectDeepData(card, jobData, baseResult, rateLabels) {
+    console.log('[UJM] fetchAndInjectDeepData called, ciphertext:', jobData.ciphertext, 'numericUid:', jobData.numericUid);
+    try {
+      const response = await new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage(
+          { type: MESSAGE_TYPES.FETCH_JOB_DETAILS, payload: { ciphertext: jobData.ciphertext, jobPostUid: jobData.numericUid || null } },
+          res => {
+            if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
+            resolve(res);
+          },
+        );
+      });
+
+      if (!response?.success || !response.data) {
+        console.log('[UJM] Deep data fetch returned no data:', response);
+        return;
+      }
+
+      const dd = response.data;
+      console.log('[UJM] Deep data received:', {
+        connects: dd.connects,
+        medianBid: dd.bids?.medianBid,
+        topBids: dd.bids?.competitorBids?.length || 0,
+      });
+      const deepData = response.data;
+      const { bonusPoints, flags: deepFlags, rateLabels: deepRateLabels } = applyDeepDataScore(deepData);
+
+      // Re-score with deep data bonus
+      const baseScore = baseResult.score ?? 0;
+      const newScore = Math.min(100, Math.max(0, baseScore + bonusPoints));
+
+      // Merge flags and rate labels
+      const mergedFlags = [...(baseResult.flags || []), ...deepFlags];
+      const mergedRateLabels = { ...(rateLabels || {}), ...deepRateLabels };
+
+      // Update the result with deep data
+      const updatedResult = {
+        ...baseResult,
+        score: newScore,
+        flags: mergedFlags,
+        deepData,
+        deepBonus: bonusPoints,
+      };
+
+      // Re-inject the badge with updated data
+      if (!document.contains(card)) return;
+      injectBadge(card, updatedResult, mergedRateLabels);
+
+    } catch (err) {
+      console.log('[UJM] Deep data fetch failed for', jobData.ciphertext, err.message);
+    }
+  }
+
   // ─── Process a single card ─────────────────────────────────────────────────
   async function processCard(card) {
     if (processedCards.has(card)) return;
@@ -688,6 +1022,11 @@
     }
     injectBadge(card, result, rateLabels);
     inFlightIds.delete(jobData.uid);
+
+    // ── Fetch deep data (GraphQL job details) if ciphertext is available ──────
+    if (jobData.ciphertext) {
+      fetchAndInjectDeepData(card, jobData, result, rateLabels);
+    }
   }
 
   // ─── Scan for cards ────────────────────────────────────────────────────────

@@ -406,6 +406,49 @@
   text-transform: capitalize;
 }
 
+/* Tooltip detail sections */
+.ujm-tooltip-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ujm-text-muted);
+  margin: 8px 0 4px;
+}
+
+.ujm-tooltip-section-title:first-child {
+  margin-top: 0;
+}
+
+.ujm-tooltip-divider {
+  border-top: 1px solid var(--ujm-border);
+  margin: 10px 0 6px;
+}
+
+.ujm-tooltip-detail {
+  font-size: 12px;
+  color: var(--ujm-text);
+  padding: 1px 0;
+  line-height: 1.5;
+}
+
+.ujm-tooltip-warning {
+  color: var(--ujm-red, #dc3545);
+}
+
+/* Top bids inline chips */
+.ujm-tooltip-top-bids .ujm-bid-item {
+  display: inline-block;
+  background: var(--ujm-muted-light, #f0f0f0);
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-right: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ujm-text);
+  border: 1px solid var(--ujm-border);
+}
+
 /* Make job cards position:relative so badge can be absolute */
 [data-test="job-tile-list"] > section.air3-card-section,
 [data-test="JobsList"] article[data-test="JobTile"] {

@@ -3,7 +3,7 @@
   "name": "Upwork Job Matcher",
   "version": "1.1.0",
   "description": "Scores Upwork job listings against your profile using LLM analysis.",
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage", "activeTab", "cookies"],
   "host_permissions": [
     "https://www.upwork.com/*",
     "https://api.openai.com/*",

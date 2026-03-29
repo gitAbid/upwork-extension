@@ -19,6 +19,7 @@ const STORAGE_KEYS = {
   DARK_MODE: 'ujm_dark_mode',
   CUSTOM_RULES: 'ujm_custom_rules',
   OPTIMIZATION_ENABLED: 'ujm_optimization_enabled',
+  JOB_DETAILS_CACHE: 'ujm_job_details_cache',
   STACK_KEYWORDS: 'ujm_stack_keywords',
   EXTENSION_ENABLED: 'ujm_extension_enabled',
   USER_HOURLY_RATE: 'ujm_user_hourly_rate',
@@ -93,6 +94,7 @@ const SCORE_THRESHOLDS = {
 const MESSAGE_TYPES = {
   SCORE_JOB: 'SCORE_JOB',
   FETCH_MODELS: 'FETCH_MODELS',
+  FETCH_JOB_DETAILS: 'FETCH_JOB_DETAILS',
 };
 
 // Default custom rules — examples demonstrating the system (base scoring is hardcoded; these add bonus/penalty on top)
