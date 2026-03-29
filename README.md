@@ -12,12 +12,31 @@
 
 ## Screenshots
 
-| Job Cards with Scores | Settings Panel | Extension Popup |
-|:---:|:---:|:---:|
-| <!-- screenshot-badges --> | <!-- screenshot-settings --> | <!-- screenshot-popup --> |
-| *[Add `docs/badges.png`]* | *[Add `docs/settings.png`]* | *[Add `docs/popup.png`]* |
+### Job Cards with Score Badges
 
-> Replace the placeholders above with actual screenshots in a `docs/` folder.
+Score badges and dollar-hint flag pills are injected directly into Upwork job cards:
+
+![Job cards showing score badges and dollar-hint flag pills on Upwork](docs/assets/badge-reference.png)
+
+### Extension Popup
+
+Quick stats and extension status at a glance:
+
+| Overview | Stats |
+|:---:|:---:|
+| <img src="docs/assets/popup-overview.png" width="300" alt="Popup overview"> | <img src="docs/assets/popup-stats.png" width="300" alt="Popup stats"> |
+
+### Settings Panel
+
+Configure your profile, AI provider, scoring rules, and display preferences:
+
+| Profile | AI Provider | Scoring & Rules |
+|:---:|:---:|:---:|
+| <img src="docs/assets/settings-profile.png" width="300" alt="Profile settings"> | <img src="docs/assets/settings-provider.png" width="300" alt="AI Provider settings"> | <img src="docs/assets/settings-scoring.png" width="300" alt="Scoring settings"> |
+
+| Logs & Token Usage | Display |
+|:---:|:---:|
+| <img src="docs/assets/settings-logs.png" width="300" alt="Logs settings"> | <img src="docs/assets/settings-display.png" width="300" alt="Display settings"> |
 
 ---
 

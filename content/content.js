@@ -493,8 +493,8 @@
 
     chipRow.appendChild(finalChip);
 
-    // Flag pills (both known system flags and custom rule flags)
-    const allPillFlags = (flags || []).filter(f => FLAG_LABELS[f] || f);
+    // Flag pills (both known system flags and custom rule flags), deduplicated
+    const allPillFlags = [...new Set((flags || []).filter(f => FLAG_LABELS[f] || f))];
     const pillRow = document.createElement('div');
     pillRow.className = 'ujm-flags-row';
     if (allPillFlags.length) {
@@ -547,8 +547,8 @@
       }
       titleRow.remove(); // also removes chipRow and loading badge inside it
     }
-    // Clean up pill row (sibling of the removed wrapper)
-    card.querySelector('.ujm-flags-row')?.remove();
+    // Clean up ALL pill rows (sibling of the removed wrapper)
+    card.querySelectorAll('.ujm-flags-row').forEach(el => el.remove());
     // Fallback cleanup for absolute-positioned wrapper
     card.querySelector('.ujm-wrapper')?.remove();
   }

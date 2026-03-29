@@ -422,6 +422,14 @@
     @media (max-width: 900px) {
       .mockups-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
     }
+    .mockups-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .mockups-grid-2 { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
+    }
     .mockup-frame {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -1026,6 +1034,107 @@
             <span class="flag-pill green">Just Posted</span>
             <span class="flag-pill green">Skill Match</span>
           </div>
+        </div>
+      </div>
+      <!-- Real screenshot -->
+      <div class="score-preview fade-in" style="margin-top: 1.5rem;">
+        <div class="score-preview-header">
+          <h3>Live on Upwork</h3>
+          <span style="color: var(--text-tertiary); font-size: 0.8rem;">Actual</span>
+        </div>
+        <div class="score-preview-body" style="padding: 0; overflow: hidden;">
+          <img src="assets/badge-reference.png" alt="Score badges and dollar-hint flag pills on real Upwork job cards" style="width: 100%; height: auto; display: block; border-radius: 0 0 var(--radius-lg) var(--radius-lg);">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Settings & Popup ─────────────────── -->
+  <section id="settings" style="background: var(--bg-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label fade-in">Configuration</div>
+        <h2 class="section-title fade-in">Powerful settings, zero complexity</h2>
+        <p class="section-subtitle centered fade-in">Set up your profile, connect an AI provider, tune scoring rules, and monitor usage — all in one panel.</p>
+      </div>
+
+      <!-- Popup screenshots -->
+      <div class="mockups-grid-2 fade-in" style="margin-bottom: 24px;">
+        <div class="mockup-frame">
+          <div class="mockup-chrome">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <div class="mockup-url">Extension Popup</div>
+          </div>
+          <div class="mockup-body">
+            <img src="assets/popup-overview.png" alt="Extension popup overview" style="width: 100%; height: auto; display: block;">
+          </div>
+          <div class="mockup-label">Popup — Overview</div>
+        </div>
+        <div class="mockup-frame">
+          <div class="mockup-chrome">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <div class="mockup-url">Extension Popup</div>
+          </div>
+          <div class="mockup-body">
+            <img src="assets/popup-stats.png" alt="Extension popup stats" style="width: 100%; height: auto; display: block;">
+          </div>
+          <div class="mockup-label">Popup — Stats</div>
+        </div>
+      </div>
+
+      <!-- Settings screenshots -->
+      <div class="mockups-grid fade-in">
+        <div class="mockup-frame">
+          <div class="mockup-chrome">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <div class="mockup-url">Settings — Profile</div>
+          </div>
+          <div class="mockup-body">
+            <img src="assets/settings-profile.png" alt="Profile settings" style="width: 100%; height: auto; display: block;">
+          </div>
+          <div class="mockup-label">Profile</div>
+        </div>
+        <div class="mockup-frame">
+          <div class="mockup-chrome">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <div class="mockup-url">Settings — AI Provider</div>
+          </div>
+          <div class="mockup-body">
+            <img src="assets/settings-provider.png" alt="AI Provider settings" style="width: 100%; height: auto; display: block;">
+          </div>
+          <div class="mockup-label">AI Provider</div>
+        </div>
+        <div class="mockup-frame">
+          <div class="mockup-chrome">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <div class="mockup-url">Settings — Scoring</div>
+          </div>
+          <div class="mockup-body">
+            <img src="assets/settings-scoring.png" alt="Scoring and custom rules settings" style="width: 100%; height: auto; display: block;">
+          </div>
+          <div class="mockup-label">Scoring & Rules</div>
+        </div>
+      </div>
+      <div class="mockups-grid-2 fade-in" style="margin-top: 24px;">
+        <div class="mockup-frame">
+          <div class="mockup-chrome">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <div class="mockup-url">Settings — Logs</div>
+          </div>
+          <div class="mockup-body">
+            <img src="assets/settings-logs.png" alt="Logs and token usage settings" style="width: 100%; height: auto; display: block;">
+          </div>
+          <div class="mockup-label">Logs & Token Usage</div>
+        </div>
+        <div class="mockup-frame">
+          <div class="mockup-chrome">
+            <div class="mockup-dots"><span></span><span></span><span></span></div>
+            <div class="mockup-url">Settings — Display</div>
+          </div>
+          <div class="mockup-body">
+            <img src="assets/settings-display.png" alt="Display settings" style="width: 100%; height: auto; display: block;">
+          </div>
+          <div class="mockup-label">Display</div>
         </div>
       </div>
     </div>
