@@ -1,0 +1,1635 @@
+curl 'https://www.upwork.com/api/graphql/v1?alias=gql-query-get-auth-job-details' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'authorization: bearer oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b' \
+  -H 'content-type: application/json' \
+  -b $'visitor_id=59.153.103.41.1744455732191000; spt=e32fecd8-7aaf-4482-b7ae-d739ed388ff5; G_ENABLED_IDPS=google; recognized=code_magician; x-spec-id=86bd7689-940e-4a90-8b2c-dc3242b8f707; current_organization_uid=1144960541944864768; company_last_accessed=d26338562; device_view=full; _vwo_uuid_v2=DA81110ED4875C4AB31803E6B94DD5DB3|1f6ecf6bc7daf908fed16642e3ebe923; _vwo_uuid=DA81110ED4875C4AB31803E6B94DD5DB3; DA_code_magician=d5f2b5ae65c013d7d80c461467358d84b7f11b41c47d2b29a3efa04a32fd128b; umq_cq=1905; __cflb=02DiuEXPXZVk436fJfSVuuwDqLqkhavJc24xdau7w72o5; enabled_ff=\u0021CI12577UniversalSearch,\u0021MP16400Air3Migration,\u0021SSINavUser,\u0021i18nGA,CI17409DarkModeUI,JPAir3,OTBnrOn,SSINavUserBpa,TONB2256Air3Migration,i18nOn; cookie_prefix=; cookie_domain=.upwork.com; _upw_ses.5831=*; visitor_gql_token=oauth2v2_int_f204648caef16147b65ec5c69963b89b; country_code=BD; _vwo_ds=3%241773616290%3A34.81816524%3A%3A%3A%3A%3A1774781601%3A1774628965%3A3; _vis_opt_s=3%7C; _vis_opt_test_cookie=1; _vwo_sn=1165311%3A1%3A%3A%3A%3A%3A2; asct_vt=oauth2v2_int_3627f4c2872bb5d448f7df4c3b1e55ca; g_state={"i_l":0,"i_ll":1774781910610,"i_e":{"enable_itp_optimization":1}}; XSRF-TOKEN=e8c1d6dbdfeae25b6b576236cdd55014; console_user=code_magician; user_uid=1144960541940670464; master_access_token=2ce40e8f.oauth2v2_int_1b85e49d3fcde0e5b51b4638c8816ba6; oauth2_global_js_token=oauth2v2_int_719ac691fe1282a42f880d6780cbe68b; uTheme=air-3-0; uThemeMode=light; d371bc8sb=oauth2v2_int_65d1014d31656688ca8ac9a3f8d8261d; cf_clearance=Iaz7FPjvdZ2qDHuAzBVsQNf.52iE8u7q5GtDMdBd4lg-1774782120-1.2.1.1-uVqn0eBd8uFxbBpIg4dseziLHyOGnK4INzXuHQY9Sg145mSJCXG3kY0iGnUkshyEcRbiQMUCNOlITkbZrocAiSqqREhqxJPVGVd6fueIdDAnKGWE29nc1U2bEua3uWIm5yVX3E5Z763YKA.sIoQXMk2gPT.LbXaeNyfjdCh1c_8a0galWmkvG2_HTLGIlqzejhCEQSARfdPtg_L6HjvqHJvI9ByXjGNvUdkN5we.fhaMtdCUVv8hGqvdKVi5Bu.5; JobDetailsNuxt_vt=oauth2v2_int_27d0406f4512ef2a0a12c285431305c2; 3e880535sb=oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b; umq=1920; UniversalSearchNuxt_vt=oauth2v2_int_cd425be12b64e64cb91dd8d21f40103d; OptanonAlertBoxClosed=2026-03-29T11:10:25.588Z; forterToken=499e9ade59c5425fbaf831d214d0b854_1774782636050_28_UAS9_23ck; AWSALBTG=fOm2UICvYCyPhuP81oGpRbHs9t8IJcHEZ1Uvvl8mC3FYE8YrVqwPvrBbT+3D+uGXljR7AWpIzi8C+QQAl8LKVoa5Qi/db2M72vi/0hIeZZGD51wdr1oLPukcuLPGuuNMglQ4E34cCoMFE7eTEvqptr5f3FiA3mqNsnkbrM7jdWc5; AWSALBTGCORS=fOm2UICvYCyPhuP81oGpRbHs9t8IJcHEZ1Uvvl8mC3FYE8YrVqwPvrBbT+3D+uGXljR7AWpIzi8C+QQAl8LKVoa5Qi/db2M72vi/0hIeZZGD51wdr1oLPukcuLPGuuNMglQ4E34cCoMFE7eTEvqptr5f3FiA3mqNsnkbrM7jdWc5; OptanonConsent=isGpcEnabled=0&datestamp=Sun+Mar+29+2026+17%3A10%3A36+GMT%2B0600+(Bangladesh+Standard+Time)&version=202512.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=1144960541940670464&interactionCount=316&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A0&AwaitingReconsent=false&geolocation=BD%3BC&isAnonUser=0&identifierType=Cookie+Unique+Id&iType=undefined&crTime=1774782636640; __cf_bm=oBhvo1b9_19Sd8xCfYLTiRReEiMeCcT2ZxJAqAlMUeU-1774782637.1144037-1.0.1.1-DOP0fcIZ9Fs.uJDs4w.Y15j0bZ_Kr6ReblcColnmFnsi9E1Ct3_Thxz_v5YGoD48kBDZSxscLvfcQI65RaHenuffX8.hzE3QYWnmbeHG7Thdyc9dPVar3y4.rwPVRTCa; _cfuvid=j16WZ4lBrA.KISuR849fB4KnvIy.JJRuEhFiE6pof_w-1774782637.1144037-1.0.1.1-pLGXX03GiBC2LGpmrxcpzZ0v8e7Ou7Vg6c9TknOp_f8; AWSALB=u8a1imyw2uIZK71S0h2qTpZeNhsn/J5JkoWaOA5ZcFdl9U37x64HpO7dJ81OmNeOUZI9oc7/uevNHxsc7Cp/Rm0uLp8uNBK6XHrnJEUNy5DxRgpDpTrNTWTHv6uq; AWSALBCORS=u8a1imyw2uIZK71S0h2qTpZeNhsn/J5JkoWaOA5ZcFdl9U37x64HpO7dJ81OmNeOUZI9oc7/uevNHxsc7Cp/Rm0uLp8uNBK6XHrnJEUNy5DxRgpDpTrNTWTHv6uq; _upw_id.5831=4d89cf31-d5b2-4c22-85ee-afa9a01344f2.1744455734.86.1774782934.1774683902.d94d2200-f04a-48e4-8a53-214a3de77961.28d4c0b3-277f-4faa-888c-986d0ddd3763.01e28ae9-e4ef-4387-87b4-a822f2105d41.1774781236187.198' \
+  -H 'dnt: 1' \
+  -H 'origin: https://www.upwork.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.upwork.com/nx/search/jobs/details/~022037505629305600339?nbs=1&q=java&pageTitle=Job%20Details&_modalInfo=%5B%7B%22navType%22%3A%22slider%22,%22title%22%3A%22Job%20Details%22,%22modalId%22%3A%221774782934044%22%7D%5D&is_sts_vector_search_result=null&nav_dir=pop' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-arch: "arm"' \
+  -H 'sec-ch-ua-bitness: "64"' \
+  -H 'sec-ch-ua-full-version: "146.0.7680.165"' \
+  -H 'sec-ch-ua-full-version-list: "Chromium";v="146.0.7680.165", "Not-A.Brand";v="24.0.0.0", "Google Chrome";v="146.0.7680.165"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-model: ""' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-ch-ua-platform-version: "26.4.0"' \
+  -H 'sec-ch-viewport-width: 605' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'vnd-eo-parent-span-id: 408189cc-7289-43b1-b4de-68ad7db3f8bb' \
+  -H 'vnd-eo-span-id: 4db2367a-7564-4be3-8506-d57964af8e98' \
+  -H 'vnd-eo-trace-id: 9e3e6dc46353bb2f-PDX' \
+  -H 'vnd-eo-visitorid: 59.153.103.41.1744455732191000' \
+  -H 'x-upwork-accept-language: en-US' \
+  -H 'x-upwork-api-tenantid: 1144960541944864768' \
+  --data-raw $'{"query":"fragment JobPubOpeningInfoFragment on Job {\\n    ciphertext\\n    id\\n    type\\n    access\\n    title\\n    hideBudget\\n    createdOn\\n    notSureProjectDuration\\n    notSureFreelancersToHire\\n    notSureExperienceLevel\\n    notSureLocationPreference\\n    premium\\n  }\\n  fragment JobPubOpeningSegmentationDataFragment on JobSegmentation {\\n    customValue\\n    label\\n    name\\n    sortOrder\\n    type\\n    value\\n    skill {\\n      description\\n      externalLink\\n      prettyName\\n      skill\\n      id\\n    }\\n  }\\n  fragment JobPubOpeningSandDataFragment on SandsData {\\n    occupation {\\n      freeText\\n      ontologyId\\n      prefLabel\\n      id\\n      uid: id\\n    }\\n    ontologySkills {\\n      groupId\\n      id\\n      freeText\\n      prefLabel\\n      groupPrefLabel\\n      relevance\\n    }\\n    additionalSkills {\\n      groupId\\n      id\\n      freeText\\n      prefLabel\\n      relevance\\n    }\\n  }\\n  fragment JobPubOpeningFragment on JobPubOpeningInfo {\\n    status\\n    postedOn\\n    publishTime\\n    sourcingTime\\n    startDate\\n    deliveryDate\\n    workload\\n    contractorTier\\n    description\\n    info {\\n      ...JobPubOpeningInfoFragment\\n    }\\n    segmentationData {\\n      ...JobPubOpeningSegmentationDataFragment\\n    }\\n    sandsData {\\n      ...JobPubOpeningSandDataFragment\\n    }\\n    category {\\n      name\\n      urlSlug\\n    }\\n    categoryGroup {\\n      name\\n      urlSlug\\n    }\\n    budget {\\n      amount\\n      currencyCode\\n    }\\n    annotations {\\n      customFields\\n      tags\\n    }\\n    engagementDuration {\\n      label\\n      weeks\\n    }\\n    extendedBudgetInfo {\\n      hourlyBudgetMin\\n      hourlyBudgetMax\\n      hourlyBudgetType\\n    }\\n    attachments @include(if: $isLoggedIn) {\\n      fileName\\n      length\\n      uri\\n    }\\n    clientActivity {\\n      lastBuyerActivity\\n      totalApplicants\\n      totalHired\\n      totalInvitedToInterview\\n      unansweredInvites\\n      invitationsSent\\n      numberOfPositionsToHire\\n    }\\n    deliverables\\n    deadline\\n    tools {\\n      name\\n    }\\n  }\\n  fragment JobQualificationsFragment on JobQualifications {\\n    countries\\n    earnings\\n    groupRecno\\n    languages\\n    localDescription\\n    localFlexibilityDescription\\n    localMarket\\n    minJobSuccessScore\\n    minOdeskHours\\n    onSiteType\\n    prefEnglishSkill\\n    regions\\n    risingTalent\\n    shouldHavePortfolio\\n    states\\n    tests\\n    timezones\\n    type\\n    locationCheckRequired\\n    group {\\n      groupId\\n      groupLogo\\n      groupName\\n    }\\n    location {\\n      city\\n      country\\n      countryTimezone\\n      offsetFromUtcMillis\\n      state\\n      worldRegion\\n    }\\n    locations {\\n      id\\n      type\\n    }\\n    minHoursWeek @skip(if: $isLoggedIn)\\n  }\\n  fragment JobAuthDetailsOpeningFragment on JobAuthOpeningInfo {\\n    job {\\n      ...JobPubOpeningFragment\\n    }\\n    qualifications {\\n      ...JobQualificationsFragment\\n    }\\n    questions {\\n      question\\n      position\\n    }\\n  }\\n  fragment JobPubBuyerInfoFragment on JobPubBuyerInfo {\\n    location {\\n      offsetFromUtcMillis\\n      countryTimezone\\n      city\\n      country\\n    }\\n    stats {\\n      totalAssignments\\n      activeAssignmentsCount\\n      hoursCount\\n      feedbackCount\\n      score\\n      totalJobsWithHires\\n      totalCharges {\\n        amount\\n      }\\n    }\\n    company {\\n      name @include(if: $isLoggedIn)\\n      companyId @include(if: $isLoggedIn)\\n      isEDCReplicated\\n      contractDate\\n      profile {\\n        industry\\n        size\\n      }\\n    }\\n    jobs {\\n      openCount\\n      postedCount @include(if: $isLoggedIn)\\n      openJobs {\\n        id\\n        uid: id\\n        isPtcPrivate\\n        ciphertext\\n        title\\n        type\\n      }\\n    }\\n    avgHourlyJobsRate @include(if: $isLoggedIn) {\\n      amount\\n    }\\n  }\\n  fragment JobAuthDetailsBuyerWorkHistoryFragment on BuyerWorkHistoryItem {\\n    isPtcJob\\n    status\\n    isEDCReplicated\\n    isPtcPrivate\\n    startDate\\n    endDate\\n    totalCharge\\n    totalHours\\n    jobInfo {\\n      title\\n      id\\n      uid: id\\n      access\\n      type\\n      ciphertext\\n    }\\n    contractorInfo {\\n      contractorName\\n      accessType\\n      ciphertext\\n    }\\n    rate {\\n      amount\\n    }\\n    feedback {\\n      feedbackSuppressed\\n      score\\n      comment\\n    }\\n    feedbackToClient {\\n      feedbackSuppressed\\n      score\\n      comment\\n    }\\n  }\\n  fragment JobAuthDetailsBuyerFragment on JobAuthBuyerInfo {\\n    enterprise\\n    isPaymentMethodVerified\\n    info {\\n      ...JobPubBuyerInfoFragment\\n    }\\n    workHistory {\\n      ...JobAuthDetailsBuyerWorkHistoryFragment\\n    }\\n  }\\n  fragment JobAuthDetailsCurrentUserInfoFragment on JobCurrentUserInfo {\\n    owner\\n    freelancerInfo {\\n      profileState\\n      applied\\n      devProfileCiphertext\\n      hired\\n      application {\\n        vjApplicationId\\n      }\\n      pendingInvite {\\n        inviteId\\n      }\\n      contract {\\n        contractId\\n        status\\n      }\\n      hourlyRate {\\n        amount\\n      }\\n      qualificationsMatches {\\n        matches {\\n          clientPreferred\\n          clientPreferredLabel\\n          freelancerValue\\n          freelancerValueLabel\\n          qualification\\n          qualified\\n        }\\n      }\\n    }\\n  }\\n  query JobAuthDetailsQuery(\\n    $id: ID\u0021\\n    $isFreelancerOrAgency: Boolean\u0021\\n    $isLoggedIn: Boolean\u0021\\n  ) {\\n    jobAuthDetails(id: $id) {\\n      hiredApplicantNames\\n      opening {\\n        ...JobAuthDetailsOpeningFragment\\n      }\\n      buyer {\\n        ...JobAuthDetailsBuyerFragment\\n      }\\n      currentUserInfo {\\n        ...JobAuthDetailsCurrentUserInfoFragment\\n      }\\n      similarJobs {\\n        id\\n        uid: id\\n        ciphertext\\n        title\\n        snippet\\n      }\\n      workLocation {\\n        onSiteCity\\n        onSiteCountry\\n        onSiteReason\\n        onSiteReasonFlexible\\n        onSiteState\\n        onSiteType\\n      }\\n      phoneVerificationStatus {\\n        status\\n      }\\n      applicantsBidsStats {\\n        avgRateBid {\\n          amount\\n          currencyCode\\n        }\\n        minRateBid {\\n          amount\\n          currencyCode\\n        }\\n        maxRateBid {\\n          amount\\n          currencyCode\\n        }\\n      }\\n      specializedProfileOccupationId @include(if: $isFreelancerOrAgency)\\n      applicationContext @include(if: $isFreelancerOrAgency) {\\n        freelancerAllowed\\n        clientAllowed\\n      }\\n    }\\n  }","variables":{"id":"~022037505629305600339","isFreelancerOrAgency":true,"isLoggedIn":true}}'
+
+
+
+
+{
+    "data": {
+        "jobAuthDetails": {
+            "hiredApplicantNames": null,
+            "opening": {
+                "job": {
+                    "status": "ACTIVE",
+                    "postedOn": "2026-03-27T12:22:52.105Z",
+                    "publishTime": "2026-03-27T12:24:18.666Z",
+                    "sourcingTime": null,
+                    "startDate": null,
+                    "deliveryDate": null,
+                    "workload": "More than 30 hrs/week",
+                    "contractorTier": "EXPERT",
+                    "description": "We’re looking to hire an android developer to support the development and improvement of our mobile application. The ideal candidate has strong android kotlin experience and can build clean, stable, and scalable features for production use.\n\nWe value an android developer kotlin background with solid knowledge of app architecture, performance optimization, and maintainable code. \n\nRequirements / Skills\n\nMust-have: Android, Kotlin, Android App Development, Mobile App Development, Java, AOSP\nNice to have: Firebase, Flutter, React Native\nBonus / secondary: React, Node.js, SQL, PHP, C#, Swift, iOS Development\n\nEngineering & Product Quality\n\nSoftware Design\nApplication Improvement\nSoftware Development\n\nWe’re looking for a reliable kotlin developer who communicates clearly and can contribute to long-term product improvement.",
+                    "info": {
+                        "ciphertext": "~022037505629305600339",
+                        "id": "2037505629305600339",
+                        "type": "HOURLY",
+                        "access": "PUBLIC_INDEX",
+                        "title": "Android Developer (Kotlin) for Mobile App Development",
+                        "hideBudget": false,
+                        "createdOn": "2026-03-27T12:22:52.105Z",
+                        "notSureProjectDuration": false,
+                        "notSureFreelancersToHire": false,
+                        "notSureExperienceLevel": false,
+                        "notSureLocationPreference": false,
+                        "premium": false
+                    },
+                    "segmentationData": [
+                        {
+                            "customValue": null,
+                            "label": "Ongoing project",
+                            "name": "Employment",
+                            "sortOrder": 1,
+                            "type": "EMPLOYMENT",
+                            "value": "EMPLOYMENT_POSITION",
+                            "skill": null
+                        }
+                    ],
+                    "sandsData": {
+                        "occupation": {
+                            "freeText": null,
+                            "ontologyId": "upworkOccupation:mobileappdevelopment",
+                            "prefLabel": "Mobile App Development",
+                            "id": "996364627857502209",
+                            "uid": "996364627857502209"
+                        },
+                        "ontologySkills": [
+                            {
+                                "groupId": "1737190624499249155",
+                                "id": "1631308909698273280",
+                                "freeText": null,
+                                "prefLabel": "AI Mobile App Development",
+                                "groupPrefLabel": "Mobile App Dev Deliverables",
+                                "relevance": "MANDATORY"
+                            }
+                        ],
+                        "additionalSkills": [
+                            {
+                                "groupId": null,
+                                "id": "996364628025274376",
+                                "freeText": null,
+                                "prefLabel": "Android",
+                                "relevance": "MANDATORY"
+                            },
+                            {
+                                "groupId": null,
+                                "id": "996364628025274384",
+                                "freeText": null,
+                                "prefLabel": "Kotlin",
+                                "relevance": "MANDATORY"
+                            },
+                            {
+                                "groupId": null,
+                                "id": "996364628000108550",
+                                "freeText": null,
+                                "prefLabel": "Smartphone",
+                                "relevance": "MANDATORY"
+                            },
+                            {
+                                "groupId": null,
+                                "id": "1031626712726093824",
+                                "freeText": null,
+                                "prefLabel": "Android App Development",
+                                "relevance": "MANDATORY"
+                            },
+                            {
+                                "groupId": null,
+                                "id": "1031626760125923328",
+                                "freeText": null,
+                                "prefLabel": "Mobile App Development",
+                                "relevance": "MANDATORY"
+                            },
+                            {
+                                "groupId": null,
+                                "id": "996364628016885777",
+                                "freeText": null,
+                                "prefLabel": "User Authentication",
+                                "relevance": "MANDATORY"
+                            },
+                            {
+                                "groupId": null,
+                                "id": "996364628016885778",
+                                "freeText": null,
+                                "prefLabel": "User Profile Creation",
+                                "relevance": "MANDATORY"
+                            },
+                            {
+                                "groupId": null,
+                                "id": "996364628000108551",
+                                "freeText": null,
+                                "prefLabel": "Tablet",
+                                "relevance": "MANDATORY"
+                            },
+                            {
+                                "groupId": null,
+                                "id": "996364628021080065",
+                                "freeText": null,
+                                "prefLabel": "Map Integration",
+                                "relevance": "MANDATORY"
+                            },
+                            {
+                                "groupId": null,
+                                "id": "996364628021080064",
+                                "freeText": null,
+                                "prefLabel": "Location-Based Service",
+                                "relevance": "MANDATORY"
+                            }
+                        ]
+                    },
+                    "category": {
+                        "name": "Mobile Development",
+                        "urlSlug": "mobile-development"
+                    },
+                    "categoryGroup": {
+                        "name": "Web, Mobile & Software Dev",
+                        "urlSlug": "web-mobile-software-dev"
+                    },
+                    "budget": {
+                        "amount": 0.0,
+                        "currencyCode": "USD"
+                    },
+                    "annotations": {
+                        "customFields": {
+                            "siteSource": "desktop_rjp",
+                            "publishTime": "2026-03-27T12:24:18.666Z",
+                            "sourcingUpdateCount": "0",
+                            "sourcingUpdateForbidden": "false",
+                            "type": "RJP",
+                            "optInDescriptionAIv2": "no",
+                            "browser": "Chrome",
+                            "device": "Macintosh",
+                            "flowType": "RJP"
+                        },
+                        "tags": [
+                            "jsi_contractToHire",
+                            "contractToHireSet",
+                            "searchable",
+                            "C2HJobsOptInEducation"
+                        ]
+                    },
+                    "engagementDuration": {
+                        "label": "1 to 3 months",
+                        "weeks": 9
+                    },
+                    "extendedBudgetInfo": {
+                        "hourlyBudgetMin": 35.0,
+                        "hourlyBudgetMax": 45.0,
+                        "hourlyBudgetType": "MANUAL"
+                    },
+                    "attachments": [],
+                    "clientActivity": {
+                        "lastBuyerActivity": "2026-03-27T12:22:52.079Z",
+                        "totalApplicants": 105,
+                        "totalHired": 0,
+                        "totalInvitedToInterview": 0,
+                        "unansweredInvites": 0,
+                        "invitationsSent": 0,
+                        "numberOfPositionsToHire": 1
+                    },
+                    "deliverables": null,
+                    "deadline": null,
+                    "tools": []
+                },
+                "qualifications": {
+                    "countries": null,
+                    "earnings": null,
+                    "groupRecno": null,
+                    "languages": null,
+                    "localDescription": null,
+                    "localFlexibilityDescription": null,
+                    "localMarket": false,
+                    "minJobSuccessScore": 0,
+                    "minOdeskHours": 0,
+                    "onSiteType": null,
+                    "prefEnglishSkill": "ANY",
+                    "regions": null,
+                    "risingTalent": false,
+                    "shouldHavePortfolio": false,
+                    "states": null,
+                    "tests": null,
+                    "timezones": null,
+                    "type": "ANY",
+                    "locationCheckRequired": false,
+                    "group": null,
+                    "location": null,
+                    "locations": null
+                },
+                "questions": [
+                    {
+                        "question": "Describe your recent experience with similar projects",
+                        "position": 0
+                    }
+                ]
+            },
+            "buyer": {
+                "enterprise": false,
+                "isPaymentMethodVerified": true,
+                "info": {
+                    "location": {
+                        "offsetFromUtcMillis": 10800000,
+                        "countryTimezone": "Europe/Kiev (UTC+03:00)",
+                        "city": "Dnipro",
+                        "country": "UKR"
+                    },
+                    "stats": {
+                        "totalAssignments": 18,
+                        "activeAssignmentsCount": 1,
+                        "hoursCount": 82.0,
+                        "feedbackCount": 15,
+                        "score": 5.0,
+                        "totalJobsWithHires": 16,
+                        "totalCharges": {
+                            "amount": 4905.57
+                        }
+                    },
+                    "company": {
+                        "name": null,
+                        "companyId": "1940296145271086705",
+                        "isEDCReplicated": null,
+                        "contractDate": "2025-07-02T00:00:00.000Z",
+                        "profile": {
+                            "industry": null,
+                            "size": null
+                        }
+                    },
+                    "jobs": {
+                        "openCount": 3,
+                        "postedCount": 17,
+                        "openJobs": [
+                            {
+                                "id": "2036373674590903997",
+                                "uid": "2036373674590903997",
+                                "isPtcPrivate": false,
+                                "ciphertext": "~022036373674590903997",
+                                "title": "Full Stack Developer for SaaS Platform Development",
+                                "type": "HOURLY"
+                            },
+                            {
+                                "id": "2036089830981672637",
+                                "uid": "2036089830981672637",
+                                "isPtcPrivate": false,
+                                "ciphertext": "~022036089830981672637",
+                                "title": "UI UX Designer for Web Design, Mobile App Design & SaaS",
+                                "type": "HOURLY"
+                            }
+                        ]
+                    },
+                    "avgHourlyJobsRate": {
+                        "amount": 43.643170731707315
+                    }
+                },
+                "workHistory": [
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2026-03-16T16:24:23.619Z",
+                        "endDate": "2026-03-19T15:18:31.074Z",
+                        "totalCharge": 107.39,
+                        "totalHours": 3.0,
+                        "jobInfo": {
+                            "title": "AI Automation Specialist for Workflow Automation, Integrations & AI Agents",
+                            "id": "2031729285508810929",
+                            "uid": "2031729285508810929",
+                            "access": "PUBLIC_INDEX",
+                            "type": "HOURLY",
+                            "ciphertext": "~022031729285508810929"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Roan F.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~017c0b3e04a084d29d"
+                        },
+                        "rate": {
+                            "amount": 30.0
+                        },
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Great AI Automation Specialist to work with. Reliable, proactive and accountable for outcomes, not just task completion. Helped us improve workflows and automate key processes in a practical and effective way. Communication was smooth, and the overall collaboration was very positive."
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": ""
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2026-03-16T15:42:28.291Z",
+                        "endDate": "2026-03-18T13:13:49.463Z",
+                        "totalCharge": 287.59,
+                        "totalHours": 6.5,
+                        "jobInfo": {
+                            "title": "UI UX Designer for Web Product Design",
+                            "id": "2032380292972416056",
+                            "uid": "2032380292972416056",
+                            "access": "PUBLIC_INDEX",
+                            "type": "HOURLY",
+                            "ciphertext": "~022032380292972416056"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Alona I.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~0166cb84b953cda970"
+                        },
+                        "rate": {
+                            "amount": 40.0
+                        },
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Although Alona is new to Upwork, she is definitely not new to design. She is a skilled ui ux designer with solid web design expertise and she was consistently professional, detail oriented and solution oriented. We were very happy with both her work and the team supporting her!"
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "It was a pleasure working with this client. Communication was smooth, feedback was clear, and the collaboration overall was very comfortable for our team.\n\nWe’d be happy to work together again in the future."
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2026-03-06T11:48:03.736Z",
+                        "endDate": "2026-03-11T15:01:32.303Z",
+                        "totalCharge": 43.79,
+                        "totalHours": 1.0,
+                        "jobInfo": {
+                            "title": "Need a front-end developer (React, Next.js, Javascript) for developing web interfaces",
+                            "id": "2028853793927579149",
+                            "uid": "2028853793927579149",
+                            "access": "PUBLIC_INDEX",
+                            "type": "HOURLY",
+                            "ciphertext": "~022028853793927579149"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Stan R.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~01b7847aaee28b31f6"
+                        },
+                        "rate": {
+                            "amount": 30.0
+                        },
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Great front-end developer with solid React, Next.js and Javascript skills. He helped us with a small update to our web interfaces and completed everything quickly and professionally. Good communication, fast turnaround, and accurate implementation. We would be happy to work with him again."
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": ""
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2026-03-02T16:39:05.962Z",
+                        "endDate": "2026-03-06T11:22:10.687Z",
+                        "totalCharge": 0.0,
+                        "totalHours": 0.0,
+                        "jobInfo": {
+                            "title": "UI UX designer for Fintech SaaS Landing page Web design in Figma",
+                            "id": "2027008420055883025",
+                            "uid": "2027008420055883025",
+                            "access": "PUBLIC_INDEX",
+                            "type": "FIXED",
+                            "ciphertext": "~022027008420055883025"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Roman V.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~016c1a5ffd7922d141"
+                        },
+                        "rate": null,
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "We worked with Devera on a Fintech SaaS landing page design, and the results were exactly what we needed. Their team structured the UI/UX to make our product easier to understand and helped us create a much stronger conversion-focused landing page. Professional communication and very efficient delivery"
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Great client to work with. Clear communication, well-structured requirements, and fast feedback throughout the project. The collaboration on the Fintech SaaS landing page went smoothly, and we’d be happy to work together again."
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2026-02-23T07:53:12.401Z",
+                        "endDate": "2026-02-27T12:08:16.199Z",
+                        "totalCharge": 965.99,
+                        "totalHours": 20.0,
+                        "jobInfo": {
+                            "title": "Full Stack Developer .NET Angular for MVP Code Review & Bug Fix",
+                            "id": "2024397710497255714",
+                            "uid": "2024397710497255714",
+                            "access": "PUBLIC_INDEX",
+                            "type": "HOURLY",
+                            "ciphertext": "~022024397710497255714"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Taras Y.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~0149066815a3ff7ee7"
+                        },
+                        "rate": {
+                            "amount": 45.0
+                        },
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Taras, thank you for the excellent work on stabilizing our MVP! \nYou quickly got up to speed with the existing C#/.NET and Angular codebase, performed a thorough code review, identified and fixed bugs on both backend and frontend and suggested practical improvements to enhance structure and maintainability. Your work with Azure was especially valuable - deployment was smooth and updates to production were handled professionally and without issues.\nCommitted to quality and truly solution oriented, Taras communicated clearly, worked independently, met deadlines, and delivered clean, reliable results. The overall outcome significantly improved the stability of our product before release.\nWe highly recommend Taras and would be happy to collaborate again in the future"
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "I had an exceptionally great experience working with this client. Everything was clear, transparent, straightforward, and nice. Would definitely like to work again in the future."
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2026-02-16T15:12:22.780Z",
+                        "endDate": "2026-02-19T08:21:56.035Z",
+                        "totalCharge": 500.0,
+                        "totalHours": 0.0,
+                        "jobInfo": {
+                            "title": "SaaS Developer with WhatsApp experience",
+                            "id": "2022310588247521886",
+                            "uid": "2022310588247521886",
+                            "access": "PUBLIC_INDEX",
+                            "type": "FIXED",
+                            "ciphertext": "~022022310588247521886"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Ihor K.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~015f6aa25b5863466c"
+                        },
+                        "rate": null,
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Ihor worked as a SaaS developer. He structured the SaaS platform features and release flow on a mern stack platform. As a Full Stack developer react node, he handled both backend logic and UI fixes. As a web developer, he was easy to work with, communicated clearly, and focused on practical solutions that improved stability and performance"
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Great client, highly recomended!"
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2026-01-27T10:04:44.721Z",
+                        "endDate": "2026-01-30T14:33:45.807Z",
+                        "totalCharge": 329.99,
+                        "totalHours": 6.0,
+                        "jobInfo": {
+                            "title": "DevOps Engineer (AWS DevOps / CI/CD) — Serverless Benchmark Project | GCP DevOps a Plus",
+                            "id": "2013989594940724031",
+                            "uid": "2013989594940724031",
+                            "access": "PUBLIC_INDEX",
+                            "type": "HOURLY",
+                            "ciphertext": "~022013989594940724031"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Viacheslav H.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~0135e0c4898f0e7769"
+                        },
+                        "rate": {
+                            "amount": 50.0
+                        },
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Viacheslav did a great job as a DevOps Engineer on our serverless setup. Strong AWS DevOps skills everything was structured cleanly and the CI/CD pipeline in GitHub actions was reliable and easy to maintain. He also has good GCP DevOps understanding, which helped when discussing trade-offs and cost/performance expectations. Communication was clear, deadlines were met - I’d happily work with him again"
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Great experience working together, clear communication, well-defined tasks and a smooth collaboration throughout the project"
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2026-01-16T15:49:06.893Z",
+                        "endDate": "2026-01-20T14:06:07.717Z",
+                        "totalCharge": 0.0,
+                        "totalHours": 0.0,
+                        "jobInfo": {
+                            "title": "Google Ads Specialist (google ads ecommerce / shopping ads)",
+                            "id": "2011756541836855534",
+                            "uid": "2011756541836855534",
+                            "access": "PUBLIC_INDEX",
+                            "type": "FIXED",
+                            "ciphertext": "~022011756541836855534"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Valerii H.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~01a2653a8348308793"
+                        },
+                        "rate": null,
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Working with Valerii  was genuinely easy and comfortable he jumped into the account, got up to speed fast, and clearly showed where the budget was leaking and what to improve first. As a ppc specialist, he delivered a clear audit, prioritized the fixes and implemented changes right away - not just theory. You can feel the experience as a google ads specialist, he neatly cleaned up the structure, keywords/negatives, bids, ads and audiences.Also checked the tracking basics and suggested how to better align ads with landing pages so the traffic doesn’t get wasted. A special for google shopping ads - reviewed the feed health, product grouping, search terms, and negatives all practical and to the point"
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Amazing client! Would love to work with him again."
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2026-01-07T08:21:12.564Z",
+                        "endDate": "2026-01-13T11:27:52.778Z",
+                        "totalCharge": 300.0,
+                        "totalHours": 0.0,
+                        "jobInfo": {
+                            "title": "SaaS product designer | B2B SaaS designer (UI/UX)",
+                            "id": "2006008970838591702",
+                            "uid": "2006008970838591702",
+                            "access": "PUBLIC_INDEX",
+                            "type": "FIXED",
+                            "ciphertext": "~022006008970838591702"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Ivan K.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~0182894a0378def1a4"
+                        },
+                        "rate": null,
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Great freelancer to work with. Не quickly understood the task and as a ui ux designer SaaS, delivered clean, simple screens for the dashboard and main flow without overdesigning. As a b2b saas designer he handled data-heavy UI (tables, forms, settings) really well - clear and usable. You can feel the saas product designer mindset: consistent components, neat structure, and a developer-ready Figma file plus a clickable prototype. Fast communication, quick iterations, on-time delivery. Highly recommended  this ui ux designer"
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "It was a pleasure working with you!"
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2025-12-22T16:03:37.035Z",
+                        "endDate": "2025-12-30T08:46:57.561Z",
+                        "totalCharge": 0.0,
+                        "totalHours": 0.0,
+                        "jobInfo": {
+                            "title": "Facebook Ads Manager ( Meta ads + Google ads )",
+                            "id": "2001282228982539717",
+                            "uid": "2001282228982539717",
+                            "access": "PUBLIC_INDEX",
+                            "type": "FIXED",
+                            "ciphertext": "~022001282228982539717"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Victor T.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~011d46e849da2cabde"
+                        },
+                        "rate": null,
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Victor is a reliable facebook ads specialist. We worked on setting up and optimizing campaigns  communication was fast and to the point, and tasks were delivered on time. As a meta facebook ads manager and google ads specialist, he demonstrated strong expertise: account structure, audiences, creatives, budget control and solid analytics. I recommend him for meta ads management and scaling paid acquisition"
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "It was a pleasure working with this client from start to finish. Clear communication, well-structured feedback, and a strong understanding of their business goals made the collaboration smooth and productive. Decisions were made thoughtfully and on time, which allowed us to move fast and focus on results.\n\nWe truly appreciated the trust and openness throughout the project. Would be happy to work together again and can confidently recommend this client to other professionals."
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2025-12-17T14:01:10.593Z",
+                        "endDate": "2025-12-22T15:25:26.505Z",
+                        "totalCharge": 304.71,
+                        "totalHours": 5.0,
+                        "jobInfo": {
+                            "title": "Front end developer react needed",
+                            "id": "1999048069371267029",
+                            "uid": "1999048069371267029",
+                            "access": "PUBLIC_INDEX",
+                            "type": "HOURLY",
+                            "ciphertext": "~021999048069371267029"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Antony K.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~012396778d96da42a3"
+                        },
+                        "rate": {
+                            "amount": 55.23
+                        },
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Antony quickly got up to speed and proved himself as a front end developer react with strong frontend react experience. He helped us rebuild our existing project in React, carefully migrated key screens and components, and delivered a modern, responsive, and user-friendly interface exactly what we were aiming for. I also want to highlight that Antony is comfortable in cross-framework environments he understands the context when an angular frontend or vue.js frontend is involved and works with that mix smoothly. Communication was clear, progress was transparent and deadlines stayed on track. Highly recommended  I’d gladly work with him again"
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "It was a pleasure to work with Hanna."
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2025-11-21T10:06:56.303Z",
+                        "endDate": "2025-11-26T11:52:41.789Z",
+                        "totalCharge": 308.09,
+                        "totalHours": 9.5,
+                        "jobInfo": {
+                            "title": "Full stack developer react (react node) for SaaS web application",
+                            "id": "1990721563701113263",
+                            "uid": "1990721563701113263",
+                            "access": "PUBLIC_INDEX",
+                            "type": "HOURLY",
+                            "ciphertext": "~021990721563701113263"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Karyna K.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~01bd946c780beff869"
+                        },
+                        "rate": {
+                            "amount": 30.0
+                        },
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "We had a great experience working with this freelancer as a full stack developer react node on our project.\nThey confidently handled complex frontend react tasks and proved to be a reliable react web developer, delivering clean, reusable components on time. On the backend side, they worked with react node to implement stable APIs and improve overall performance for our react saas platform.\nCommunication was clear, deadlines were met, and the final result exceeded our expectations  I would gladly recommend them for any project needing  strong full stack developer react node"
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "great client to work with"
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2025-11-10T11:15:53.648Z",
+                        "endDate": "2025-11-20T13:40:45.125Z",
+                        "totalCharge": 304.56,
+                        "totalHours": 4.333333,
+                        "jobInfo": {
+                            "title": "Frontend React Developer Needed for React Project Redevelopment",
+                            "id": "1985977351197405929",
+                            "uid": "1985977351197405929",
+                            "access": "PUBLIC_INDEX",
+                            "type": "HOURLY",
+                            "ciphertext": "~021985977351197405929"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Antony K.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~012396778d96da42a3"
+                        },
+                        "rate": {
+                            "amount": 65.0
+                        },
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Antony did an excellent job on our frontend react redevelopment - clean components, solid performance, smooth collaboration. Highly recommend him as a reliable front end developer react with helpful exposure to angular frontend and vue.js frontend"
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Responsive, collaborative, thinking client"
+                        }
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2025-11-17T09:09:15.142Z",
+                        "endDate": "2025-11-18T15:48:31.744Z",
+                        "totalCharge": 339.43,
+                        "totalHours": 3.666667,
+                        "jobInfo": {
+                            "title": "Looking for a UI UX Designer to Create a Modern Website (B2B Designer)",
+                            "id": "1985973767076557545",
+                            "uid": "1985973767076557545",
+                            "access": "PUBLIC_INDEX",
+                            "type": "HOURLY",
+                            "ciphertext": "~021985973767076557545"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Tony V.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~01b52ca38109ceef4b"
+                        },
+                        "rate": {
+                            "amount": 85.79
+                        },
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "I worked with Tony as a ui ux designer on modernizing our B2B website and his contribution truly surpassed expectations. Acting as a b2b designer and saas designer, he clarified the navigation, improved the content hierarchy helped shape a system that scales smoothly across pages and sections. His SaaS website design work made our messaging clearer and encouraged deeper exploration of the product and case studies. Tony also proposed sensible UX metrics and consistently tied design decision to measurable impact. The deliverables Figma files, tokens, and components were clean, well-organized, and implementation-ready. Strong communicator and a pleasure to work with I highly recommend him."
+                        },
+                        "feedbackToClient": null
+                    },
+                    {
+                        "isPtcJob": false,
+                        "status": "CLOSED",
+                        "isEDCReplicated": null,
+                        "isPtcPrivate": false,
+                        "startDate": "2025-11-17T09:08:27.731Z",
+                        "endDate": "2025-11-18T14:25:49.388Z",
+                        "totalCharge": 283.03,
+                        "totalHours": 4.0,
+                        "jobInfo": {
+                            "title": "Looking for a UI UX Designer to Create a Modern Website (B2B Designer)",
+                            "id": "1985973767076557545",
+                            "uid": "1985973767076557545",
+                            "access": "PUBLIC_INDEX",
+                            "type": "HOURLY",
+                            "ciphertext": "~021985973767076557545"
+                        },
+                        "contractorInfo": {
+                            "contractorName": "Roman L.",
+                            "accessType": "PUBLIC_INDEX",
+                            "ciphertext": "~0197bdb5a2e63778df"
+                        },
+                        "rate": {
+                            "amount": 65.34
+                        },
+                        "feedback": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "I worked with Roman as a ui ux designer to modernize our UX/UI Design for B2B website  and the outcome surpassed expectations. Acting as a b2b designer and saas designer he clarified navigation, improved content hierarchy and built a system that scales across pages and sections. His saas website design work improved message clarity and encouraged deeper exploration of our product and case studies. He proposed sensible UX metrics and tied design choices to measurable impact."
+                        },
+                        "feedbackToClient": {
+                            "feedbackSuppressed": false,
+                            "score": 5.0,
+                            "comment": "Effective, productive and responsive client"
+                        }
+                    }
+                ]
+            },
+            "currentUserInfo": {
+                "owner": false,
+                "freelancerInfo": {
+                    "profileState": "AUTO_ACCEPTED",
+                    "applied": null,
+                    "devProfileCiphertext": "~0152b07b27d15b3722",
+                    "hired": null,
+                    "application": null,
+                    "pendingInvite": null,
+                    "contract": null,
+                    "hourlyRate": {
+                        "amount": 40.0
+                    },
+                    "qualificationsMatches": {
+                        "matches": [
+                            {
+                                "clientPreferred": "all",
+                                "clientPreferredLabel": "Any",
+                                "freelancerValue": "IC",
+                                "freelancerValueLabel": "Not Specified",
+                                "qualification": "FreelancerType",
+                                "qualified": true
+                            },
+                            {
+                                "clientPreferred": "0",
+                                "clientPreferredLabel": "At least 0%",
+                                "freelancerValue": "0",
+                                "freelancerValueLabel": "0%",
+                                "qualification": "MinimumJobSuccessScore",
+                                "qualified": true
+                            },
+                            {
+                                "clientPreferred": "0",
+                                "clientPreferredLabel": "Any",
+                                "freelancerValue": "3",
+                                "freelancerValueLabel": "Fluent",
+                                "qualification": "EnglishLevel",
+                                "qualified": true
+                            },
+                            {
+                                "clientPreferred": "0",
+                                "clientPreferredLabel": "At least 0 hours",
+                                "freelancerValue": "0",
+                                "freelancerValueLabel": "0",
+                                "qualification": "HoursBilled",
+                                "qualified": true
+                            },
+                            {
+                                "clientPreferred": "ANY",
+                                "clientPreferredLabel": "Any",
+                                "freelancerValue": "0.00",
+                                "freelancerValueLabel": "0.00",
+                                "qualification": "Earnings",
+                                "qualified": true
+                            },
+                            {
+                                "clientPreferred": "Any",
+                                "clientPreferredLabel": null,
+                                "freelancerValue": "bn, en",
+                                "freelancerValueLabel": "Bengali, English",
+                                "qualification": "Language",
+                                "qualified": true
+                            }
+                        ]
+                    }
+                }
+            },
+            "similarJobs": [],
+            "workLocation": {
+                "onSiteCity": null,
+                "onSiteCountry": null,
+                "onSiteReason": null,
+                "onSiteReasonFlexible": null,
+                "onSiteState": null,
+                "onSiteType": null
+            },
+            "phoneVerificationStatus": {
+                "status": "VERIFIED"
+            },
+            "applicantsBidsStats": null,
+            "specializedProfileOccupationId": "996364627857502209",
+            "applicationContext": {
+                "freelancerAllowed": true,
+                "clientAllowed": true
+            }
+        }
+    }
+}
+
+
+
+
+curl 'https://www.upwork.com/api/graphql/v1?alias=gql-query-get-connects-data' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'authorization: bearer oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b' \
+  -H 'content-type: application/json' \
+  -b $'visitor_id=59.153.103.41.1744455732191000; spt=e32fecd8-7aaf-4482-b7ae-d739ed388ff5; G_ENABLED_IDPS=google; recognized=code_magician; x-spec-id=86bd7689-940e-4a90-8b2c-dc3242b8f707; current_organization_uid=1144960541944864768; company_last_accessed=d26338562; device_view=full; _vwo_uuid_v2=DA81110ED4875C4AB31803E6B94DD5DB3|1f6ecf6bc7daf908fed16642e3ebe923; _vwo_uuid=DA81110ED4875C4AB31803E6B94DD5DB3; DA_code_magician=d5f2b5ae65c013d7d80c461467358d84b7f11b41c47d2b29a3efa04a32fd128b; umq_cq=1905; __cflb=02DiuEXPXZVk436fJfSVuuwDqLqkhavJc24xdau7w72o5; enabled_ff=\u0021CI12577UniversalSearch,\u0021MP16400Air3Migration,\u0021SSINavUser,\u0021i18nGA,CI17409DarkModeUI,JPAir3,OTBnrOn,SSINavUserBpa,TONB2256Air3Migration,i18nOn; cookie_prefix=; cookie_domain=.upwork.com; _upw_ses.5831=*; visitor_gql_token=oauth2v2_int_f204648caef16147b65ec5c69963b89b; country_code=BD; _vwo_ds=3%241773616290%3A34.81816524%3A%3A%3A%3A%3A1774781601%3A1774628965%3A3; _vis_opt_s=3%7C; _vis_opt_test_cookie=1; _vwo_sn=1165311%3A1%3A%3A%3A%3A%3A2; asct_vt=oauth2v2_int_3627f4c2872bb5d448f7df4c3b1e55ca; g_state={"i_l":0,"i_ll":1774781910610,"i_e":{"enable_itp_optimization":1}}; XSRF-TOKEN=e8c1d6dbdfeae25b6b576236cdd55014; console_user=code_magician; user_uid=1144960541940670464; master_access_token=2ce40e8f.oauth2v2_int_1b85e49d3fcde0e5b51b4638c8816ba6; oauth2_global_js_token=oauth2v2_int_719ac691fe1282a42f880d6780cbe68b; uTheme=air-3-0; uThemeMode=light; d371bc8sb=oauth2v2_int_65d1014d31656688ca8ac9a3f8d8261d; cf_clearance=Iaz7FPjvdZ2qDHuAzBVsQNf.52iE8u7q5GtDMdBd4lg-1774782120-1.2.1.1-uVqn0eBd8uFxbBpIg4dseziLHyOGnK4INzXuHQY9Sg145mSJCXG3kY0iGnUkshyEcRbiQMUCNOlITkbZrocAiSqqREhqxJPVGVd6fueIdDAnKGWE29nc1U2bEua3uWIm5yVX3E5Z763YKA.sIoQXMk2gPT.LbXaeNyfjdCh1c_8a0galWmkvG2_HTLGIlqzejhCEQSARfdPtg_L6HjvqHJvI9ByXjGNvUdkN5we.fhaMtdCUVv8hGqvdKVi5Bu.5; JobDetailsNuxt_vt=oauth2v2_int_27d0406f4512ef2a0a12c285431305c2; 3e880535sb=oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b; umq=1920; UniversalSearchNuxt_vt=oauth2v2_int_cd425be12b64e64cb91dd8d21f40103d; OptanonAlertBoxClosed=2026-03-29T11:10:25.588Z; forterToken=499e9ade59c5425fbaf831d214d0b854_1774782636050_28_UAS9_23ck; AWSALBTG=fOm2UICvYCyPhuP81oGpRbHs9t8IJcHEZ1Uvvl8mC3FYE8YrVqwPvrBbT+3D+uGXljR7AWpIzi8C+QQAl8LKVoa5Qi/db2M72vi/0hIeZZGD51wdr1oLPukcuLPGuuNMglQ4E34cCoMFE7eTEvqptr5f3FiA3mqNsnkbrM7jdWc5; AWSALBTGCORS=fOm2UICvYCyPhuP81oGpRbHs9t8IJcHEZ1Uvvl8mC3FYE8YrVqwPvrBbT+3D+uGXljR7AWpIzi8C+QQAl8LKVoa5Qi/db2M72vi/0hIeZZGD51wdr1oLPukcuLPGuuNMglQ4E34cCoMFE7eTEvqptr5f3FiA3mqNsnkbrM7jdWc5; OptanonConsent=isGpcEnabled=0&datestamp=Sun+Mar+29+2026+17%3A10%3A36+GMT%2B0600+(Bangladesh+Standard+Time)&version=202512.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=1144960541940670464&interactionCount=316&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A0&AwaitingReconsent=false&geolocation=BD%3BC&isAnonUser=0&identifierType=Cookie+Unique+Id&iType=undefined&crTime=1774782636640; __cf_bm=oBhvo1b9_19Sd8xCfYLTiRReEiMeCcT2ZxJAqAlMUeU-1774782637.1144037-1.0.1.1-DOP0fcIZ9Fs.uJDs4w.Y15j0bZ_Kr6ReblcColnmFnsi9E1Ct3_Thxz_v5YGoD48kBDZSxscLvfcQI65RaHenuffX8.hzE3QYWnmbeHG7Thdyc9dPVar3y4.rwPVRTCa; _cfuvid=j16WZ4lBrA.KISuR849fB4KnvIy.JJRuEhFiE6pof_w-1774782637.1144037-1.0.1.1-pLGXX03GiBC2LGpmrxcpzZ0v8e7Ou7Vg6c9TknOp_f8; _upw_id.5831=4d89cf31-d5b2-4c22-85ee-afa9a01344f2.1744455734.86.1774782934.1774683902.d94d2200-f04a-48e4-8a53-214a3de77961.28d4c0b3-277f-4faa-888c-986d0ddd3763.01e28ae9-e4ef-4387-87b4-a822f2105d41.1774781236187.199; AWSALB=IavGFDua9Wbud4ZGAAUCdBVMWJT/hbgJpc22qqVejSjQQBwzuylHexwXvSnXa9XJs78kDAVY0ShJabObGHCw/42cvfysmk0gQ2Vu3L2sxhcwa9F01JCS3GUPIFlD; AWSALBCORS=IavGFDua9Wbud4ZGAAUCdBVMWJT/hbgJpc22qqVejSjQQBwzuylHexwXvSnXa9XJs78kDAVY0ShJabObGHCw/42cvfysmk0gQ2Vu3L2sxhcwa9F01JCS3GUPIFlD' \
+  -H 'dnt: 1' \
+  -H 'origin: https://www.upwork.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.upwork.com/nx/search/jobs/details/~022037505629305600339?nbs=1&q=java&pageTitle=Job%20Details&_modalInfo=%5B%7B%22navType%22%3A%22slider%22,%22title%22%3A%22Job%20Details%22,%22modalId%22%3A%221774782934044%22%7D%5D&is_sts_vector_search_result=null&nav_dir=pop' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-arch: "arm"' \
+  -H 'sec-ch-ua-bitness: "64"' \
+  -H 'sec-ch-ua-full-version: "146.0.7680.165"' \
+  -H 'sec-ch-ua-full-version-list: "Chromium";v="146.0.7680.165", "Not-A.Brand";v="24.0.0.0", "Google Chrome";v="146.0.7680.165"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-model: ""' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-ch-ua-platform-version: "26.4.0"' \
+  -H 'sec-ch-viewport-width: 605' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'vnd-eo-parent-span-id: 408189cc-7289-43b1-b4de-68ad7db3f8bb' \
+  -H 'vnd-eo-span-id: 76f4d144-a847-4211-ae65-8c58a7a12ee9' \
+  -H 'vnd-eo-trace-id: 9e3e6dc46353bb2f-PDX' \
+  -H 'vnd-eo-visitorid: 59.153.103.41.1744455732191000' \
+  -H 'x-upwork-accept-language: en-US' \
+  -H 'x-upwork-api-tenantid: 1144960541944864768' \
+  --data-raw $'{"query":"\\n  query connectsDataForFreelancer($jobId: ID\u0021) {\\n    pricingJobPost: jobConnectsPriceFreelancer(jobId: $jobId) {\\n      price\\n      context\\n      auctionPrice\\n    }\\n    connectsSummary: jobFreelancerConnectsSummary {\\n      connectsBalance\\n    }\\n    jobFeatureInCurrentSubscription(feature: VIEW_COMPETITOR_BIDS) {\\n      featureInCurrentSubscription\\n    }\\n    chooseConnectsModalStatus {\\n      isExplainerModalShown\\n    }\\n  }\\n","variables":{"jobId":"2037505629305600339"}}'
+
+
+
+
+
+{
+    "data": {
+        "pricingJobPost": {
+            "price": 20,
+            "context": "OTHER",
+            "auctionPrice": 1
+        },
+        "connectsSummary": {
+            "connectsBalance": 5
+        },
+        "jobFeatureInCurrentSubscription": {
+            "featureInCurrentSubscription": false
+        },
+        "chooseConnectsModalStatus": {
+            "isExplainerModalShown": true
+        }
+    }
+}
+
+
+
+
+curl 'https://www.upwork.com/api/graphql/v1?alias=gql-query-fetchjobdetailsandcontext' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'authorization: bearer oauth2v2_int_7f2afe391e20597ee1aff87448ccbaa9' \
+  -H 'content-type: application/json' \
+  -b $'visitor_id=59.153.103.41.1744455732191000; spt=e32fecd8-7aaf-4482-b7ae-d739ed388ff5; G_ENABLED_IDPS=google; recognized=code_magician; x-spec-id=86bd7689-940e-4a90-8b2c-dc3242b8f707; current_organization_uid=1144960541944864768; company_last_accessed=d26338562; device_view=full; _vwo_uuid_v2=DA81110ED4875C4AB31803E6B94DD5DB3|1f6ecf6bc7daf908fed16642e3ebe923; _vwo_uuid=DA81110ED4875C4AB31803E6B94DD5DB3; DA_code_magician=d5f2b5ae65c013d7d80c461467358d84b7f11b41c47d2b29a3efa04a32fd128b; __cflb=02DiuEXPXZVk436fJfSVuuwDqLqkhavJc24xdau7w72o5; enabled_ff=\u0021CI12577UniversalSearch,\u0021MP16400Air3Migration,\u0021SSINavUser,\u0021i18nGA,CI17409DarkModeUI,JPAir3,OTBnrOn,SSINavUserBpa,TONB2256Air3Migration,i18nOn; cookie_prefix=; cookie_domain=.upwork.com; _upw_ses.5831=*; visitor_gql_token=oauth2v2_int_f204648caef16147b65ec5c69963b89b; country_code=BD; _vwo_ds=3%241773616290%3A34.81816524%3A%3A%3A%3A%3A1774781601%3A1774628965%3A3; _vis_opt_s=3%7C; _vis_opt_test_cookie=1; _vwo_sn=1165311%3A1%3A%3A%3A%3A%3A2; asct_vt=oauth2v2_int_3627f4c2872bb5d448f7df4c3b1e55ca; g_state={"i_l":0,"i_ll":1774781910610,"i_e":{"enable_itp_optimization":1}}; XSRF-TOKEN=e8c1d6dbdfeae25b6b576236cdd55014; console_user=code_magician; user_uid=1144960541940670464; master_access_token=2ce40e8f.oauth2v2_int_1b85e49d3fcde0e5b51b4638c8816ba6; oauth2_global_js_token=oauth2v2_int_719ac691fe1282a42f880d6780cbe68b; uTheme=air-3-0; uThemeMode=light; d371bc8sb=oauth2v2_int_65d1014d31656688ca8ac9a3f8d8261d; JobDetailsNuxt_vt=oauth2v2_int_27d0406f4512ef2a0a12c285431305c2; 3e880535sb=oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b; UniversalSearchNuxt_vt=oauth2v2_int_cd425be12b64e64cb91dd8d21f40103d; umq=605; cf_clearance=9RzV6qHgvCeMpUi13k6M3u.d_QMCvmdkvvsQP12hLWE-1774783019-1.2.1.1-NCSiGyEmHgYzImK3JxMiejqi8HozpC7KStrzpQbP1p_Q.SLIWTke1q1yKGUzf_rkyrXNXZRQdSEcYc8QZ1K_YUUhrsNeeIzin4Ahh71Dn9PDmRg8lCF6CdavQh_kWTnAyCuose5YjyTVx1eXcWJD8GcZZAKS2XK5mGkKnnyW1bDwYqkfv0aRbo68DMnh9Bi4qVpSlZ.Vnlpuqywou9nNbDylBVr0LztK2CnePasI9hXQMN4aGAKMx2.fHYtXapOx; AWSALB=7m2fPfqvHV6KtpBVUcfYE1EvpdiU0h6SWvVwEUXyb3LOPllX6tO6YMqWRDqU00MQ7JpCmpMs/ng7wpyUBn/ONpEpmhhLPtWzDwygNlec9nazPADQnmBK1sdjeekY; AWSALBCORS=7m2fPfqvHV6KtpBVUcfYE1EvpdiU0h6SWvVwEUXyb3LOPllX6tO6YMqWRDqU00MQ7JpCmpMs/ng7wpyUBn/ONpEpmhhLPtWzDwygNlec9nazPADQnmBK1sdjeekY; __cf_bm=x.iuJvdSnPDubeepUe8_4LuxcYznpcaRQjt4WEQ7PUQ-1774783026.4226897-1.0.1.1-_.TP4MY_ZVCAV_z80y5630U2OVtkFnkameQeByvVrjJ8V47rfHtcu32hdljXYi2WTDw3FLcPoPYSaS94xb39YptiWea4td3a7JZZl2ZTA7JzB6HhV0AL8awi31dwLtE5; _cfuvid=V3ELBmJ5IDfxyZPBLHiO2IBjegERP0J7zKdqYJq2P4k-1774783026.4226897-1.0.1.1-avxDOHmIr3WYtdkD0MZ4WcJh8gyvcjnDX5HH1shlc1M; umq_cq=590; OptanonAlertBoxClosed=2026-03-29T11:16:59.842Z; AWSALBTG=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; AWSALBTGCORS=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; forterToken=499e9ade59c5425fbaf831d214d0b854_1774783037257_288_UAS9_23ck; OptanonConsent=isGpcEnabled=0&datestamp=Sun+Mar+29+2026+17%3A17%3A17+GMT%2B0600+(Bangladesh+Standard+Time)&version=202512.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=1144960541940670464&interactionCount=318&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A0&AwaitingReconsent=false&geolocation=BD%3BC&isAnonUser=0&identifierType=Cookie+Unique+Id&iType=undefined&crTime=1774783037959; _upw_id.5831=4d89cf31-d5b2-4c22-85ee-afa9a01344f2.1744455734.86.1774783038.1774683902.d94d2200-f04a-48e4-8a53-214a3de77961.28d4c0b3-277f-4faa-888c-986d0ddd3763.01e28ae9-e4ef-4387-87b4-a822f2105d41.1774781236187.214' \
+  -H 'dnt: 1' \
+  -H 'origin: https://www.upwork.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.upwork.com/nx/proposals/job/~022037505629305600339/apply/' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-arch: "arm"' \
+  -H 'sec-ch-ua-bitness: "64"' \
+  -H 'sec-ch-ua-full-version: "146.0.7680.165"' \
+  -H 'sec-ch-ua-full-version-list: "Chromium";v="146.0.7680.165", "Not-A.Brand";v="24.0.0.0", "Google Chrome";v="146.0.7680.165"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-model: ""' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-ch-ua-platform-version: "26.4.0"' \
+  -H 'sec-ch-viewport-width: 605' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'vnd-eo-parent-span-id: 7cce8daa-31d4-4e25-8dd6-a67935490d74' \
+  -H 'vnd-eo-span-id: 0cb118a7-f2a5-42fd-9d20-e277446f98c5' \
+  -H 'vnd-eo-trace-id: 9e3e77947178311c-DAC' \
+  -H 'vnd-eo-visitorid: 59.153.103.41.1744455732191000' \
+  -H 'x-upwork-accept-language: en-US' \
+  -H 'x-upwork-api-tenantid: 1144960541944864768' \
+  --data-raw $'{"query":"\\nquery fetchJobDetailsAndContext($ciphertext: String\u0021) {\\n  fetchJobDetailsAndContext(ciphertext: $ciphertext) {\\n    affiliateContractorInCurrentOrg\\n    canViewAgencyContractorsInSomeOrg\\n    companyId\\n    eacInSomeOrg\\n    enterpriseClient\\n    idVerificationRequired\\n    phoneVerificationRequired\\n\\n    engagementDurations {\\n      id\\n      label\\n      type\\n      weeks\\n    }\\n\\n    qualifications {\\n      locationCheckRequired\\n      localMarket\\n      minHoursWeek\\n      minJobSuccessScore\\n      minOdeskHours\\n      prefEnglishSkill\\n      risingTalent\\n      shouldHavePortfolio\\n      type\\n      countries\\n    }\\n\\n    opening {\\n      description\\n      duration\\n      durationLabel\\n      durationId\\n      startDate\\n      postedOn\\n      publishTime\\n      sourcingTime\\n      status\\n      visibility\\n      workload\\n      companyRecno\\n      contractorTier\\n      openingId\\n\\n      budget {\\n        amount\\n        currencyCode\\n      }\\n\\n      extendedBudgetInfo {\\n        hourlyBudgetMin\\n        hourlyBudgetMax\\n        hourlyBudgetType\\n      }\\n\\n      deliveryDate\\n\\n      category {\\n        name\\n        urlSlug\\n      }\\n\\n      categoryGroup {\\n        name\\n        urlSlug\\n      }\\n\\n      clientActivity {\\n        numberOfPositionsToHire\\n        totalApplicants\\n      }\\n\\n      info {\\n        access\\n        ciphertext\\n        createdOn\\n        hideBudget\\n        notSureExperienceLevel\\n        notSureFreelancersToHire\\n        notSureLocationPreference\\n        notSureProjectDuration\\n        premium\\n        title\\n        type\\n        id\\n      }\\n\\n      engagementDuration {\\n        id\\n        label\\n        type\\n        weeks\\n      }\\n\\n      annotations {\\n        customFields\\n        tags\\n      }\\n\\n      segmentationData {\\n        customValue\\n        label\\n        name\\n        sortOrder\\n        type\\n        typeId\\n        value\\n      }\\n\\n      sandsData {\\n        occupation {\\n          id\\n          freeText\\n          ontologyId\\n          prefLabel\\n        }\\n\\n        ontologySkills {\\n          attributeGroupId\\n          attributeId\\n          freeText\\n          ontologyId\\n          prefLabel\\n        }\\n\\n        occupations {\\n          id\\n          freeText\\n          ontologyId\\n          prefLabel\\n        }\\n      }\\n    }\\n  }\\n}\\n","variables":{"ciphertext":"~022037505629305600339"}}'
+
+
+{
+    "data": {
+        "fetchJobDetailsAndContext": {
+            "affiliateContractorInCurrentOrg": false,
+            "canViewAgencyContractorsInSomeOrg": false,
+            "companyId": "1940296145271086705",
+            "eacInSomeOrg": false,
+            "enterpriseClient": false,
+            "idVerificationRequired": false,
+            "phoneVerificationRequired": false,
+            "engagementDurations": [
+                {
+                    "id": "474250516458926080",
+                    "label": "More than 6 months",
+                    "type": 1,
+                    "weeks": 52
+                },
+                {
+                    "id": "474250516458926081",
+                    "label": "3 to 6 months",
+                    "type": 2,
+                    "weeks": 18
+                },
+                {
+                    "id": "474250516458926082",
+                    "label": "1 to 3 months",
+                    "type": 3,
+                    "weeks": 9
+                },
+                {
+                    "id": "474250516458926083",
+                    "label": "Less than 1 month",
+                    "type": 4,
+                    "weeks": 3
+                }
+            ],
+            "qualifications": {
+                "locationCheckRequired": false,
+                "localMarket": false,
+                "minHoursWeek": 40,
+                "minJobSuccessScore": 0,
+                "minOdeskHours": 0,
+                "prefEnglishSkill": 0,
+                "risingTalent": false,
+                "shouldHavePortfolio": false,
+                "type": 0,
+                "countries": null
+            },
+            "opening": {
+                "description": "We’re looking to hire an android developer to support the development and improvement of our mobile application. The ideal candidate has strong android kotlin experience and can build clean, stable, and scalable features for production use.\n\nWe value an android developer kotlin background with solid knowledge of app architecture, performance optimization, and maintainable code. \n\nRequirements / Skills\n\nMust-have: Android, Kotlin, Android App Development, Mobile App Development, Java, AOSP\nNice to have: Firebase, Flutter, React Native\nBonus / secondary: React, Node.js, SQL, PHP, C#, Swift, iOS Development\n\nEngineering & Product Quality\n\nSoftware Design\nApplication Improvement\nSoftware Development\n\nWe’re looking for a reliable kotlin developer who communicates clearly and can contribute to long-term product improvement.",
+                "duration": "1 to 3 months",
+                "durationLabel": "1 to 3 months",
+                "durationId": 2,
+                "startDate": null,
+                "postedOn": "2026-03-27T12:22:52.105Z",
+                "publishTime": "2026-03-27T12:24:18.666Z",
+                "sourcingTime": null,
+                "status": 1,
+                "visibility": 4,
+                "workload": "More than 30 hrs/week",
+                "companyRecno": 1016935463,
+                "contractorTier": 3,
+                "openingId": "2037505629305600339",
+                "budget": {
+                    "amount": 0.0,
+                    "currencyCode": "USD"
+                },
+                "extendedBudgetInfo": {
+                    "hourlyBudgetMin": 35.0,
+                    "hourlyBudgetMax": 45.0,
+                    "hourlyBudgetType": 1
+                },
+                "deliveryDate": null,
+                "category": {
+                    "name": "Mobile Development",
+                    "urlSlug": "mobile-development"
+                },
+                "categoryGroup": {
+                    "name": "Web, Mobile & Software Dev",
+                    "urlSlug": "web-mobile-software-dev"
+                },
+                "clientActivity": {
+                    "numberOfPositionsToHire": 1,
+                    "totalApplicants": 105
+                },
+                "info": {
+                    "access": 4,
+                    "ciphertext": "~022037505629305600339",
+                    "createdOn": "2026-03-27T12:22:52.105Z",
+                    "hideBudget": false,
+                    "notSureExperienceLevel": false,
+                    "notSureFreelancersToHire": false,
+                    "notSureLocationPreference": false,
+                    "notSureProjectDuration": false,
+                    "premium": false,
+                    "title": "Android Developer (Kotlin) for Mobile App Development",
+                    "type": 2,
+                    "id": "2037505629305600339"
+                },
+                "engagementDuration": {
+                    "id": "474250516458926082",
+                    "label": "1 to 3 months",
+                    "type": 3,
+                    "weeks": 9
+                },
+                "annotations": {
+                    "customFields": {
+                        "siteSource": "desktop_rjp",
+                        "publishTime": "2026-03-27T12:24:18.666Z",
+                        "sourcingUpdateCount": "0",
+                        "sourcingUpdateForbidden": "false",
+                        "type": "RJP",
+                        "optInDescriptionAIv2": "no",
+                        "browser": "Chrome",
+                        "device": "Macintosh",
+                        "flowType": "RJP"
+                    },
+                    "tags": [
+                        "jsi_contractToHire",
+                        "contractToHireSet",
+                        "searchable",
+                        "C2HJobsOptInEducation"
+                    ]
+                },
+                "segmentationData": [
+                    {
+                        "customValue": null,
+                        "label": "Ongoing project",
+                        "name": "Employment",
+                        "sortOrder": 1,
+                        "type": "EMPLOYMENT",
+                        "typeId": "535792587707281410",
+                        "value": "EMPLOYMENT_POSITION"
+                    }
+                ],
+                "sandsData": {
+                    "occupation": {
+                        "id": "996364627857502209",
+                        "freeText": null,
+                        "ontologyId": "upworkOccupation:mobileappdevelopment",
+                        "prefLabel": "Mobile App Development"
+                    },
+                    "ontologySkills": [
+                        {
+                            "attributeGroupId": "1737190624499249155",
+                            "attributeId": "1631308909698273280",
+                            "freeText": null,
+                            "ontologyId": "kg:54-00539",
+                            "prefLabel": "AI Mobile App Development"
+                        }
+                    ],
+                    "occupations": [
+                        {
+                            "id": "996364627857502209",
+                            "freeText": null,
+                            "ontologyId": "upworkOccupation:mobileappdevelopment",
+                            "prefLabel": "Mobile App Development"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
+
+
+
+
+curl 'https://www.upwork.com/api/graphql/v1?alias=gql-query-proposalsopenings' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'authorization: bearer oauth2v2_int_7f2afe391e20597ee1aff87448ccbaa9' \
+  -H 'content-type: application/json' \
+  -b $'visitor_id=59.153.103.41.1744455732191000; spt=e32fecd8-7aaf-4482-b7ae-d739ed388ff5; G_ENABLED_IDPS=google; recognized=code_magician; x-spec-id=86bd7689-940e-4a90-8b2c-dc3242b8f707; current_organization_uid=1144960541944864768; company_last_accessed=d26338562; device_view=full; _vwo_uuid_v2=DA81110ED4875C4AB31803E6B94DD5DB3|1f6ecf6bc7daf908fed16642e3ebe923; _vwo_uuid=DA81110ED4875C4AB31803E6B94DD5DB3; DA_code_magician=d5f2b5ae65c013d7d80c461467358d84b7f11b41c47d2b29a3efa04a32fd128b; __cflb=02DiuEXPXZVk436fJfSVuuwDqLqkhavJc24xdau7w72o5; enabled_ff=\u0021CI12577UniversalSearch,\u0021MP16400Air3Migration,\u0021SSINavUser,\u0021i18nGA,CI17409DarkModeUI,JPAir3,OTBnrOn,SSINavUserBpa,TONB2256Air3Migration,i18nOn; cookie_prefix=; cookie_domain=.upwork.com; _upw_ses.5831=*; visitor_gql_token=oauth2v2_int_f204648caef16147b65ec5c69963b89b; country_code=BD; _vwo_ds=3%241773616290%3A34.81816524%3A%3A%3A%3A%3A1774781601%3A1774628965%3A3; _vis_opt_s=3%7C; _vis_opt_test_cookie=1; _vwo_sn=1165311%3A1%3A%3A%3A%3A%3A2; asct_vt=oauth2v2_int_3627f4c2872bb5d448f7df4c3b1e55ca; g_state={"i_l":0,"i_ll":1774781910610,"i_e":{"enable_itp_optimization":1}}; XSRF-TOKEN=e8c1d6dbdfeae25b6b576236cdd55014; console_user=code_magician; user_uid=1144960541940670464; master_access_token=2ce40e8f.oauth2v2_int_1b85e49d3fcde0e5b51b4638c8816ba6; oauth2_global_js_token=oauth2v2_int_719ac691fe1282a42f880d6780cbe68b; uTheme=air-3-0; uThemeMode=light; d371bc8sb=oauth2v2_int_65d1014d31656688ca8ac9a3f8d8261d; JobDetailsNuxt_vt=oauth2v2_int_27d0406f4512ef2a0a12c285431305c2; 3e880535sb=oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b; UniversalSearchNuxt_vt=oauth2v2_int_cd425be12b64e64cb91dd8d21f40103d; umq=605; cf_clearance=9RzV6qHgvCeMpUi13k6M3u.d_QMCvmdkvvsQP12hLWE-1774783019-1.2.1.1-NCSiGyEmHgYzImK3JxMiejqi8HozpC7KStrzpQbP1p_Q.SLIWTke1q1yKGUzf_rkyrXNXZRQdSEcYc8QZ1K_YUUhrsNeeIzin4Ahh71Dn9PDmRg8lCF6CdavQh_kWTnAyCuose5YjyTVx1eXcWJD8GcZZAKS2XK5mGkKnnyW1bDwYqkfv0aRbo68DMnh9Bi4qVpSlZ.Vnlpuqywou9nNbDylBVr0LztK2CnePasI9hXQMN4aGAKMx2.fHYtXapOx; AWSALB=7m2fPfqvHV6KtpBVUcfYE1EvpdiU0h6SWvVwEUXyb3LOPllX6tO6YMqWRDqU00MQ7JpCmpMs/ng7wpyUBn/ONpEpmhhLPtWzDwygNlec9nazPADQnmBK1sdjeekY; AWSALBCORS=7m2fPfqvHV6KtpBVUcfYE1EvpdiU0h6SWvVwEUXyb3LOPllX6tO6YMqWRDqU00MQ7JpCmpMs/ng7wpyUBn/ONpEpmhhLPtWzDwygNlec9nazPADQnmBK1sdjeekY; __cf_bm=x.iuJvdSnPDubeepUe8_4LuxcYznpcaRQjt4WEQ7PUQ-1774783026.4226897-1.0.1.1-_.TP4MY_ZVCAV_z80y5630U2OVtkFnkameQeByvVrjJ8V47rfHtcu32hdljXYi2WTDw3FLcPoPYSaS94xb39YptiWea4td3a7JZZl2ZTA7JzB6HhV0AL8awi31dwLtE5; _cfuvid=V3ELBmJ5IDfxyZPBLHiO2IBjegERP0J7zKdqYJq2P4k-1774783026.4226897-1.0.1.1-avxDOHmIr3WYtdkD0MZ4WcJh8gyvcjnDX5HH1shlc1M; umq_cq=590; OptanonAlertBoxClosed=2026-03-29T11:16:59.842Z; AWSALBTG=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; AWSALBTGCORS=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; forterToken=499e9ade59c5425fbaf831d214d0b854_1774783037257_288_UAS9_23ck; OptanonConsent=isGpcEnabled=0&datestamp=Sun+Mar+29+2026+17%3A17%3A17+GMT%2B0600+(Bangladesh+Standard+Time)&version=202512.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=1144960541940670464&interactionCount=318&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A0&AwaitingReconsent=false&geolocation=BD%3BC&isAnonUser=0&identifierType=Cookie+Unique+Id&iType=undefined&crTime=1774783037959; _upw_id.5831=4d89cf31-d5b2-4c22-85ee-afa9a01344f2.1744455734.86.1774783038.1774683902.d94d2200-f04a-48e4-8a53-214a3de77961.28d4c0b3-277f-4faa-888c-986d0ddd3763.01e28ae9-e4ef-4387-87b4-a822f2105d41.1774781236187.214' \
+  -H 'dnt: 1' \
+  -H 'origin: https://www.upwork.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.upwork.com/nx/proposals/job/~022037505629305600339/apply/' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-arch: "arm"' \
+  -H 'sec-ch-ua-bitness: "64"' \
+  -H 'sec-ch-ua-full-version: "146.0.7680.165"' \
+  -H 'sec-ch-ua-full-version-list: "Chromium";v="146.0.7680.165", "Not-A.Brand";v="24.0.0.0", "Google Chrome";v="146.0.7680.165"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-model: ""' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-ch-ua-platform-version: "26.4.0"' \
+  -H 'sec-ch-viewport-width: 605' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'vnd-eo-parent-span-id: 7cce8daa-31d4-4e25-8dd6-a67935490d74' \
+  -H 'vnd-eo-span-id: 62b3908b-a0b2-4bff-8d3f-4e45037751b5' \
+  -H 'vnd-eo-trace-id: 9e3e77947178311c-DAC' \
+  -H 'vnd-eo-visitorid: 59.153.103.41.1744455732191000' \
+  -H 'x-upwork-accept-language: en-US' \
+  -H 'x-upwork-api-tenantid: 1144960541944864768' \
+  --data-raw $'{"query":"\\n  query ($ciphertext: String\u0021){\\n    proposalsOpenings(ciphertext: $ciphertext) {\\n        clientSuspended\\n        opening {\\n            id\\n            hideBudget\\n            publishTime\\n            freelancerMilestonesAllowed\\n            hourlyBudgetMax\\n            hourlyBudgetMin\\n            createdById\\n            job {\\n                info {\\n                    type\\n                }\\n                budget {\\n                    amount\\n                }\\n            }\\n        }\\n        occupation {\\n            id\\n        }\\n        questions {\\n            questions {\\n                id\\n                question\\n            }\\n        }\\n    }\\n  }\\n","variables":{"ciphertext":"~022037505629305600339"}}'
+
+
+
+{
+    "data": {
+        "proposalsOpenings": {
+            "clientSuspended": false,
+            "opening": {
+                "id": "2037505629305600339",
+                "hideBudget": false,
+                "publishTime": "2026-03-27T12:24:18.666Z",
+                "freelancerMilestonesAllowed": false,
+                "hourlyBudgetMax": 45.0,
+                "hourlyBudgetMin": 35.0,
+                "createdById": "1940296145271086704",
+                "job": {
+                    "info": {
+                        "type": 2
+                    },
+                    "budget": {
+                        "amount": 0.0
+                    }
+                }
+            },
+            "occupation": {
+                "id": "996364627857502209"
+            },
+            "questions": {
+                "questions": [
+                    {
+                        "id": "1985973765377714738",
+                        "question": "Describe your recent experience with similar projects"
+                    }
+                ]
+            }
+        }
+    }
+}
+
+
+
+curl 'https://www.upwork.com/api/graphql/v1?alias=gql-query-connectsforjobapply-jobfeatureincurrentsubscription' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'authorization: bearer oauth2v2_int_7f2afe391e20597ee1aff87448ccbaa9' \
+  -H 'content-type: application/json' \
+  -b $'visitor_id=59.153.103.41.1744455732191000; spt=e32fecd8-7aaf-4482-b7ae-d739ed388ff5; G_ENABLED_IDPS=google; recognized=code_magician; x-spec-id=86bd7689-940e-4a90-8b2c-dc3242b8f707; current_organization_uid=1144960541944864768; company_last_accessed=d26338562; device_view=full; _vwo_uuid_v2=DA81110ED4875C4AB31803E6B94DD5DB3|1f6ecf6bc7daf908fed16642e3ebe923; _vwo_uuid=DA81110ED4875C4AB31803E6B94DD5DB3; DA_code_magician=d5f2b5ae65c013d7d80c461467358d84b7f11b41c47d2b29a3efa04a32fd128b; __cflb=02DiuEXPXZVk436fJfSVuuwDqLqkhavJc24xdau7w72o5; enabled_ff=\u0021CI12577UniversalSearch,\u0021MP16400Air3Migration,\u0021SSINavUser,\u0021i18nGA,CI17409DarkModeUI,JPAir3,OTBnrOn,SSINavUserBpa,TONB2256Air3Migration,i18nOn; cookie_prefix=; cookie_domain=.upwork.com; _upw_ses.5831=*; visitor_gql_token=oauth2v2_int_f204648caef16147b65ec5c69963b89b; country_code=BD; _vwo_ds=3%241773616290%3A34.81816524%3A%3A%3A%3A%3A1774781601%3A1774628965%3A3; _vis_opt_s=3%7C; _vis_opt_test_cookie=1; _vwo_sn=1165311%3A1%3A%3A%3A%3A%3A2; asct_vt=oauth2v2_int_3627f4c2872bb5d448f7df4c3b1e55ca; g_state={"i_l":0,"i_ll":1774781910610,"i_e":{"enable_itp_optimization":1}}; XSRF-TOKEN=e8c1d6dbdfeae25b6b576236cdd55014; console_user=code_magician; user_uid=1144960541940670464; master_access_token=2ce40e8f.oauth2v2_int_1b85e49d3fcde0e5b51b4638c8816ba6; oauth2_global_js_token=oauth2v2_int_719ac691fe1282a42f880d6780cbe68b; uTheme=air-3-0; uThemeMode=light; d371bc8sb=oauth2v2_int_65d1014d31656688ca8ac9a3f8d8261d; JobDetailsNuxt_vt=oauth2v2_int_27d0406f4512ef2a0a12c285431305c2; 3e880535sb=oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b; UniversalSearchNuxt_vt=oauth2v2_int_cd425be12b64e64cb91dd8d21f40103d; umq=605; cf_clearance=9RzV6qHgvCeMpUi13k6M3u.d_QMCvmdkvvsQP12hLWE-1774783019-1.2.1.1-NCSiGyEmHgYzImK3JxMiejqi8HozpC7KStrzpQbP1p_Q.SLIWTke1q1yKGUzf_rkyrXNXZRQdSEcYc8QZ1K_YUUhrsNeeIzin4Ahh71Dn9PDmRg8lCF6CdavQh_kWTnAyCuose5YjyTVx1eXcWJD8GcZZAKS2XK5mGkKnnyW1bDwYqkfv0aRbo68DMnh9Bi4qVpSlZ.Vnlpuqywou9nNbDylBVr0LztK2CnePasI9hXQMN4aGAKMx2.fHYtXapOx; umq_cq=590; OptanonAlertBoxClosed=2026-03-29T11:16:59.842Z; AWSALBTG=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; AWSALBTGCORS=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; forterToken=499e9ade59c5425fbaf831d214d0b854_1774783037257_288_UAS9_23ck; OptanonConsent=isGpcEnabled=0&datestamp=Sun+Mar+29+2026+17%3A17%3A17+GMT%2B0600+(Bangladesh+Standard+Time)&version=202512.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=1144960541940670464&interactionCount=318&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A0&AwaitingReconsent=false&geolocation=BD%3BC&isAnonUser=0&identifierType=Cookie+Unique+Id&iType=undefined&crTime=1774783037959; _upw_id.5831=4d89cf31-d5b2-4c22-85ee-afa9a01344f2.1744455734.86.1774783038.1774683902.d94d2200-f04a-48e4-8a53-214a3de77961.28d4c0b3-277f-4faa-888c-986d0ddd3763.01e28ae9-e4ef-4387-87b4-a822f2105d41.1774781236187.215; __cf_bm=t5lmhInNwC0mweMdlq7EbTEpuqS5C.0_LdEM1O9B4bc-1774783038-1.0.1.1-xOC4tRZnK53PeeT4IPNElSaaL2mDdbV7hXFwJUlPELLSMCAtOWqCYGQ4iybMdSqzuF3AeAwNDIsCl3TGUBMe37pSHwN_iS1uORJ_0pBEsrI; _cfuvid=5iW2YrrdCEdvp0Bdp6gFgkeKGeCEs1bZDXCcc.0OTOM-1774783038203-0.0.1.1-604800000; AWSALB=mZW8mLXioa9eBHsh+snKvW5qXyhQV4+wG4HrGiLW/ynEm0omMfsXGdB6Sqoka28WgYkeP6qqnnuRcHC7LK95rbQju7cIRiJe6f2dIDGyhnESw/Qm9wQ4RPxdDe5/; AWSALBCORS=mZW8mLXioa9eBHsh+snKvW5qXyhQV4+wG4HrGiLW/ynEm0omMfsXGdB6Sqoka28WgYkeP6qqnnuRcHC7LK95rbQju7cIRiJe6f2dIDGyhnESw/Qm9wQ4RPxdDe5/' \
+  -H 'dnt: 1' \
+  -H 'origin: https://www.upwork.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.upwork.com/nx/proposals/job/~022037505629305600339/apply/' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-arch: "arm"' \
+  -H 'sec-ch-ua-bitness: "64"' \
+  -H 'sec-ch-ua-full-version: "146.0.7680.165"' \
+  -H 'sec-ch-ua-full-version-list: "Chromium";v="146.0.7680.165", "Not-A.Brand";v="24.0.0.0", "Google Chrome";v="146.0.7680.165"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-model: ""' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-ch-ua-platform-version: "26.4.0"' \
+  -H 'sec-ch-viewport-width: 605' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'vnd-eo-parent-span-id: 7cce8daa-31d4-4e25-8dd6-a67935490d74' \
+  -H 'vnd-eo-span-id: 2b39a39c-581a-4133-822a-227c2eb6cc41' \
+  -H 'vnd-eo-trace-id: 9e3e77947178311c-DAC' \
+  -H 'vnd-eo-visitorid: 59.153.103.41.1744455732191000' \
+  -H 'x-upwork-accept-language: en-US' \
+  -H 'x-upwork-api-tenantid: 1144960541944864768' \
+  --data-raw $'{"query":"query($jobId: ID\u0021, $freelancerPersonId: ID\u0021, $agencyId: ID, $isAgency: Boolean\u0021, $feature: SubscriptionFeatureEnum) {\\n  connectsForJobApply(jobId: $jobId, freelancerId: $freelancerPersonId, agencyId: $agencyId) {\\n    connects\\n    connectsV2Applicable\\n    adviceToReplenish @include(if: $isAgency)\\n    isAgency:agency @include(if: $isAgency)\\n    isAgencyAdmin:agencyAdmin @include(if: $isAgency)\\n    canBuyConnects\\n    canApply\\n    jobsPrice\\n    priceDetails {\\n      pricing {\\n        price\\n        auctionPrice\\n        context\\n      }\\n      auction {\\n        id\\n        jobPostUid:jobPostId\\n        aboutToClose\\n        closed\\n        slotSize\\n        status\\n        type\\n      }\\n    }\\n  }\\n  featureInCurrentSubscription: jobFeatureInCurrentSubscription(\\n    feature: $feature\\n  ) {\\n    featureInCurrentSubscription\\n  }\\n}","variables":{"jobId":"2037505629305600339","freelancerPersonId":"1144960541940670464","agencyId":null,"isAgency":false,"feature":"MAXIMUM_AGENCY_SIZE"}}'
+
+
+{
+    "data": {
+        "connectsForJobApply": {
+            "connects": 5,
+            "connectsV2Applicable": true,
+            "canBuyConnects": true,
+            "canApply": false,
+            "jobsPrice": 20,
+            "priceDetails": {
+                "pricing": {
+                    "price": 20,
+                    "auctionPrice": 1,
+                    "context": 1
+                },
+                "auction": {
+                    "id": "17857284",
+                    "jobPostUid": "2037505629305600339",
+                    "aboutToClose": false,
+                    "closed": false,
+                    "slotSize": 4,
+                    "status": 1,
+                    "type": 3
+                }
+            }
+        },
+        "featureInCurrentSubscription": {
+            "featureInCurrentSubscription": false
+        }
+    }
+}
+
+
+curl 'https://www.upwork.com/api/graphql/v1?alias=gql-query-umachatbffgetthreadhistory' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'authorization: bearer oauth2v2_int_d1dd57c6df0fcf15f59a3e4cf1a74e8c' \
+  -H 'content-type: application/json' \
+  -b $'visitor_id=59.153.103.41.1744455732191000; spt=e32fecd8-7aaf-4482-b7ae-d739ed388ff5; G_ENABLED_IDPS=google; recognized=code_magician; x-spec-id=86bd7689-940e-4a90-8b2c-dc3242b8f707; current_organization_uid=1144960541944864768; company_last_accessed=d26338562; device_view=full; _vwo_uuid_v2=DA81110ED4875C4AB31803E6B94DD5DB3|1f6ecf6bc7daf908fed16642e3ebe923; _vwo_uuid=DA81110ED4875C4AB31803E6B94DD5DB3; DA_code_magician=d5f2b5ae65c013d7d80c461467358d84b7f11b41c47d2b29a3efa04a32fd128b; __cflb=02DiuEXPXZVk436fJfSVuuwDqLqkhavJc24xdau7w72o5; enabled_ff=\u0021CI12577UniversalSearch,\u0021MP16400Air3Migration,\u0021SSINavUser,\u0021i18nGA,CI17409DarkModeUI,JPAir3,OTBnrOn,SSINavUserBpa,TONB2256Air3Migration,i18nOn; cookie_prefix=; cookie_domain=.upwork.com; _upw_ses.5831=*; visitor_gql_token=oauth2v2_int_f204648caef16147b65ec5c69963b89b; country_code=BD; _vwo_ds=3%241773616290%3A34.81816524%3A%3A%3A%3A%3A1774781601%3A1774628965%3A3; _vis_opt_s=3%7C; _vis_opt_test_cookie=1; _vwo_sn=1165311%3A1%3A%3A%3A%3A%3A2; asct_vt=oauth2v2_int_3627f4c2872bb5d448f7df4c3b1e55ca; g_state={"i_l":0,"i_ll":1774781910610,"i_e":{"enable_itp_optimization":1}}; XSRF-TOKEN=e8c1d6dbdfeae25b6b576236cdd55014; console_user=code_magician; user_uid=1144960541940670464; master_access_token=2ce40e8f.oauth2v2_int_1b85e49d3fcde0e5b51b4638c8816ba6; oauth2_global_js_token=oauth2v2_int_719ac691fe1282a42f880d6780cbe68b; uTheme=air-3-0; uThemeMode=light; d371bc8sb=oauth2v2_int_65d1014d31656688ca8ac9a3f8d8261d; JobDetailsNuxt_vt=oauth2v2_int_27d0406f4512ef2a0a12c285431305c2; 3e880535sb=oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b; UniversalSearchNuxt_vt=oauth2v2_int_cd425be12b64e64cb91dd8d21f40103d; umq=605; cf_clearance=9RzV6qHgvCeMpUi13k6M3u.d_QMCvmdkvvsQP12hLWE-1774783019-1.2.1.1-NCSiGyEmHgYzImK3JxMiejqi8HozpC7KStrzpQbP1p_Q.SLIWTke1q1yKGUzf_rkyrXNXZRQdSEcYc8QZ1K_YUUhrsNeeIzin4Ahh71Dn9PDmRg8lCF6CdavQh_kWTnAyCuose5YjyTVx1eXcWJD8GcZZAKS2XK5mGkKnnyW1bDwYqkfv0aRbo68DMnh9Bi4qVpSlZ.Vnlpuqywou9nNbDylBVr0LztK2CnePasI9hXQMN4aGAKMx2.fHYtXapOx; umq_cq=590; OptanonAlertBoxClosed=2026-03-29T11:16:59.842Z; AWSALBTG=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; AWSALBTGCORS=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; forterToken=499e9ade59c5425fbaf831d214d0b854_1774783037257_288_UAS9_23ck; OptanonConsent=isGpcEnabled=0&datestamp=Sun+Mar+29+2026+17%3A17%3A17+GMT%2B0600+(Bangladesh+Standard+Time)&version=202512.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=1144960541940670464&interactionCount=318&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A0&AwaitingReconsent=false&geolocation=BD%3BC&isAnonUser=0&identifierType=Cookie+Unique+Id&iType=undefined&crTime=1774783037959; _upw_id.5831=4d89cf31-d5b2-4c22-85ee-afa9a01344f2.1744455734.86.1774783038.1774683902.d94d2200-f04a-48e4-8a53-214a3de77961.28d4c0b3-277f-4faa-888c-986d0ddd3763.01e28ae9-e4ef-4387-87b4-a822f2105d41.1774781236187.215; AWSALB=wiEaOmB2bW8tKwg2Br8N1wU7WnTI5HJlXpHtTRdSXMGaiHwV1L18X5++T/L1giyUZrikwXyImz2oTIz2Blp56s/iA5nHxZqz6lpkVtgUya+YhRO22mYMwpkvc/A1; AWSALBCORS=wiEaOmB2bW8tKwg2Br8N1wU7WnTI5HJlXpHtTRdSXMGaiHwV1L18X5++T/L1giyUZrikwXyImz2oTIz2Blp56s/iA5nHxZqz6lpkVtgUya+YhRO22mYMwpkvc/A1; __cf_bm=YXukHoHvz7iNatjNgvAQu9FJPjtjHYjl09zJNm5nUGE-1774783038.4020116-1.0.1.1-Um5UcDYyhyPy08h5yQu48sAIcJaxT6GOESzTc5P.O2YJViGulwxvy6czgKxwDBBUCz8vtBANLpyv095KelHJ2silv5qe8tHrnmlAhsTyHjwgmd7D5HENklCpNo9eLpBt; _cfuvid=IOUPcAQa85GSvs8.g61jZU6_oNJFCCqfc9Wsd.F3vEE-1774783038.4020116-1.0.1.1-Kp5_MPjLUNGDmfQZp3qVyHkuxR3kCLn6AhG5ynDw47A' \
+  -H 'dnt: 1' \
+  -H 'origin: https://www.upwork.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.upwork.com/nx/proposals/job/~022037505629305600339/apply/' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-arch: "arm"' \
+  -H 'sec-ch-ua-bitness: "64"' \
+  -H 'sec-ch-ua-full-version: "146.0.7680.165"' \
+  -H 'sec-ch-ua-full-version-list: "Chromium";v="146.0.7680.165", "Not-A.Brand";v="24.0.0.0", "Google Chrome";v="146.0.7680.165"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-model: ""' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-ch-ua-platform-version: "26.4.0"' \
+  -H 'sec-ch-viewport-width: 605' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'vnd-eo-parent-span-id: 09d6b59d-7f48-4498-9b2e-ee9992a01735' \
+  -H 'vnd-eo-span-id: cd35e8c0-f71f-4c96-a71b-fb05d6d2f8e6' \
+  -H 'vnd-eo-trace-id: 63929a04-2bd0-42c1-b2db-a92f5138c99a' \
+  -H 'vnd-eo-visitorid: 59.153.103.41.1744455732191000' \
+  -H 'x-upwork-accept-language: en-US' \
+  -H 'x-upwork-api-tenantid: 1144960541944864768' \
+  --data-raw $'{"query":"query UmaChatBFFGetThreadHistory($threadId: ID\u0021, $limit: Int, $offset: Int, $includeRatings: Boolean) {\\n  umaChatBFFGetThreadHistory(\\n    threadId: $threadId\\n    limit: $limit\\n    offset: $offset\\n    includeRatings: $includeRatings\\n  ) {\\n    messages {\\n      messageId\\n      content\\n      role\\n      createdDateTime\\n      rating {\\n        id\\n        value\\n        feedbackText\\n      }\\n    }\\n  }\\n}","variables":{"threadId":"821d51c9-5c56-4fe0-9609-45d68dcff6bb"}}'
+
+
+{
+    "data": {
+        "umaChatBFFGetThreadHistory": {
+            "messages": [
+                {
+                    "messageId": "5a9e7e50-3f50-4840-9751-87bcf8b6d9d4",
+                    "content": "refine the proposal",
+                    "role": "USER",
+                    "createdDateTime": "2026-03-26T06:10:56.838494Z",
+                    "rating": null
+                },
+                {
+                    "messageId": "81512326-36be-4fa5-9bbe-62e21fdd31a0",
+                    "content": "<think>\nOkay, let's see. The user wants me to refine the proposal for Abid H. applying to the Property Management SaaS Product job. First, I need to understand the job requirements and Abid's profile to make sure the proposal aligns well.\n\nThe job is looking for a developer with specific tech stack experience: React, Node.js for frontend, Java Spring Boot, Flyway, resilience4j for backend, MySQL, Stripe/PayPal integration, AI with Google Vision and OpenAI, Docker/Kubernetes, GoDaddy, DigitalOcean, and Caddy for SSL. \n\nAbid's profile highlights his Java backend expertise, experience with Spring Boot, microservices, performance optimization, AI integration, and containerization. His skills match several of the required technologies. The key is to connect his experience directly to the job's needs.\n\nThe existing proposal might be a bit generic. I need to make it more specific. For example, mention his experience with Java 21, which is relevant since the job uses Java Spring Boot. Highlighting his work with Docker and Kubernetes is important because the job requires containerization. Also, his AI experience with LLM APIs can be tied to the OpenAI and Google Vision requirements.\n\nI should structure the proposal to address each part of the job description. Start with a strong opening that shows he's a good fit. Then, break down his experience into sections that match the job's tech stack. Emphasize his architecture-first approach and how that can prevent future rewrites, which is a concern for SaaS products. \n\nNeed to make sure he mentions specific tools like Flyway for DB migrations, resilience4j for resilience, and Stripe/PayPal integration. Also, his experience with DigitalOcean and Caddy for SSL would be good to include. \n\nAvoid using placeholders and use the client's name if available. Since the client name isn't provided, start with \"Hello,\". Sign off with his name. Make sure the tone is professional but approachable, showing enthusiasm for the project. \n\nCheck for any missing tech stack elements and ensure all required components are addressed. Also, highlight his ability to handle full-stack integrations, which the job might need since it mentions both frontend and backend. \n\nFinally, ensure the proposal is concise but covers all key points, making it clear that Abid has the necessary skills and experience to deliver a scalable, reliable SaaS product.\n</think>\n\n```coverletter\nHello,  \n\nI’m excited to apply for your Property Management SaaS project, as your tech stack and requirements align closely with my expertise in building scalable, high-performance backend systems. With 7+ years of experience in Java Spring Boot, microservices, and AI-integrated architectures, I’m confident in delivering a robust solution that meets your SaaS needs.  \n\n**Why I’m a strong fit for your project:**  \n- **Java Spring Boot & Resilience:** I’ve architected and optimized Spring Boot REST APIs for enterprise systems handling 10K+ concurrent users, with a focus on resilience4j-style fault tolerance and Flyway-based DB migrations. My recent work includes modernizing legacy Java 6 codebases to Java 21, ensuring future-proof scalability.  \n- **AI Integration:** I’ve implemented LLM APIs (e.g., OpenAI) and Google Vision for document processing in backend workflows, which directly aligns with your AI requirements.  \n- **Cloud & Containerization:** I’ve deployed containerized apps on DigitalOcean using Docker/Kubernetes, configured Caddy for SSL, and managed DNS/VM setups—skills that match your infrastructure stack.  \n- **Payment & Security:** I’ve integrated Stripe and PayPal APIs into SaaS platforms, ensuring secure, compliant transactions. My experience with OAuth2 and JWT also ensures your APIs will be secure by design.  \n- **Performance & Architecture:** I prioritize architecture-first design to avoid costly rewrites. For example, I improved a telecom platform’s reliability from 65% to 99.9% by addressing bottlenecks in DB queries, caching, and async processing.  \n\nI’d love to discuss how my approach to scalable, maintainable systems can help your SaaS product succeed. Let’s connect to explore your vision and align on technical priorities.  \n\nBest,  \nAbid H.  \nJava Spring Boot | Microservices | AI Backend  \n```",
+                    "role": "ASSISTANT",
+                    "createdDateTime": "2026-03-26T06:10:57.101156Z",
+                    "rating": null
+                }
+            ]
+        }
+    }
+}
+
+
+
+curl 'https://www.upwork.com/api/graphql/v1?alias=gql-query-bidsjobpostuid' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'authorization: bearer oauth2v2_int_7f2afe391e20597ee1aff87448ccbaa9' \
+  -H 'content-type: application/json' \
+  -b $'visitor_id=59.153.103.41.1744455732191000; spt=e32fecd8-7aaf-4482-b7ae-d739ed388ff5; G_ENABLED_IDPS=google; recognized=code_magician; x-spec-id=86bd7689-940e-4a90-8b2c-dc3242b8f707; current_organization_uid=1144960541944864768; company_last_accessed=d26338562; device_view=full; _vwo_uuid_v2=DA81110ED4875C4AB31803E6B94DD5DB3|1f6ecf6bc7daf908fed16642e3ebe923; _vwo_uuid=DA81110ED4875C4AB31803E6B94DD5DB3; DA_code_magician=d5f2b5ae65c013d7d80c461467358d84b7f11b41c47d2b29a3efa04a32fd128b; __cflb=02DiuEXPXZVk436fJfSVuuwDqLqkhavJc24xdau7w72o5; enabled_ff=\u0021CI12577UniversalSearch,\u0021MP16400Air3Migration,\u0021SSINavUser,\u0021i18nGA,CI17409DarkModeUI,JPAir3,OTBnrOn,SSINavUserBpa,TONB2256Air3Migration,i18nOn; cookie_prefix=; cookie_domain=.upwork.com; _upw_ses.5831=*; visitor_gql_token=oauth2v2_int_f204648caef16147b65ec5c69963b89b; country_code=BD; _vwo_ds=3%241773616290%3A34.81816524%3A%3A%3A%3A%3A1774781601%3A1774628965%3A3; _vis_opt_s=3%7C; _vis_opt_test_cookie=1; _vwo_sn=1165311%3A1%3A%3A%3A%3A%3A2; asct_vt=oauth2v2_int_3627f4c2872bb5d448f7df4c3b1e55ca; g_state={"i_l":0,"i_ll":1774781910610,"i_e":{"enable_itp_optimization":1}}; XSRF-TOKEN=e8c1d6dbdfeae25b6b576236cdd55014; console_user=code_magician; user_uid=1144960541940670464; master_access_token=2ce40e8f.oauth2v2_int_1b85e49d3fcde0e5b51b4638c8816ba6; oauth2_global_js_token=oauth2v2_int_719ac691fe1282a42f880d6780cbe68b; uTheme=air-3-0; uThemeMode=light; d371bc8sb=oauth2v2_int_65d1014d31656688ca8ac9a3f8d8261d; JobDetailsNuxt_vt=oauth2v2_int_27d0406f4512ef2a0a12c285431305c2; 3e880535sb=oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b; UniversalSearchNuxt_vt=oauth2v2_int_cd425be12b64e64cb91dd8d21f40103d; umq=605; cf_clearance=9RzV6qHgvCeMpUi13k6M3u.d_QMCvmdkvvsQP12hLWE-1774783019-1.2.1.1-NCSiGyEmHgYzImK3JxMiejqi8HozpC7KStrzpQbP1p_Q.SLIWTke1q1yKGUzf_rkyrXNXZRQdSEcYc8QZ1K_YUUhrsNeeIzin4Ahh71Dn9PDmRg8lCF6CdavQh_kWTnAyCuose5YjyTVx1eXcWJD8GcZZAKS2XK5mGkKnnyW1bDwYqkfv0aRbo68DMnh9Bi4qVpSlZ.Vnlpuqywou9nNbDylBVr0LztK2CnePasI9hXQMN4aGAKMx2.fHYtXapOx; umq_cq=590; OptanonAlertBoxClosed=2026-03-29T11:16:59.842Z; AWSALBTG=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; AWSALBTGCORS=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; forterToken=499e9ade59c5425fbaf831d214d0b854_1774783037257_288_UAS9_23ck; OptanonConsent=isGpcEnabled=0&datestamp=Sun+Mar+29+2026+17%3A17%3A17+GMT%2B0600+(Bangladesh+Standard+Time)&version=202512.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=1144960541940670464&interactionCount=318&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A0&AwaitingReconsent=false&geolocation=BD%3BC&isAnonUser=0&identifierType=Cookie+Unique+Id&iType=undefined&crTime=1774783037959; AWSALB=wiEaOmB2bW8tKwg2Br8N1wU7WnTI5HJlXpHtTRdSXMGaiHwV1L18X5++T/L1giyUZrikwXyImz2oTIz2Blp56s/iA5nHxZqz6lpkVtgUya+YhRO22mYMwpkvc/A1; AWSALBCORS=wiEaOmB2bW8tKwg2Br8N1wU7WnTI5HJlXpHtTRdSXMGaiHwV1L18X5++T/L1giyUZrikwXyImz2oTIz2Blp56s/iA5nHxZqz6lpkVtgUya+YhRO22mYMwpkvc/A1; _upw_id.5831=4d89cf31-d5b2-4c22-85ee-afa9a01344f2.1744455734.86.1774783039.1774683902.d94d2200-f04a-48e4-8a53-214a3de77961.28d4c0b3-277f-4faa-888c-986d0ddd3763.01e28ae9-e4ef-4387-87b4-a822f2105d41.1774781236187.216; __cf_bm=MKUY7IpmKTagoGKPPDfUm0lgyAjOJ9ZnpoT3AqymNFk-1774783038.4008822-1.0.1.1-IdQ_1Si2rss7qlP80tq34gttlw3PFluJuY3KeAWClvUNiro4lq43AxrMfUlmJ.Z29FoP_tdGQjSbdUrJ2MwqxHfd60_ZazED1kVtQZE4v3BAHLbnc2o8tNVrDWShkweB; _cfuvid=z5NhYkvmhCSiclLpNt4GxyDPXKyKEIeZ.6pGdKELHXc-1774783038.4008822-1.0.1.1-AiRCzTDtN.B_xVH7Bzl0jJfENqtt55_tXD9ju7Pw1ZE' \
+  -H 'dnt: 1' \
+  -H 'origin: https://www.upwork.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.upwork.com/nx/proposals/job/~022037505629305600339/apply/' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-arch: "arm"' \
+  -H 'sec-ch-ua-bitness: "64"' \
+  -H 'sec-ch-ua-full-version: "146.0.7680.165"' \
+  -H 'sec-ch-ua-full-version-list: "Chromium";v="146.0.7680.165", "Not-A.Brand";v="24.0.0.0", "Google Chrome";v="146.0.7680.165"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-model: ""' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-ch-ua-platform-version: "26.4.0"' \
+  -H 'sec-ch-viewport-width: 605' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'vnd-eo-parent-span-id: 7cce8daa-31d4-4e25-8dd6-a67935490d74' \
+  -H 'vnd-eo-span-id: 703beeb6-1498-4c61-b48e-b726ea7996a8' \
+  -H 'vnd-eo-trace-id: 9e3e77947178311c-DAC' \
+  -H 'vnd-eo-visitorid: 59.153.103.41.1744455732191000' \
+  -H 'x-upwork-accept-language: en-US' \
+  -H 'x-upwork-api-tenantid: 1144960541944864768' \
+  --data-raw $'{"query":"\\n  query ($jobPostUid: ID\u0021) {\\n    bidsJobPostUid(jobPostUid: $jobPostUid, filter: IN_THE_MONEY) {\\n      bids {\\n        id,\\n        amount,\\n        createdTime\\n      }\\n    }\\n  }\\n","variables":{"jobPostUid":"2037505629305600339"}}'
+
+
+
+{
+    "data": {
+        "bidsJobPostUid": {
+            "bids": [
+                {
+                    "id": "159738039",
+                    "amount": 82,
+                    "createdTime": "2026-03-27T19:43:38.081827Z"
+                },
+                {
+                    "id": "159728741",
+                    "amount": 81,
+                    "createdTime": "2026-03-27T17:45:44.656931Z"
+                },
+                {
+                    "id": "159710277",
+                    "amount": 80,
+                    "createdTime": "2026-03-27T14:22:58.915040Z"
+                },
+                {
+                    "id": "159716134",
+                    "amount": 77,
+                    "createdTime": "2026-03-27T15:32:06.458122Z"
+                }
+            ]
+        }
+    }
+}
+
+
+
+curl 'https://www.upwork.com/api/graphql/v1?alias=getSuggestedBid' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'authorization: bearer oauth2v2_int_7f2afe391e20597ee1aff87448ccbaa9' \
+  -H 'content-type: application/json' \
+  -b $'visitor_id=59.153.103.41.1744455732191000; spt=e32fecd8-7aaf-4482-b7ae-d739ed388ff5; G_ENABLED_IDPS=google; recognized=code_magician; x-spec-id=86bd7689-940e-4a90-8b2c-dc3242b8f707; current_organization_uid=1144960541944864768; company_last_accessed=d26338562; device_view=full; _vwo_uuid_v2=DA81110ED4875C4AB31803E6B94DD5DB3|1f6ecf6bc7daf908fed16642e3ebe923; _vwo_uuid=DA81110ED4875C4AB31803E6B94DD5DB3; DA_code_magician=d5f2b5ae65c013d7d80c461467358d84b7f11b41c47d2b29a3efa04a32fd128b; __cflb=02DiuEXPXZVk436fJfSVuuwDqLqkhavJc24xdau7w72o5; enabled_ff=\u0021CI12577UniversalSearch,\u0021MP16400Air3Migration,\u0021SSINavUser,\u0021i18nGA,CI17409DarkModeUI,JPAir3,OTBnrOn,SSINavUserBpa,TONB2256Air3Migration,i18nOn; cookie_prefix=; cookie_domain=.upwork.com; _upw_ses.5831=*; visitor_gql_token=oauth2v2_int_f204648caef16147b65ec5c69963b89b; country_code=BD; _vwo_ds=3%241773616290%3A34.81816524%3A%3A%3A%3A%3A1774781601%3A1774628965%3A3; _vis_opt_s=3%7C; _vis_opt_test_cookie=1; _vwo_sn=1165311%3A1%3A%3A%3A%3A%3A2; asct_vt=oauth2v2_int_3627f4c2872bb5d448f7df4c3b1e55ca; g_state={"i_l":0,"i_ll":1774781910610,"i_e":{"enable_itp_optimization":1}}; XSRF-TOKEN=e8c1d6dbdfeae25b6b576236cdd55014; console_user=code_magician; user_uid=1144960541940670464; master_access_token=2ce40e8f.oauth2v2_int_1b85e49d3fcde0e5b51b4638c8816ba6; oauth2_global_js_token=oauth2v2_int_719ac691fe1282a42f880d6780cbe68b; uTheme=air-3-0; uThemeMode=light; d371bc8sb=oauth2v2_int_65d1014d31656688ca8ac9a3f8d8261d; JobDetailsNuxt_vt=oauth2v2_int_27d0406f4512ef2a0a12c285431305c2; 3e880535sb=oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b; UniversalSearchNuxt_vt=oauth2v2_int_cd425be12b64e64cb91dd8d21f40103d; umq=605; cf_clearance=9RzV6qHgvCeMpUi13k6M3u.d_QMCvmdkvvsQP12hLWE-1774783019-1.2.1.1-NCSiGyEmHgYzImK3JxMiejqi8HozpC7KStrzpQbP1p_Q.SLIWTke1q1yKGUzf_rkyrXNXZRQdSEcYc8QZ1K_YUUhrsNeeIzin4Ahh71Dn9PDmRg8lCF6CdavQh_kWTnAyCuose5YjyTVx1eXcWJD8GcZZAKS2XK5mGkKnnyW1bDwYqkfv0aRbo68DMnh9Bi4qVpSlZ.Vnlpuqywou9nNbDylBVr0LztK2CnePasI9hXQMN4aGAKMx2.fHYtXapOx; umq_cq=590; OptanonAlertBoxClosed=2026-03-29T11:16:59.842Z; AWSALBTG=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; AWSALBTGCORS=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; forterToken=499e9ade59c5425fbaf831d214d0b854_1774783037257_288_UAS9_23ck; OptanonConsent=isGpcEnabled=0&datestamp=Sun+Mar+29+2026+17%3A17%3A17+GMT%2B0600+(Bangladesh+Standard+Time)&version=202512.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=1144960541940670464&interactionCount=318&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A0&AwaitingReconsent=false&geolocation=BD%3BC&isAnonUser=0&identifierType=Cookie+Unique+Id&iType=undefined&crTime=1774783037959; AWSALB=wiEaOmB2bW8tKwg2Br8N1wU7WnTI5HJlXpHtTRdSXMGaiHwV1L18X5++T/L1giyUZrikwXyImz2oTIz2Blp56s/iA5nHxZqz6lpkVtgUya+YhRO22mYMwpkvc/A1; AWSALBCORS=wiEaOmB2bW8tKwg2Br8N1wU7WnTI5HJlXpHtTRdSXMGaiHwV1L18X5++T/L1giyUZrikwXyImz2oTIz2Blp56s/iA5nHxZqz6lpkVtgUya+YhRO22mYMwpkvc/A1; _upw_id.5831=4d89cf31-d5b2-4c22-85ee-afa9a01344f2.1744455734.86.1774783039.1774683902.d94d2200-f04a-48e4-8a53-214a3de77961.28d4c0b3-277f-4faa-888c-986d0ddd3763.01e28ae9-e4ef-4387-87b4-a822f2105d41.1774781236187.216; __cf_bm=MKUY7IpmKTagoGKPPDfUm0lgyAjOJ9ZnpoT3AqymNFk-1774783038.4008822-1.0.1.1-IdQ_1Si2rss7qlP80tq34gttlw3PFluJuY3KeAWClvUNiro4lq43AxrMfUlmJ.Z29FoP_tdGQjSbdUrJ2MwqxHfd60_ZazED1kVtQZE4v3BAHLbnc2o8tNVrDWShkweB; _cfuvid=z5NhYkvmhCSiclLpNt4GxyDPXKyKEIeZ.6pGdKELHXc-1774783038.4008822-1.0.1.1-AiRCzTDtN.B_xVH7Bzl0jJfENqtt55_tXD9ju7Pw1ZE' \
+  -H 'dnt: 1' \
+  -H 'origin: https://www.upwork.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.upwork.com/nx/proposals/job/~022037505629305600339/apply/' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-arch: "arm"' \
+  -H 'sec-ch-ua-bitness: "64"' \
+  -H 'sec-ch-ua-full-version: "146.0.7680.165"' \
+  -H 'sec-ch-ua-full-version-list: "Chromium";v="146.0.7680.165", "Not-A.Brand";v="24.0.0.0", "Google Chrome";v="146.0.7680.165"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-model: ""' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-ch-ua-platform-version: "26.4.0"' \
+  -H 'sec-ch-viewport-width: 605' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'vnd-eo-parent-span-id: 7cce8daa-31d4-4e25-8dd6-a67935490d74' \
+  -H 'vnd-eo-span-id: 5146bf77-0b70-4513-b1da-890d49f4d1a7' \
+  -H 'vnd-eo-trace-id: 9e3e77947178311c-DAC' \
+  -H 'vnd-eo-visitorid: 59.153.103.41.1744455732191000' \
+  -H 'x-upwork-accept-language: en-US' \
+  -H 'x-upwork-api-tenantid: 1144960541944864768' \
+  --data-raw $'{"query":"\\n  query ($jobPostUid: ID\u0021) {\\n    bidsJobPostUid(jobPostUid: $jobPostUid, includeSuggestedBid: true) {\\n      suggestedBid {\\n\\t\\t\\t\\tmedianBid\\n\\t\\t\\t\\tp80Bid\\n\\t\\t\\t\\tp90Bid\\n      }\\n    }\\n  }\\n","variables":{"jobPostUid":"2037505629305600339"}}'
+
+
+{
+    "data": {
+        "bidsJobPostUid": {
+            "suggestedBid": {
+                "medianBid": 33,
+                "p80Bid": 84,
+                "p90Bid": 120
+            }
+        }
+    }
+}
+
+
+curl 'https://www.upwork.com/api/graphql/v1?alias=gql-query-contractorsrate' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'authorization: bearer oauth2v2_int_7f2afe391e20597ee1aff87448ccbaa9' \
+  -H 'content-type: application/json' \
+  -b $'visitor_id=59.153.103.41.1744455732191000; spt=e32fecd8-7aaf-4482-b7ae-d739ed388ff5; G_ENABLED_IDPS=google; recognized=code_magician; x-spec-id=86bd7689-940e-4a90-8b2c-dc3242b8f707; current_organization_uid=1144960541944864768; company_last_accessed=d26338562; device_view=full; _vwo_uuid_v2=DA81110ED4875C4AB31803E6B94DD5DB3|1f6ecf6bc7daf908fed16642e3ebe923; _vwo_uuid=DA81110ED4875C4AB31803E6B94DD5DB3; DA_code_magician=d5f2b5ae65c013d7d80c461467358d84b7f11b41c47d2b29a3efa04a32fd128b; __cflb=02DiuEXPXZVk436fJfSVuuwDqLqkhavJc24xdau7w72o5; enabled_ff=\u0021CI12577UniversalSearch,\u0021MP16400Air3Migration,\u0021SSINavUser,\u0021i18nGA,CI17409DarkModeUI,JPAir3,OTBnrOn,SSINavUserBpa,TONB2256Air3Migration,i18nOn; cookie_prefix=; cookie_domain=.upwork.com; _upw_ses.5831=*; visitor_gql_token=oauth2v2_int_f204648caef16147b65ec5c69963b89b; country_code=BD; _vwo_ds=3%241773616290%3A34.81816524%3A%3A%3A%3A%3A1774781601%3A1774628965%3A3; _vis_opt_s=3%7C; _vis_opt_test_cookie=1; _vwo_sn=1165311%3A1%3A%3A%3A%3A%3A2; asct_vt=oauth2v2_int_3627f4c2872bb5d448f7df4c3b1e55ca; g_state={"i_l":0,"i_ll":1774781910610,"i_e":{"enable_itp_optimization":1}}; XSRF-TOKEN=e8c1d6dbdfeae25b6b576236cdd55014; console_user=code_magician; user_uid=1144960541940670464; master_access_token=2ce40e8f.oauth2v2_int_1b85e49d3fcde0e5b51b4638c8816ba6; oauth2_global_js_token=oauth2v2_int_719ac691fe1282a42f880d6780cbe68b; uTheme=air-3-0; uThemeMode=light; d371bc8sb=oauth2v2_int_65d1014d31656688ca8ac9a3f8d8261d; JobDetailsNuxt_vt=oauth2v2_int_27d0406f4512ef2a0a12c285431305c2; 3e880535sb=oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b; UniversalSearchNuxt_vt=oauth2v2_int_cd425be12b64e64cb91dd8d21f40103d; umq=605; cf_clearance=9RzV6qHgvCeMpUi13k6M3u.d_QMCvmdkvvsQP12hLWE-1774783019-1.2.1.1-NCSiGyEmHgYzImK3JxMiejqi8HozpC7KStrzpQbP1p_Q.SLIWTke1q1yKGUzf_rkyrXNXZRQdSEcYc8QZ1K_YUUhrsNeeIzin4Ahh71Dn9PDmRg8lCF6CdavQh_kWTnAyCuose5YjyTVx1eXcWJD8GcZZAKS2XK5mGkKnnyW1bDwYqkfv0aRbo68DMnh9Bi4qVpSlZ.Vnlpuqywou9nNbDylBVr0LztK2CnePasI9hXQMN4aGAKMx2.fHYtXapOx; umq_cq=590; OptanonAlertBoxClosed=2026-03-29T11:16:59.842Z; AWSALBTG=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; AWSALBTGCORS=vzPPE646zOfzLF4oGVnqVMrsudN5pOK8D2fEZcDQuQyBROVyfZ6bGCTCC+fzdPexZ+8GLGhfnVIr/0vTdzq6gOjAZ9qQxyNQKflqb/95M6dQbTwvpi/olurvIMfG5ofqIc0JAfkOoJIoO0IU2e5cz/PQQPOrqVw4EmkNUyRDtq5y; forterToken=499e9ade59c5425fbaf831d214d0b854_1774783037257_288_UAS9_23ck; OptanonConsent=isGpcEnabled=0&datestamp=Sun+Mar+29+2026+17%3A17%3A17+GMT%2B0600+(Bangladesh+Standard+Time)&version=202512.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=1144960541940670464&interactionCount=318&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A0&AwaitingReconsent=false&geolocation=BD%3BC&isAnonUser=0&identifierType=Cookie+Unique+Id&iType=undefined&crTime=1774783037959; AWSALB=wiEaOmB2bW8tKwg2Br8N1wU7WnTI5HJlXpHtTRdSXMGaiHwV1L18X5++T/L1giyUZrikwXyImz2oTIz2Blp56s/iA5nHxZqz6lpkVtgUya+YhRO22mYMwpkvc/A1; AWSALBCORS=wiEaOmB2bW8tKwg2Br8N1wU7WnTI5HJlXpHtTRdSXMGaiHwV1L18X5++T/L1giyUZrikwXyImz2oTIz2Blp56s/iA5nHxZqz6lpkVtgUya+YhRO22mYMwpkvc/A1; _upw_id.5831=4d89cf31-d5b2-4c22-85ee-afa9a01344f2.1744455734.86.1774783039.1774683902.d94d2200-f04a-48e4-8a53-214a3de77961.28d4c0b3-277f-4faa-888c-986d0ddd3763.01e28ae9-e4ef-4387-87b4-a822f2105d41.1774781236187.216; __cf_bm=MKUY7IpmKTagoGKPPDfUm0lgyAjOJ9ZnpoT3AqymNFk-1774783038.4008822-1.0.1.1-IdQ_1Si2rss7qlP80tq34gttlw3PFluJuY3KeAWClvUNiro4lq43AxrMfUlmJ.Z29FoP_tdGQjSbdUrJ2MwqxHfd60_ZazED1kVtQZE4v3BAHLbnc2o8tNVrDWShkweB; _cfuvid=z5NhYkvmhCSiclLpNt4GxyDPXKyKEIeZ.6pGdKELHXc-1774783038.4008822-1.0.1.1-AiRCzTDtN.B_xVH7Bzl0jJfENqtt55_tXD9ju7Pw1ZE' \
+  -H 'dnt: 1' \
+  -H 'origin: https://www.upwork.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.upwork.com/nx/proposals/job/~022037505629305600339/apply/' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-arch: "arm"' \
+  -H 'sec-ch-ua-bitness: "64"' \
+  -H 'sec-ch-ua-full-version: "146.0.7680.165"' \
+  -H 'sec-ch-ua-full-version-list: "Chromium";v="146.0.7680.165", "Not-A.Brand";v="24.0.0.0", "Google Chrome";v="146.0.7680.165"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-model: ""' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-ch-ua-platform-version: "26.4.0"' \
+  -H 'sec-ch-viewport-width: 605' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'vnd-eo-parent-span-id: 7cce8daa-31d4-4e25-8dd6-a67935490d74' \
+  -H 'vnd-eo-span-id: 70b56cdb-a36a-4194-a1ff-774e84dcbd58' \
+  -H 'vnd-eo-trace-id: 9e3e77947178311c-DAC' \
+  -H 'vnd-eo-visitorid: 59.153.103.41.1744455732191000' \
+  -H 'x-upwork-accept-language: en-US' \
+  -H 'x-upwork-api-tenantid: 1144960541944864768' \
+  --data-raw $'{"query":"\\n  query ($contractorUid: ID\u0021){\\n    contractorsRate(personUid: $contractorUid)\\n  }\\n","variables":{"contractorUid":"1144960541940670464"}}'
+
+{"data":{"contractorsRate":40.0}}
+
+
+
+curl 'https://www.upwork.com/api/graphql/v1?alias=gql-query-vendormatches' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'authorization: bearer oauth2v2_int_7f2afe391e20597ee1aff87448ccbaa9' \
+  -H 'content-type: application/json' \
+  -b $'visitor_id=59.153.103.41.1744455732191000; spt=e32fecd8-7aaf-4482-b7ae-d739ed388ff5; G_ENABLED_IDPS=google; recognized=code_magician; x-spec-id=86bd7689-940e-4a90-8b2c-dc3242b8f707; current_organization_uid=1144960541944864768; company_last_accessed=d26338562; device_view=full; _vwo_uuid_v2=DA81110ED4875C4AB31803E6B94DD5DB3|1f6ecf6bc7daf908fed16642e3ebe923; _vwo_uuid=DA81110ED4875C4AB31803E6B94DD5DB3; DA_code_magician=d5f2b5ae65c013d7d80c461467358d84b7f11b41c47d2b29a3efa04a32fd128b; __cflb=02DiuEXPXZVk436fJfSVuuwDqLqkhavJc24xdau7w72o5; enabled_ff=\u0021CI12577UniversalSearch,\u0021MP16400Air3Migration,\u0021SSINavUser,\u0021i18nGA,CI17409DarkModeUI,JPAir3,OTBnrOn,SSINavUserBpa,TONB2256Air3Migration,i18nOn; cookie_prefix=; cookie_domain=.upwork.com; _upw_ses.5831=*; visitor_gql_token=oauth2v2_int_f204648caef16147b65ec5c69963b89b; country_code=BD; _vwo_ds=3%241773616290%3A34.81816524%3A%3A%3A%3A%3A1774781601%3A1774628965%3A3; _vis_opt_s=3%7C; _vis_opt_test_cookie=1; _vwo_sn=1165311%3A1%3A%3A%3A%3A%3A2; asct_vt=oauth2v2_int_3627f4c2872bb5d448f7df4c3b1e55ca; g_state={"i_l":0,"i_ll":1774781910610,"i_e":{"enable_itp_optimization":1}}; XSRF-TOKEN=e8c1d6dbdfeae25b6b576236cdd55014; console_user=code_magician; user_uid=1144960541940670464; master_access_token=2ce40e8f.oauth2v2_int_1b85e49d3fcde0e5b51b4638c8816ba6; oauth2_global_js_token=oauth2v2_int_719ac691fe1282a42f880d6780cbe68b; uTheme=air-3-0; uThemeMode=light; d371bc8sb=oauth2v2_int_65d1014d31656688ca8ac9a3f8d8261d; JobDetailsNuxt_vt=oauth2v2_int_27d0406f4512ef2a0a12c285431305c2; 3e880535sb=oauth2v2_int_5ec2b734f810a28c67abc5a0593fb09b; UniversalSearchNuxt_vt=oauth2v2_int_cd425be12b64e64cb91dd8d21f40103d; umq=605; cf_clearance=9RzV6qHgvCeMpUi13k6M3u.d_QMCvmdkvvsQP12hLWE-1774783019-1.2.1.1-NCSiGyEmHgYzImK3JxMiejqi8HozpC7KStrzpQbP1p_Q.SLIWTke1q1yKGUzf_rkyrXNXZRQdSEcYc8QZ1K_YUUhrsNeeIzin4Ahh71Dn9PDmRg8lCF6CdavQh_kWTnAyCuose5YjyTVx1eXcWJD8GcZZAKS2XK5mGkKnnyW1bDwYqkfv0aRbo68DMnh9Bi4qVpSlZ.Vnlpuqywou9nNbDylBVr0LztK2CnePasI9hXQMN4aGAKMx2.fHYtXapOx; umq_cq=590; OptanonAlertBoxClosed=2026-03-29T11:16:59.842Z; forterToken=499e9ade59c5425fbaf831d214d0b854_1774783037257_288_UAS9_23ck; OptanonConsent=isGpcEnabled=0&datestamp=Sun+Mar+29+2026+17%3A17%3A17+GMT%2B0600+(Bangladesh+Standard+Time)&version=202512.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=1144960541940670464&interactionCount=318&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A0%2CC0003%3A1%2CC0004%3A0&AwaitingReconsent=false&geolocation=BD%3BC&isAnonUser=0&identifierType=Cookie+Unique+Id&iType=undefined&crTime=1774783037959; __cf_bm=MKUY7IpmKTagoGKPPDfUm0lgyAjOJ9ZnpoT3AqymNFk-1774783038.4008822-1.0.1.1-IdQ_1Si2rss7qlP80tq34gttlw3PFluJuY3KeAWClvUNiro4lq43AxrMfUlmJ.Z29FoP_tdGQjSbdUrJ2MwqxHfd60_ZazED1kVtQZE4v3BAHLbnc2o8tNVrDWShkweB; _cfuvid=z5NhYkvmhCSiclLpNt4GxyDPXKyKEIeZ.6pGdKELHXc-1774783038.4008822-1.0.1.1-AiRCzTDtN.B_xVH7Bzl0jJfENqtt55_tXD9ju7Pw1ZE; AWSALBTG=F7TxLgWI5lpQwvNi00jY1lDkyXEoJ+uF8aifOb4n01isZL3/fOyOAAo7r7u8qJSmVZbGlXv+MIV2BepiU/vmn3rueEXGt0Q17Vy4UPyCsEuFUQYcm8HOc++REV3F3OWBUwQgrQRXlDFNkX0YIBa2/8U2AOT/fCMK9J7V9SvN/vYl; AWSALBTGCORS=F7TxLgWI5lpQwvNi00jY1lDkyXEoJ+uF8aifOb4n01isZL3/fOyOAAo7r7u8qJSmVZbGlXv+MIV2BepiU/vmn3rueEXGt0Q17Vy4UPyCsEuFUQYcm8HOc++REV3F3OWBUwQgrQRXlDFNkX0YIBa2/8U2AOT/fCMK9J7V9SvN/vYl; AWSALB=RvhHv2wvEntwbh1Nw9zqSfUwHvc97TDKsT6SmRdb9WQqRg63y4lMz59SoXiENUUvJ5SrOvEJDkJLuTQFZhRBnw1m5prFCIqm7pGxKYLB3cCqH5GQesMLsTuiCQpY; AWSALBCORS=RvhHv2wvEntwbh1Nw9zqSfUwHvc97TDKsT6SmRdb9WQqRg63y4lMz59SoXiENUUvJ5SrOvEJDkJLuTQFZhRBnw1m5prFCIqm7pGxKYLB3cCqH5GQesMLsTuiCQpY; _upw_id.5831=4d89cf31-d5b2-4c22-85ee-afa9a01344f2.1744455734.86.1774783039.1774683902.d94d2200-f04a-48e4-8a53-214a3de77961.28d4c0b3-277f-4faa-888c-986d0ddd3763.01e28ae9-e4ef-4387-87b4-a822f2105d41.1774781236187.222' \
+  -H 'dnt: 1' \
+  -H 'origin: https://www.upwork.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.upwork.com/nx/proposals/job/~022037505629305600339/apply/' \
+  -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
+  -H 'sec-ch-ua-arch: "arm"' \
+  -H 'sec-ch-ua-bitness: "64"' \
+  -H 'sec-ch-ua-full-version: "146.0.7680.165"' \
+  -H 'sec-ch-ua-full-version-list: "Chromium";v="146.0.7680.165", "Not-A.Brand";v="24.0.0.0", "Google Chrome";v="146.0.7680.165"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-model: ""' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-ch-ua-platform-version: "26.4.0"' \
+  -H 'sec-ch-viewport-width: 605' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36' \
+  -H 'vnd-eo-parent-span-id: 7cce8daa-31d4-4e25-8dd6-a67935490d74' \
+  -H 'vnd-eo-span-id: 3606d217-71ce-46fd-bd8e-689ab54255f9' \
+  -H 'vnd-eo-trace-id: 9e3e77947178311c-DAC' \
+  -H 'vnd-eo-visitorid: 59.153.103.41.1744455732191000' \
+  -H 'x-upwork-accept-language: en-US' \
+  -H 'x-upwork-api-tenantid: 1144960541944864768' \
+  --data-raw $'{"query":"\\n  query vendorMatches($input: VendorMatchesInput\u0021) {\\n    vendorMatches(input: $input) {\\n      totalPrefs\\n      totalMatches\\n      matchingDetails {\\n        fieldName\\n        match\\n        preferred\\n        subFields {\\n          fieldName\\n          match\\n          actual\\n          preferred\\n          actualLabel\\n          preferredLabel\\n          fieldLabel\\n        }\\n        preferredLabel\\n        fieldLabel\\n      }\\n    }\\n  }\\n","variables":{"input":{"vendorId":"1144960541940670464","jobId":"2037505629305600339","agency":false}}}'
+
+
+{
+    "data": {
+        "vendorMatches": {
+            "totalPrefs": 6,
+            "totalMatches": 6,
+            "matchingDetails": [
+                {
+                    "fieldName": "VendorType",
+                    "match": true,
+                    "preferred": [
+                        "ALL"
+                    ],
+                    "subFields": [],
+                    "preferredLabel": "Any",
+                    "fieldLabel": "Freelancer type"
+                },
+                {
+                    "fieldName": "JobSuccessScore",
+                    "match": true,
+                    "preferred": [
+                        "0"
+                    ],
+                    "subFields": [],
+                    "preferredLabel": "At least 0%",
+                    "fieldLabel": "Job Success Score"
+                },
+                {
+                    "fieldName": "EnglishLevel",
+                    "match": true,
+                    "preferred": [
+                        "ANY"
+                    ],
+                    "subFields": [],
+                    "preferredLabel": "Any",
+                    "fieldLabel": "English level"
+                },
+                {
+                    "fieldName": "TotalHours",
+                    "match": true,
+                    "preferred": [
+                        "0"
+                    ],
+                    "subFields": [],
+                    "preferredLabel": "At least 0 hours",
+                    "fieldLabel": "Upwork hours"
+                },
+                {
+                    "fieldName": "Earnings",
+                    "match": true,
+                    "preferred": [
+                        "ANY"
+                    ],
+                    "subFields": [],
+                    "preferredLabel": "Any",
+                    "fieldLabel": "Earnings"
+                },
+                {
+                    "fieldName": "Language",
+                    "match": true,
+                    "preferred": [
+                        "Any"
+                    ],
+                    "subFields": [],
+                    "preferredLabel": null,
+                    "fieldLabel": "Language"
+                }
+            ]
+        }
+    }
+}
+
+
